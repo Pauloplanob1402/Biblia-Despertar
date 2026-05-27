@@ -1,0 +1,177 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { SpiritualIdentity } from '../types';
+
+export const DESPERTAR_PROFILES: SpiritualIdentity[] = [
+  {
+    id: 'contemplativo',
+    name: 'O Contemplativo',
+    subtitle: 'A quietude na Presença Infinita',
+    quote: 'Na quietude e na confiança estará a vossa força.',
+    description: 'Você encontra Deus no silêncio, na pausa e no recolhimento. Rejeita o barulho superficial e as atividades frenéticas da rotina religiosa, sabendo que as palavras mais profundas são ditas no mistério do secreto.',
+    scripture: 'Isaías 30:15 - "Porque assim diz o Senhor Deus... Em vos converterdes e em repousardes estaria a vossa salvação; no sossego e na confiança estaria a vossa força."',
+    reflectiveQuestion: 'Como o medo do silêncio tem impedido você de ouvir os sussurros de carinho do Pai?',
+    prayer: 'Pai do silêncio, aquieta minhas tempestades mentais. Ensina-me a não temer o vazio, pois é nele que Tua doce brisa sopra. Amém.',
+    archetype: 'O Místico Solitário',
+    emotionalTrigger: 'Busca por profundidade em um mundo de ruídos incessantes.',
+    coreFeeling: 'Desejo infinito de intimidade pura e desarmada.',
+    hexColor: '#3F4E4F' // Deep forest grey/slate
+  },
+  {
+    id: 'peregrino',
+    name: 'O Peregrino',
+    subtitle: 'A busca constante pela Verdade',
+    quote: 'Caminhamos por fé, sabendo que este mundo não é nossa morada.',
+    description: 'Você aceita que a vida é uma estrada de aprendizados. Não se apega a verdades prontas ou fáceis. Prefere a poeira da estrada e a honestidade das perguntas sinceras à segurança artificial das certezas engessadas.',
+    scripture: 'Hebreus 11:13 - "Confessando que eram estrangeiros e peregrinos na terra."',
+    reflectiveQuestion: 'Qual certeza você precisa abrir mão para poder dar o próximo passo de fé na sua caminhada?',
+    prayer: 'Senhor do caminho, guie meus pés cansados. Que a incerteza do amanhã não paralise minha fé, pois sei que Tu caminhas ao meu lado. Amém.',
+    archetype: 'O Buscador Honesto',
+    emotionalTrigger: 'Inconformismo com as respostas rasas e o estático.',
+    coreFeeling: 'Sede divina de novidade de vida e descobrimento.',
+    hexColor: '#8C6239' // Warm terracotta/clay
+  },
+  {
+    id: 'restaurador',
+    name: 'O Restaurador',
+    subtitle: 'A reconstrução de corações quebrados',
+    quote: 'Ele cura os quebrantados de coração e faixas as feridas.',
+    description: 'Sua alma vibra em ver o quebrantado ser refeito. Você tem olhos para enxergar as rachaduras cobertas pelas máscaras sociais e carrega o óleo e o vinho da compaixão para cuidar das dores ocultas do seu próximo.',
+    scripture: 'Isaías 58:12 - "E chamar-te-ão reparador das roturas, e restaurador de caminhos para morar."',
+    reflectiveQuestion: 'Há alguma cicatriz antiga em você que ainda te impede de derramar bálsamo na dor de outro?',
+    prayer: 'Médico dos médicos, usa minhas mãos calejadas e minha sensibilidade para curar as feridas invisíveis. Cura-me primeiro, cura-nos juntos. Amém.',
+    archetype: 'O Curador Ferido',
+    emotionalTrigger: 'Identificação imediata com a dor, o abuso ou o luto alheio.',
+    coreFeeling: 'Anseio reconstrutor, restauração e dignidade humana.',
+    hexColor: '#6B4F4F' // Ash redwood
+  },
+  {
+    id: 'guardiao',
+    name: 'O Guardião',
+    subtitle: 'O zelo pela tradição e herança espiritual',
+    quote: 'Guarda o bom depósito que te foi confiado.',
+    description: 'Você valoriza as raízes antigas, a sabedoria dos santos passados e a pureza doutrinária. Sua missão é proteger a herança da fé e garantir que os fundamentos não sejam arrastados pelos ventos da novidade.',
+    scripture: '2 Timóteo 1:14 - "Guarda o bom depósito pelo Espírito Santo que habita em nós."',
+    reflectiveQuestion: 'Você tem guardado a fé de maneira a compartilhá-la com amor, ou erguendo muros de julgamento?',
+    prayer: 'Guardião de Israel, ajuda-me a conservar o bom depósito da fé com mansidão. Que meu zelo seja construtor de paz, e nunca uma espada de orgulho. Amém.',
+    archetype: 'O Protetor da Linhagem',
+    emotionalTrigger: 'Preocupação com a perda de valores essenciais e o esquecimento histórico.',
+    coreFeeling: 'Senso profundo de responsabilidade eterna e fidelidade.',
+    hexColor: '#2C3639' // Deep dark charcoal
+  },
+  {
+    id: 'cooperador',
+    name: 'O Cooperador',
+    subtitle: 'O evangelho prático expresso em serviço',
+    quote: 'Aquele que serve ao menor, a mim serve.',
+    description: 'Para você, o amor é um substantivo concreto. Não se contenta apenas com cânticos ou sermões; sua verdadeira liturgia acontece quando está lavando os pés, preparando a mesa, servindo o marginalizado e estendendo a mão.',
+    scripture: 'Gálatas 6:2 - "Levai as cargas uns dos outros, e assim cumprireis a lei de Cristo."',
+    reflectiveQuestion: 'Como você pode equilibrar o servir prático com a necessidade de sentar-se aos pés de Jesus para descansar?',
+    prayer: 'Mestre do serviço, consagra minhas mãos. Que em cada ato ordinário de cuidado eu possa revelar a Tua extraordinária graça. Amém.',
+    archetype: 'O Servo Compassivo',
+    emotionalTrigger: 'Necessidade prática de ver o amor em ação e resolver carências reais.',
+    coreFeeling: 'Satisfação profunda em ser útil e aliviar fardos.',
+    hexColor: '#4A5B5C' // Sage spruce
+  },
+  {
+    id: 'pacificador',
+    name: 'O Pacificador',
+    subtitle: 'Pontes de graça sobre abismos de rancor',
+    quote: 'Bem-aventurados os pacificadores, porque serão chamados filhos de Deus.',
+    description: 'Você odeia a divisão e o partidarismo. Sua presença acalma ambientes conflagrados. Você possui a escuta ativa necessária para desarmar os espíritos e construir conexões onde antes só existiam muros frios.',
+    scripture: 'Mateus 5:9 - "Bem-aventurados os pacificadores, porque eles serão chamados filhos de Deus."',
+    reflectiveQuestion: 'Onde você precisa introduzir o silêncio e o perdão em vez de ter a última palavra inflamada?',
+    prayer: 'Príncipe da Paz, faça de mim uma ferramenta de reconciliação. Onde houver ódio, que eu leve o abraço sincero da Tua graça soberana. Amém.',
+    archetype: 'O Tecedor de Pontes',
+    emotionalTrigger: 'Desconforto físico e espiritual em ambientes cheios de discórdia e orgulho.',
+    coreFeeling: 'Harmonia cósmica inspirada pela sabedoria do Alto.',
+    hexColor: '#7882A4' // Dusty denim slate
+  },
+  {
+    id: 'adorador',
+    name: 'O Adorador',
+    subtitle: 'A poesia do amor entregue sem reservas',
+    quote: 'Minha alma engrandece ao Senhor, meu espírito se alegra.',
+    description: 'Sua expressão com Deus é artística, espontânea e emocional. Você rompe o véu da formalidade teológica com lágrimas, cânticos e admiração pura pela beleza da criação e pela majestade do Criador.',
+    scripture: 'Salmos 103:1 - "Bendiz, ó minha alma, ao Senhor, e tudo o que há em mim bendiga o seu santo nome."',
+    reflectiveQuestion: 'Como manter sua adoração pura diante do Pai quando as circunstâncias ao seu redor parecem desmoronar?',
+    prayer: 'Doador de toda beleza, transborda meu coração de sensibilidade. Que minha vida seja uma música silenciosa de entrega a Ti em meio a este mundo cinza. Amém.',
+    archetype: 'O Poeta Sensível',
+    emotionalTrigger: 'Esgotamento diante do pragmatismo mecânico das obrigações cotidianas.',
+    coreFeeling: 'Transbordamento existencial através da arte, beleza e louvor.',
+    hexColor: '#B4846C' // Aged apricot/mellow bronze
+  },
+  {
+    id: 'atalaia',
+    name: 'O Atalaia',
+    subtitle: 'O clamor profético por justiça',
+    quote: 'Clama em alta voz, não te cales, levanta a voz como a trombeta.',
+    description: 'Você não consegue calar-se diante da injustiça e da opressão. Sente as feridas sociais na própria pele e é impulsionado por um senso profético que desperta consciências adormecidas para a santidade e justiça de Deus.',
+    scripture: 'Isaías 62:6 - "Sobre os teus muros, ó Jerusalém, pus guardas [atalaias], que todo o dia e toda a noite jamais se calarão."',
+    reflectiveQuestion: 'Como denunciar o erro sem perder a ternura do coração, mantendo a graça como moldura?',
+    prayer: 'Deus da Justiça, dá-me palavras afiadas, mas cheias de misericórdia. Que eu zele pelos que não têm voz sem nunca esquecer da minha própria pequenez. Amém.',
+    archetype: 'O Clamor do Deserto',
+    emotionalTrigger: 'Indignação com a hipocrisia religiosa e a indiferença social.',
+    coreFeeling: 'Urgência santa de realinhamento e integridade espiritual.',
+    hexColor: '#5C3D2E' // Roasted espresso brown
+  },
+  {
+    id: 'discipulo',
+    name: 'O Discípulo',
+    subtitle: 'O eterno aprender aos pés de Jesus',
+    quote: 'Aprendei de mim, que sou manso e humilde de coração.',
+    description: 'Sua alma anseia por instrução. Você é humilde para reconhecer suas faltas e estuda constantemente as escrituras, rituais e hábitos saudáveis que formam o caráter de Cristo em você dia após dia.',
+    scripture: 'Mateus 11:29 - "Tomai sobre vós o meu jugo, e aprendei de mim, que sou manso e humilde de coração; e encontrareis descanso para as vossas almas."',
+    reflectiveQuestion: 'Há alguma opinião orgulhosa que você precisa abandonar para voltar a ter fôlego de aprendiz?',
+    prayer: 'Mestre amoroso, sento-me hoje aos Teus pés. Limpa as lentes do meu orgulho e molda meu pensamento de acordo com Teus ensinamentos mansos. Amém.',
+    archetype: 'O Aprendiz Paciente',
+    emotionalTrigger: 'Senso de imperfeição pessoal que clama por crescimento e discipulado.',
+    coreFeeling: 'Devoção pela sabedoria, mentoria e modelagem do caráter.',
+    hexColor: '#557B83' // Pale ocean green
+  },
+  {
+    id: 'embaixador',
+    name: 'O Embaixador',
+    subtitle: 'A propagação viva da mensagem imperial',
+    quote: 'Somos embaixadores em nome de Cristo.',
+    description: 'Você carrega um dinamismo contagioso. O Reino de Deus corre em suas veias e sua influência natural é usada para despertar comunidades, expandir visões e plantar a semente da graça nos corações que ainda jazem na escuridão.',
+    scripture: '2 Coríntios 5:20 - "De sorte que somos embaixadores da parte de Cristo, como se Deus por nós rogasse."',
+    reflectiveQuestion: 'Como garantir que sua liderança e agilidade sirvam para a glória do Rei, e não para o sucesso do embaixador?',
+    prayer: 'Rei Eterno, que eu Te represente fielmente. Que minhas palavras, atitudes e negócios sejam marcas indeléveis do Teu amor libertador. Amém.',
+    archetype: 'O Líder Estrategista',
+    emotionalTrigger: 'Visão de horizontes vazios ou comunidades estagnadas precisando de direção.',
+    coreFeeling: 'Determinação e senso de propósito expansivo no Reino.',
+    hexColor: '#6E4C1E' // Warm rich ocher
+  },
+  {
+    id: 'facilitador',
+    name: 'O Facilitador',
+    subtitle: 'A mesa acolhedora onde todos pertencem',
+    quote: 'Acolhei-vos uns aos outros, como também Cristo nos acolheu.',
+    description: 'Sua maior unção é criar ambiências de aconchego. Você abre as portas da sua casa, organiza as xícaras, prepara a refeição e, acima de tudo, escuta com os olhos, transformando estranhos em irmãos queridos em poucos instantes.',
+    scripture: 'Romanos 15:7 - "Portanto, recebei-vos uns aos outros, como também Cristo nos recebeu para a glória de Deus."',
+    reflectiveQuestion: 'Quem é o "estrangeiro" ou o "inadequado" que Deus está pedindo para você convidar para sua mesa nesta semana?',
+    prayer: 'Pai do banquete compartilhado, ajuda-me a esticar as pontas da minha mesa. Que sob meu teto nenhum coração se sinta abandonado ou sem valor. Amém.',
+    archetype: 'O Anfitrião Generoso',
+    emotionalTrigger: 'Medo da solidão existencial humana e fragmentação comunitária.',
+    coreFeeling: 'O calor da mesa posta, cafezinho quente e abraço restaurador.',
+    hexColor: '#8D8DAA' // Muted lavender grey
+  },
+  {
+    id: 'conselheiro',
+    name: 'O Conselheiro',
+    subtitle: 'O sussurro da sabedoria no vale',
+    quote: 'O conselheiro sábio edifica com palavras de cura.',
+    description: 'Você possui um ouvido calmo, sintonizado com o Espírito, permitindo-lhe dar respostas profundas a almas em encruzilhadas angustiantes. As pessoas naturalmente o procuram para chorar e obter claridade mental.',
+    scripture: 'Provérbios 11:14 - "Não havendo sábios conselhos, o povo cai, mas na multidão de conselheiros há segurança."',
+    reflectiveQuestion: 'Você tem esgotado seus próprios recursos dando conselhos sem antes se reabastecer nas fontes limpas da Palavra?',
+    prayer: 'Fonte da Sabedoria, ensina-me a ouvir mais e julgar menos. Que as palavras da minha boca tragam refrigério para a mente dos atribulados. Amém.',
+    archetype: 'A Voz Amiga no Silêncio',
+    emotionalTrigger: 'Ver vidas se destruírem por decisões impensadas ou desespero oculto.',
+    coreFeeling: 'Gratidão em ver clareza brotar onde antes havia desespero e poeira.',
+    hexColor: '#D3A380' // Sand copper
+  }
+];
