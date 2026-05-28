@@ -7,489 +7,400 @@ import { Ebook } from '../types';
 
 export const DESPERTAR_EBOOKS: Ebook[] = [
   {
-    id: 'desperto',
-    title: 'Desperto',
-    subtitle: 'A Graça Costuma Chegar Antes das Respostas',
-    author: 'O Despertar · Livro 1',
-    description: 'Para quem percebeu que a caminhada espiritual ficou pesada demais. Uma conversa sobre parar de fingir que está bem e redescobrir Deus além da performance e do barulho religioso.',
+    id: 'andre_conector',
+    title: 'O Conector',
+    subtitle: 'André',
+    author: '01 · O Conector — André',
+    description: 'A história de André, o discípulo que ninguém notava — mas que apresentou Pedro a Jesus, encontrou o menino dos pães e peixes, e levou gregos ao Mestre. Este livro revela por que o evangelho nunca precisou de plataformas ou estratégias: ele cresce de pessoa para pessoa.',
     isPremium: false,
     chapters: [
       {
-        title: 'Antes de Começar: Uma carta para você',
-        estimatedReadTime: 3,
-        content: `Você está lendo isso. Isso já diz algo. Não sei onde você se reúne no domingo — se é numa catedral antiga, numa sala de escola, num galpão ou numa sala de estar. Não importa. Esse ebook não é para um tipo específico de cristão.
-
-É para quem, independentemente de onde costuma estar, percebeu que algo ficou pesado demais. Que a performance cansa. Que a máscara pesa. Que existe uma distância entre o que se fala e o que se sente.
-
-Este não é um livro de respostas. É uma conversa honesta sobre o que acontece quando alguém decide parar de fingir — e descobre que Deus estava esperando exatamente esse momento.
-
-Você vai encontrar aqui sete conversas. Cada uma termina com uma pausa — uma pergunta para você ficar sozinho. Não precisa responder para ninguém. Só para você mesmo.
-
-No final, tem um convite. Simples, sem pressão. Você decide o que fazer com ele.
-
-"Vinde a mim, todos os que estais cansados e sobrecarregados, e eu vos darei descanso." (Mateus 11:28 — NVI)`
-      },
-      {
-        title: 'Capítulo Um: O instante em que algo dentro de você acorda',
+        title: 'Capítulo 1: O Irmão do Famoso',
         estimatedReadTime: 4,
-        content: `Não foi num culto. Não foi num retiro. Foi num momento ordinário — e de repente você soube.
+        content: `André era o irmão do famoso Pedro, mas foi ele quem iniciou tudo. Ele nunca subiu a grandes palcos nem proferiu sermões para milhares de ouvintes, mas sua história é pavimentada por gestos decisivos e discretos.
 
-Há um instante que quem já viveu reconhece imediatamente. Não é dramático. Não tem música de fundo. É silencioso, quase incômodo. Você está em algum lugar familiar — talvez o lugar onde sempre esteve no domingo — e algo dentro de você simplesmente para de fingir.
+Se você já sentiu que seu trabalho nos bastidores é invisível, este livro vai te mostar que os conectores são a própria espinha dorsal do Reino de Deus. Antes da fama e antes do palco, houve um irmão que se importou o suficiente para ir até o outro e dizer: "Vem ver".
 
-Não é raiva. Não é dúvida. É um tipo de honestidade que aparece sem ser convidada e não aceita ser ignorada. Esse é o momento do despertar. Não o início da fé — muitas vezes é o início da fé verdadeira, depois de anos de fé performática.
-
-A Bíblia tem uma palavra para isso. Paulo escreve aos Efésios: "Acorda, tu que dormes, levanta-te dentre os mortos, e Cristo te iluminará." (Efésios 5:14).
-
-Perceba o que ele não diz. Ele não diz: "organize sua vida primeiro." Não diz: "resolva suas dúvidas antes de acordar." Ele só diz: acorda. Cristo cuida do resto. O despertar não exige que você tenha chegado. Só exige que você esteja acordado.
-
-GRAÇA EM PRÁTICA: A graça não espera você estar pronto. Ela acende a luz enquanto você ainda está de olhos fechados.
-
-Pausa — Em que momento você percebeu que não conseguia mais continuar fingindo?`
+GRAÇA EM PRÁTICA: O valor de uma conexão real não é medido por holofotes, mas pelo acolhimento de uma pessoa por vez.`
       },
       {
-        title: 'Capítulo Dois: A diferença entre informação espiritual e encontro real',
-        estimatedReadTime: 5,
-        content: `Você pode saber tudo sobre Deus e não ter encontrado Ele ainda. Existe uma diferença enorme entre conhecer sobre alguém e conhecer alguém.
-
-Por anos, muitos de nós acumulamos informação espiritual. Versículos memorizados, sermões anotados, doutrinas compreendidas. E ainda assim, em algum momento, percebemos que estávamos cheios de conhecimento e vazios de encontro. Não é culpa da informação. O problema é quando a informação vira substituto para a presença.
-
-Jesus não convocou as pessoas para uma escola. Convocou para uma caminhada. "Segue-me" — duas palavras que nunca foram sobre informação. Foram sobre presença compartilhada.
-
-O encontro real acontece quando você para de aprender sobre Deus para deixar que Ele te encontre. E Ele quase sempre aparece nos lugares menos religiosos: numa conversa honesta, numa mesa simples, num silêncio que você finalmente permite.
-
-A Bíblia descreve isso em João 4 — a mulher samaritana não foi encontrada num templo. Foi encontrada num poço, no meio do dia, sozinha. Jesus não perguntou sobre sua teologia. Perguntou sobre sua sede. Qual é a sua sede real? Não a que você declara em público. A que você sente quando ninguém está vendo.
-
-GRAÇA EM PRÁTICA: A graça não está no conhecimento acumulado. Está no encontro que muda a temperatura da sala.
-
-Pausa — Quando foi a última vez que você sentiu que estava diante de Deus — e não apenas diante de uma estrutura sobre Ele?`
-      },
-      {
-        title: 'O Passo: Um convite sem pressão',
+        title: 'Capítulo 2: O Evangelho de Pessoa para Pessoa',
         estimatedReadTime: 4,
-        content: `Você chegou até aqui. Sete conversas. Sete pausas. E provavelmente algumas perguntas que ainda não têm resposta.
+        content: `A história de André revela por que o evangelho nunca precisou de plataformas colossais ou estratégias mirabolantes de marketing: ele cresce de pessoa para pessoa, numa escala humana e humilde.
 
-O Passo não acontece num altar. Não tem microfone. Não tem plateia. Acontece em silêncio, no momento em que você decide que quer continuar — mas de forma diferente. Se algo neste ebook tocou algo real em você, isso já é um começo. Você não precisa de mais do que isso agora.
-
-O que você pode fazer a seguir:
-— Encontrar uma Mesa perto de você no site do Despertar.
-— Ler o próximo ebook da série: Caminhante.
-
-"O Senhor te chamou pelo teu nome; és meu" (Isaías 43:1).`
-      }
-    ]
-  },
-  {
-    id: 'caminhante',
-    title: 'Caminhante',
-    subtitle: 'Você Não Precisa Ter Chegado Para Pertencer',
-    author: 'O Despertar · Livro 2',
-    description: 'Para quem está na estranha zona do meio do caminho — onde você já não é quem costumava ser, mas ainda não se tornou quem está por vir. Sete reflexões sobre consistência, neblina e ritmo leve.',
-    isPremium: false,
-    chapters: [
-      {
-        title: 'Antes de Começar: Uma carta para você',
-        estimatedReadTime: 3,
-        content: `Este ebook é para quem está no meio do caminho.
-
-Não para quem acabou de começar — essa é a promessa do Ebook 01, Desperto. E não para quem já chegou a algum lugar de maturidade espiritual consolidada.
-
-É para o meio. Para a zona estranha onde você já não é mais quem era — mas ainda não é quem está se tornando. Esse lugar é desconfortável. E ao mesmo tempo é exatamente onde a maioria das transformações reais acontece.
-
-"Andai no Espírito e não satisfareis os desejos da carne." (Gálatas 5:16 — NVI)`
+Você vai descobrir que não precisa ser líder, pastor, influenciador ou carregar um título pomposo para mudar vidas de forma duradoura. Você apenas precisa aprender a sentar à mesa com calma, ouvir de verdade o que o outro carrega e estender a mão de forma intencional.`
       },
       {
-        title: 'Capítulo Um: Você não está atrasado',
+        title: 'Capítulo 3: A Mesa Como Palco',
         estimatedReadTime: 4,
-        content: `Não existe linha de chegada na fé. Só o próximo passo.
+        content: `"Você não precisa de um palco para mudar o mundo. Você precisa de uma mesa."
 
-Existe uma mentira silenciosa que a maioria das pessoas espirituais carrega sem perceber: a ideia de que há um ponto certo onde você deveria estar — e que você está aquém dele.
+Uma mesa é onde as histórias são compartilhadas sem julgamentos, onde as máscaras pesadas caem e onde alguém finalmente pode dizer "eu também" e sentir que não está sozinho na caminhada.
 
-Caminhante não é o que ficou para trás. É o que continua. E continuar, quando tudo convida a parar, é o ato de fé mais subestimado que existe. Você não está atrasado. Está exatamente onde uma pessoa honesta estaria depois de tudo que você viveu.
-
-"O Senhor não tarda em cumprir a sua promessa, como julgam alguns. Pelo contrário, ele é paciente." (2 Pedro 3:9 — NVI).`
-      }
-    ]
-  },
-  {
-    id: 'glossario_movimento',
-    title: 'Nossa Visão',
-    subtitle: 'Uma conversa sobre graça e pertencimento',
-    author: 'O Despertar · Vocabulário',
-    description: '12 palavras fundamentais que definem como caminhamos juntos no Despertar — e por que essa cultura horizontal e livre de máscaras pode mudar totalmente sua experiência com Deus.',
-    isPremium: false,
-    chapters: [
-      {
-        title: 'Introdução: Uma carta para quem chegou',
-        estimatedReadTime: 3,
-        content: `Se você está lendo isso, provavelmente não chegou por acaso. Chegou porque algo em você está cansado — cansado de performance, de precisar parecer forte, de frequentar lugares onde a dúvida não tem cadeira.
-
-"A graça não é uma doutrina a ser estudada. É um peso que some quando alguém finalmente para de tentar merecer."
-
-Este documento não é um regulamento. É um convite. Cada palavra aqui foi escolhida para ser leve — porque quem chega ao Despertar já carregou peso demais.`
-      },
-      {
-        title: 'Vocabulário da Graça',
-        estimatedReadTime: 4,
-        content: `DESPERTO: o que a maioria chama de "convertido" — mas vai muito além disso. Desperto não é quem nunca errou. É quem parou de fingir que estava bem.
-
-CAMINHANTE: o que a maioria chama de "membro" — sem a pressão. Você não precisa ter chegado. Só precisa estar andando.
-
-ENRAIZADO: o que a maioria chama de "líder" — sem a hierarquia. É quem tem história suficiente para ser âncora, cuidando e permanecendo quando fica difícil.`
+➜ Quer continuar essa conversa? A história completa de André e o convite para fazer parte do movimento estão esperando por você em www.somosodespertar.com.br. O primeiro passo é apenas um clique.`
       }
     ]
   },
   {
     id: 'pedro_faisca',
-    title: 'A Faísca — Pedro',
-    subtitle: 'Sentir Demais, Errar Demais, Não Desistir',
-    author: 'O Despertar · Livro 2 — Pedro',
-    description: 'Para quem sente demais, erra demais e ainda assim não abre mão de continuar nas mãos com quem pode direcionar esse fogo sagrado.',
-    isPremium: true,
+    title: 'A Faísca',
+    subtitle: 'Pedro',
+    author: '02 · A Faísca — Pedro',
+    description: 'Pedro era exagerado, impulsivo, falava antes de pensar, negou Jesus três vezes — e ainda assim foi escolhido para liderar a igreja. Este livro é um abraço em todos que se sentem inadequados por sentir demais.',
+    isPremium: false,
     chapters: [
       {
-        title: 'Capítulo 1: Pedro Era Exagerado',
+        title: 'Capítulo 1: Sentir e Errar Demais',
         estimatedReadTime: 4,
-        content: `Falava antes de pensar. Agia antes de calcular. Amava com uma intensidade que assustava até a si mesmo.
+        content: `Pedro falava antes de pensar, agia antes de calcular e amava com uma intensidade transbordante que por vezes assustava a si mesmo. Ele caiu de forma pública e dolorosa ao negar o Mestre por três vezes para se proteger na noite fria.
 
-Pedro não era o discípulo mais equilibrado — era o mais inteiro. E foi exatamente esse homem impulsivo, de limites nítidos e erros públicos, que Jesus escolheu para liderar a igreja primitiva.
-
-Deus prefere a intensidade que erra por tentar demais do que a apatia que nunca se move. A graça encontra utilidade no seu fogo, contanto que esteja nas mãos certas.`
+Ainda assim, ele foi o escolhido para liderar a igreja primitiva. Este livro funciona como um abraço apertado em todos nós que hoje nos sentimos inadequados por sentir demais, errar demais e tentar demais na caminhada espiritual.`
       },
       {
-        title: 'Capítulo 2: As Quedas e o Choro Amargo',
+        title: 'Capítulo 2: O Fogo Sagrado',
         estimatedReadTime: 4,
-        content: `A trajetória de Pedro é uma estrada pavimentada de extremos:
-1. A Promessa Exagerada: "Jamais te negarei, mesmo que todos corram."
-2. Os Três "Não": A negação tripla no pátio, sob o peso do medo, antes que o galo cantasse.
-3. O Choro Amargo: O momento em que as máscaras caem, o orgulho quebra e as lágrimas correm livres na noite.
+        content: `Você vai entender de uma vez por todas que sua intensidade nata não é um defeito de fábrica a ser domado ou silenciado, mas sim um valioso combustível espiritual a ser devidamente direcionado.
 
-Mas ali começou o recomeço mais bonito das Escrituras. A queda não é o fim da história.`
+A graça não opera transformando pessoas explosivas em seres mornos e apáticos. Em vez disso, ela as redireciona em pessoas com fogo sagrado. Se você já quis desistir de si mesmo por causa das suas quedas repetidas, a história de Pedro mostra que Deus é especialista em recomeços.`
       },
       {
-        title: 'Capítulo 3: Deus é Especialista em Recomeços',
+        title: 'Capítulo 3: Intensidade e Firmeza',
         estimatedReadTime: 4,
         content: `"Deus nunca pediu que você fosse frio para ser firme."
 
-Sua intensidade não é um defeito a ser domado, mas um combustível a ser direcionado. Na praia, Jesus faz três perguntas curativas a Pedro: "Você me ama?" curando cada uma de suas três negações. E então dá a missão: "Apascenta as minhas ovelhas."
+O segredo está em colocar a integridade do seu coração nas mãos daquele que pode orientar a sua chama para aquecer, e não queimar, as pessoas ao seu redor.
 
-O homem que falhou publicamente é o mesmo encarregado de cuidar do rebanho da graça.`
+➜ Se algo aqui acendeu uma faísca em você, descubra como transformar sua intensidade em propósito. O ebook completo está disponível em www.somosodespertar.com.br. É para quem, como Pedro, nunca desistiu.`
       }
     ]
   },
   {
     id: 'joao_guardiao',
-    title: 'O Guardião — João',
-    subtitle: 'O Amor Que Decide Permanecer Quando Tudo Dói',
-    author: 'O Despertar · Livro 3 — João',
-    description: 'A história do discípulo que ficou ao pé da cruz quando todos fugiram, ensinando que o amor verdadeiro não é sentimento — é a decisão de permanecer.',
-    isPremium: true,
-    chapters: [
-      {
-        title: 'Capítulo 1: A Noite em Que Todos Fugiram',
-        estimatedReadTime: 4,
-        content: `Naquela madrugada, quando o medo se tornou mais alto do que a fé, os discípulos desapareceram um a um. Pedro negou. Judas traiu. Os outros correram em pânico.
-
-Mas João ficou. Ele estava lá, ao pé da cruz, suportando a dor e o silêncio, quando ninguém mais tinha a coragem de estar.
-
-"O mundo está cheio de pessoas que pregam. Está faminto de pessoas que ficam."`
-      },
-      {
-        title: 'Capítulo 2: O Amor Que Não É Sentimento',
-        estimatedReadTime: 4,
-        content: `João aprendeu com Jesus que o maior mandamento é amar. Mas esse amor não é romântico, não é emocional e não depende do nosso humor momentâneo.
-
-É o amor que decide não ir embora mesmo quando tudo dói e quando partir para bem longe seria a escolha mais fácil e confortável.
-
-Amor não é apenas sentimento. É ação, é presença silenciosa.`
-      },
-      {
-        title: 'Capítulo 3: Ser Abrigo em Meio à Tempestade',
-        estimatedReadTime: 4,
-        content: `João não precisou fazer grandes discursos ao pé da cruz ou operar milagres espetaculares naquela noite escura. Mas sua presença física ali serviu de abrigo — para Maria e para o próprio Jesus.
-
-Permanecer no silêncio, estendendo a mão para sustentar os outros com quietude, é o maior ato de discipulado real.`
-      }
-    ]
-  },
-  {
-    id: 'mateus_restaurado',
-    title: 'O Restaurado — Mateus',
-    subtitle: 'A Graça Para Quem Acha Que Já Foi Longe Demais',
-    author: 'O Despertar · Livro 4 — Mateus',
-    description: 'Para quem carrega uma culpa esmagadora e acredita que a porta se fechou. Descubra como o cobrador de impostos se tornou emissário da compaixão.',
+    title: 'O Guardião',
+    subtitle: 'João',
+    author: '03 · O Guardião — João',
+    description: 'Enquanto todos os discípulos fugiram na noite mais escura da história, João ficou. Ele estava ao pé da cruz quando ninguém mais teve coragem. Este livro é sobre o amor que permanece no silêncio.',
     isPremium: false,
     chapters: [
       {
-        title: 'Capítulo 1: O Homem Mais Odiado da Cidade',
+        title: 'Capítulo 1: O Amor que Decide Ficar',
         estimatedReadTime: 4,
-        content: `Mateus era um traidor de sua pátria, cobrando impostos a serviço de Roma e enriquecendo à custa dos mais necessitados. Ele era desprezado e excluído por qualquer círculo religioso ou social decente.
+        content: `Naquela madrugada tenebrosa, quando o pânico se tornou mais alto que a convicção, os discípulos desapareceram um a um das vistas. Pedro negou de longe, Judas traiu com um beijo e os outros fugiram para se esconder.
 
-Ninguém sentaria à mesa com ele. Mas tudo mudou quando Jesus cruzou seu caminho. Jesus não esperou Mateus se higienizar para sentar-se à mesa dele.`
+Mas João ficou. Ele permaneceu de pé ao pé da cruz no monte Calvário, suportando a dor extrema quando ninguém mais teve coragem de estar presente. É a prova cabal do amor que simplesmente decide ficar.`
       },
       {
-        title: 'Capítulo 2: A Graça Não Espera Você Melhorar',
+        title: 'Capítulo 2: A Arte de Ser Abrigo',
         estimatedReadTime: 4,
-        content: `O mundo diz: "Primeiro se arrume, prove seu valor e mude. Só então será aceito."
-A graça diz: "Você é aceito agora, exatamente como está. A transformação virá depois, como fruto natural desse amor recebido."
+        content: `Neste livro, você vai redescobrir a preciosa arte de permanecer no silêncio atento, de sustentar pessoas profundamente esgotadas apenas com a força pacífica da sua presença física, funcionando como um abrigo acolhedor em meio à tempestade da vida.
 
-A mesa da graça já está posta para quem ainda está cansado e errando no caminho.`
+João aprendeu de perto com Jesus que o maior mandamento é amar, e que amar não se traduz por um sentimento meloso ou abstrato — amar é uma ação concreta e persistente.`
       },
       {
-        title: 'Capítulo 3: Sua Mesa Está Posta',
+        title: 'Capítulo 3: O Silêncio Presente',
         estimatedReadTime: 4,
-        content: `Mateus não limpou sua vida primeiro. Ele simplesmente se levantou de sua coletoria e seguiu a Cristo. A restauração e as reparações vieram ao longo da jornada.
+        content: `"O mundo está cheio de pessoas que pregam. Está faminto de pessoas que ficam."
 
-Se Deus pôde usar Mateus para escrever um Evangelho, Ele certamente pode usar você hoje, do jeito que você está.`
+Às vezes, a presença silenciosa é um dos atos mais extraordinariamente heróicos do amor de Deus na terra.
+
+➜ A jornada de João continua em www.somosodespertar.com.br. Lá você encontra o ebook completo e descobre como se tornar um guardião de histórias e corações.`
       }
     ]
   },
   {
-    id: 'natanael_honesto',
-    title: 'Natanael — O Honesto',
-    subtitle: 'A Coragem de Ser Absolutamente Autêntico',
-    author: 'O Despertar · Livro 5 — Natanael',
-    description: 'Para quem cansou de carregar poses e performances religiosas. Um manual sobre a liberdade que brota quando finalmente paramos de fingir.',
+    id: 'tiago_profeta',
+    title: 'O Profeta',
+    subtitle: 'Tiago (irmão de Jesus)',
+    author: '04 · O Profeta — Tiago (irmão de Jesus)',
+    description: 'Tiago passou anos achando que Jesus era louco. Até que o irmão ressuscitado apareceu para ele. A partir daquele encontro, Tiago se tornou a voz da verdade na igreja primitiva.',
     isPremium: false,
     chapters: [
       {
-        title: 'Capítulo 1: Quem Era Natanael?',
+        title: 'Capítulo 1: O Fim do Ceticismo',
         estimatedReadTime: 4,
-        content: `Natanael era sincero ao ponto de parecer desconfortável. Ao ouvir sobre o Messias, respondeu de bate-pronto: "Pode vir alguma coisa boa de Nazaré?"
+        content: `Tiago cresceu colado a Jesus na oficina de carpintaria. Ele cobiçou as mesmas preocupações diárias e, por anos, acreditou que o irmão havia perdido totalmente o juízo de sua mente.
 
-Não foi um comentário bonito, mas foi genuíno. E foi exatamente essa honestidade sem rodeios que chamou a atenção de Jesus. Jesus não procura perfeição comportamental, Ele anseia por corações transparentes.`
+Tudo mudou quando o Ressuscitado apareceu especificamente a ele em um encontro reservado. A partir daquele instante, o irmão cético que se envergonhava tornou-se um pilar inabalável e a voz firme da verdade na igreja primitiva.`
       },
       {
-        title: 'Capítulo 2: Deus Não Se Impressiona Com Performances',
+        title: 'Capítulo 2: Verdade sem Violência',
         estimatedReadTime: 4,
-        content: `Fomos ensinados a posar: a sorrir quando a alma desaba e a dizer que está tudo bem quando não está. Mas Deus não precisa da sua versão de domingo, polida e decorada. Ele quer você por inteiro.
+        content: `Este livro é direcionado para quem está exausto de sorrisos plásticos que escondem dores reais, respostas decoradas prontas na ponta da língua e falsidade espiritualizada.
 
-"Quando você para de fingir, abre espaço para que a graça de Deus te encontre."`
+Você vai aprender a nítida diferença entre falar a verdade em amor e destilar a verdade com agressividade ou violência. O verdadeiro profeta não é aquele que grita mais alto no palanque para impor ideias; é aquele que chora de compaixão enquanto proclama.`
       },
       {
-        title: 'Capítulo 3: O Que Jesus Realmente Procura',
+        title: 'Capítulo 3: Integridade Prática',
         estimatedReadTime: 4,
-        content: `Jesus disse à mulher de Samaria: "Deus procura pessoas que o adorem em espírito e em verdade."
+        content: `"A verdade sem amor é violência. O amor sem verdade é engano."
 
-Seja honesto com Deus. Leve a Ele suas dúvidas, frustrações e raivas. Tire as máscaras e experimente a autêntica liberdade de quem é amado pelo que é.`
-      }
-    ]
-  },
-  {
-    id: 'tome_investigador',
-    title: 'O Investigador — Tomé',
-    subtitle: 'Para Quem Precisa Ver e Tocar Antes de Crer',
-    author: 'O Despertar · Livro 6 — Tomé',
-    description: 'Uma apologia à dúvida honesta e engajada, mostrando que a verdade do Evangelho não pede que você desligue seu cérebro.',
-    isPremium: false,
-    chapters: [
-      {
-        title: 'Capítulo 1: Um Nome Marcado Pela Dor',
-        estimatedReadTime: 4,
-        content: `Tomé ficou injustamente marcado na história como "o incrédulo" por causa de uma única frase dita em um momento de profunda dor e luto: "Se eu não vir e não tocar, não acreditarei."
+A mensagem prática de Tiago não media adulações, mas também não media a profundidade do cuidado integral com os abandonados na sarjeta.
 
-No entanto, sua dúvida não era deboche ou zombaria — era a mais pura sede de honestidade. Uma fé que nunca foi testada ou questionada é uma fé frágil.`
-      },
-      {
-        title: 'Capítulo 2: A Maior Confissão do Evangelho',
-        estimatedReadTime: 4,
-        content: `As pessoas se lembram da dúvida de Tomé, mas se esquecem de que dele veio a maior declaração de adoração de todo o Evangelho: "Senhor meu, e Deus meu!"
-
-Jesus não repreendeu suas perguntas. Ele estendeu as mãos feridas e ofereceu as evidências para que Tomé investigasse. A verdade não tem medo de perguntas sinceras.`
-      },
-      {
-        title: 'Capítulo 3: O Cristianismo Não Pede Cegueira',
-        estimatedReadTime: 4,
-        content: `A caminhada com Deus não é alienação ou desligamento intelectual. É um convite à reflexão íntima.
-
-Permita-se perguntar, investigar e crer com raízes profundas, rejeitando fés rasas de segunda mão baseadas apenas no relato dos outros.`
-      }
-    ]
-  },
-  {
-    id: 'tiago_fiel',
-    title: 'O Fiel — Tiago de Alfeu',
-    subtitle: 'A Fidelidade Discreta de Quem Quase Ninguém Vê',
-    author: 'O Despertar · Livro 7 — Tiago Alfeu',
-    description: 'Para todos os heróis anônimos que servem nos bastidores do Reino, cuja fidelidade discreta sustenta as bases de toda mesa.',
-    isPremium: true,
-    chapters: [
-      {
-        title: 'Capítulo 1: O Discípulo Invisível',
-        estimatedReadTime: 4,
-        content: `Tiago, filho de Alfeu, é o discípulo que quase ninguém conhece. Ele não escreveu epístolas famosas, não pregou grandes sermões para multidões e nunca esteve nos holofotes.
-
-Mas ele estava lá. Em cada lista dos doze, em cada momento decisivo. Às vezes, o maior testemunho que alguém pode dar é simplesmente permanecer e continuar.`
-      },
-      {
-        title: 'Capítulo 2: Os Que Chegam Cedo',
-        estimatedReadTime: 4,
-        content: `Antes que qualquer culto comece, há alguém que chegou mais cedo para acender as luzes, arrumar as cadeiras e preparar o café.
-
-Essas pessoas raramente são mencionadas nos relatórios triunfais do ativismo religioso, mas sem elas a mesa não existe e a graça não se corporifica. Elas são a base constante.`
-      },
-      {
-        title: 'Capítulo 3: O Reino Não É Feito por Estrelas',
-        estimatedReadTime: 4,
-        content: `"Não é sobre ser o melhor. É sobre não parar."
-
-Deus não mede o valor de sua vida pelo tamanho da sua plateia ou pela sua visibilidade pública. Ele vê as orações no quarto secreto, o serviço sem aplauso e a constância diária. Os fiéis anônimos são os verdadeiros sustentadores do movimento.`
-      }
-    ]
-  },
-  {
-    id: 'tadeu_intercessor',
-    title: 'O Intercessor — Tadeu',
-    subtitle: 'A Força Invisível Que Nasce de Joelhos',
-    author: 'O Despertar · Livro 8 — Tadeu',
-    description: 'A jornada de quem sustenta os movimentos na madrugada, descobrindo o valor inestimável da oração persistente e secreta.',
-    isPremium: false,
-    chapters: [
-      {
-        title: 'Capítulo 1: Uma Pergunta Reveladora',
-        estimatedReadTime: 4,
-        content: `Tadeu fez uma única pergunta registrada nos Evangelhos: "Senhor, por que haverás de te manifestar a nós e não ao mundo?"
-
-Essa indagação humilde revelou um coração ávido por intimidade profunda com Deus, alguém que recusava viver de aparências e rituais vazios.`
-      },
-      {
-        title: 'Capítulo 2: Enquanto o Mundo Aplaude o Palco',
-        estimatedReadTime: 4,
-        content: `Enquanto as lideranças sobem aos palcos sob os aplausos e holofotes, os intercessores velam de madrugada no silêncio do deserto.
-
-Seus joelhos calejados marcam o ritmo real de tudo o que acontece no plano espiritual. Todo movimento transformador de Deus sempre começa no lugar oculto.`
-      },
-      {
-        title: 'Capítulo 3: Orai Sem Cessar',
-        estimatedReadTime: 4,
-        content: `"Oramos sem cessar — não porque Deus seja surdo, mas porque o amor é incansável."
-
-A intercessão constante é carregar as dores do outro diante de Deus sem buscar nenhum crédito pessoal. O poder silencioso da oração está à sua espera.`
-      }
-    ]
-  },
-  {
-    id: 'simao_ativador',
-    title: 'O Ativador — Simão Zelote',
-    subtitle: 'Redirecionando a Indignação Para o Reino',
-    author: 'O Despertar · Livro 9 — Simão',
-    description: 'Para quem carrega uma sede inquieta por justiça e mudança, e quer canalizar essa chama fervente no discipulado em mesa.',
-    isPremium: true,
-    chapters: [
-      {
-        title: 'Capítulo 1: O Revolucionário Indignado',
-        estimatedReadTime: 4,
-        content: `Antes de encontrar o Messias, Simão era um ativista zelote armado, envolvido em planos políticos e inflamado de fúria contra a opressão romana.
-
-Quando encontrou Jesus, seu fogo não foi apagado ou reprimido, mas sim redirecionado. Sua indignação santa tornou-se força motriz para o Reino da graça.`
-      },
-      {
-        title: 'Capítulo 2: A Inquietação Como Dom Divino',
-        estimatedReadTime: 4,
-        content: `Se o caos e as incoerências do mundo te incomodam profundamente, saiba que essa inquietação não é uma falha de caráter. É um chamado sagrado.
-
-Deus não escolhe pessoas fáceis e tranquilas demais para mudar o rumo das coisas. Ele chama aqueles que estão incomodados para agir.`
-      },
-      {
-        title: 'Capítulo 3: Ação unida à Contemplação',
-        estimatedReadTime: 4,
-        content: `Simão nos ensina o equilíbrio necessário:
-- Ação sem contemplação é vazia, queima rápido e não deixa frutos.
-- Contemplação sem ação é inútil e morta.
-
-O ativador do Reino une oração profunda e atitude concreta, começando onde está, com uma cadeira e uma mesa aberta.`
+➜ A verdade que liberta está esperando por você em www.somosodespertar.com.br. Baixe o ebook e descubra como dizer o que precisa ser dito com sabedoria.`
       }
     ]
   },
   {
     id: 'filipe_questionador',
-    title: 'O Questionador — Filipe',
-    subtitle: 'Para Quem Não Engole Respostas Fáceis',
-    author: 'O Despertar · Livro 10 — Filipe',
-    description: 'Para quem já se cobrou por questionar dogmas práticos e deseja descobrir a harmonia entre a razão investigativa e a fé viva.',
-    isPremium: true,
+    title: 'O Questionador',
+    subtitle: 'Filipe',
+    author: '05 · O Questionador — Filipe',
+    description: 'Filipe era um homem lógico, calculista, que perguntava tudo. Ele queria entender o plano e ver o Pai de forma nítida. Este livro é para quem já se sentiu culpado por duvidar.',
+    isPremium: false,
     chapters: [
       {
-        title: 'Capítulo 1: Um Homem Lógico e Curioso',
+        title: 'Capítulo 1: A Mente que Calcula',
         estimatedReadTime: 4,
-        content: `Filipe era um homem extremamente racional, dado a cálculos de suficiência e movido por indagações insistentes.
+        content: `Filipe era movido pela racionalidade lógica, cálculos realistas de custos para alimentar multidões e perguntas intensas sobre os planos ocultos. Ele queria enxergar para poder asseverar.
 
-Ele calculou os custos para alimentar as multidões e pediu para Jesus ver o Pai. E em momento algum foi rejeitado ou diminuído em sua busca teológica por causa disso.`
+E Jesus nunca, em tempo algum, o rejeitou ou o diminuiu por causa das suas indagações. Este livro é um refúgio para quem sente uma ponta de culpa secreta por questionar dogmas herméticos e por não se satisfazer com respostas simplórias.`
       },
       {
-        title: 'Capítulo 2: A Dúvida versus a Indiferença',
+        title: 'Capítulo 2: O Motor da Fé',
         estimatedReadTime: 4,
-        content: `"O oposto da fé não é a dúvida legítima. O oposto da fé é a indiferença fria."
+        content: `Você vai entender que a dúvida que surge do desejo ardente de conhecer a essência real de Deus não é fraqueza espiritual, mas sim uma sede profunda e saudável por autenticidade.
 
-A dúvida honesta nasce do desejo sincero de conhecer a Deus e de não se contentar com chavões vazios decorados. Ela age como motor para um relacionamento cada vez mais profundo e despido de vaidades.`
+A dúvida honesta não age como inimiga da fé madura; ela serve como o motor silencioso que impulsiona o caminhante rumo a uma intimidade descomplicada e muito mais profunda.`
       },
       {
-        title: 'Capítulo 3: Ir Além das Próprias Limitações',
+        title: 'Capítulo 3: Perguntas Que Edificam',
         estimatedReadTime: 4,
-        content: `Embora fosse lógico e por vezes hesitante, Filipe cruzou fronteiras culturais ao pregar em Samaria e explicar as Escrituras ao oficial etíope.
+        content: `"O oposto da fé não é a dúvida. O oposto da fé é a indiferença."
 
-O chamado de Deus não requer heróis perfeitos, apenas companheiros dispostos a esticar o braço a quem procura.`
+Permitir-se questionar de forma transparente é manter aceso o fio da busca sincera que a religião de aparências tenta sufocar.
+
+➜ Suas perguntas têm um lugar. Em www.somosodespertar.com.br você encontra o ebook completo e um espaço seguro para continuar questionando — e descobrindo.`
+      }
+    ]
+  },
+  {
+    id: 'natanael_honesto',
+    title: 'O Honesto',
+    subtitle: 'Natanael',
+    author: '06 · O Honesto — Natanael',
+    description: 'Natanael era sincero ao ponto de parecer desconfortável. Quando ouviu "Jesus de Nazaré", respondeu na lata: "Pode vir alguma coisa boa de Nazaré?" Este livro é sobre a liberdade de tirar as máscaras.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: Sinceridade Crua',
+        estimatedReadTime: 4,
+        content: `Natanael era extremamente transparente. Ao ser convidado para conhecer Jesus, soltou seu preconceito espontâneo: "Pode vir alguma coisa boa daquela insignificante Nazaré?"
+
+Surpreendentemente, Jesus elogiou a sua postura autêntica de imediato: "Eis um autêntico israelita em quem não há falsidade espiritual". Jesus não procura pessoas polidas com performances imaculadas; Ele anseia por corações inteiros.`
+      },
+      {
+        title: 'Capítulo 2: Desfazendo as Máscaras',
+        estimatedReadTime: 4,
+        content: `Fomos sistematicamente condicionados pelas estruturas a sorrir de forma forçada quando as bases da nossa vida desabam e a dizer "está tudo sob controle" quando estamos quebrados por dentro.
+
+Este livro trata da coragem libertadora de deitar por terra as máscaras religiosas, sociais e culturais que o medo do julgamento nos impôs ao longo de anos de silenciamento acumulado.`
+      },
+      {
+        title: 'Capítulo 3: Transparência Absoluta',
+        estimatedReadTime: 4,
+        content: `"Quando você para de fingir, abre espaço para a graça de verdade."
+
+Deus não habita em altares de cenografia; Ele se manifesta no chão batido da nossa honestidade real e despida.
+
+➜ A liberdade de ser quem você é começa em www.somosodespertar.com.br. Baixe o ebook e descubra o poder da transparência.`
+      }
+    ]
+  },
+  {
+    id: 'mateus_restaurado',
+    title: 'O Restaurado',
+    subtitle: 'Mateus',
+    author: '07 · O Restaurado — Mateus',
+    description: 'Mateus era o homem mais odiado de sua cidade. Cobrador de impostos, traidor da nação, rico à custa dos pobres. Ninguém sentaria à mesa com ele. Mas Jesus sentou e reescreveu sua história.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: O Rejeitado da Mesa',
+        estimatedReadTime: 4,
+        content: `Mateus cobrava taxas para beneficiar os invasores romanos e tirar o sustento básico de seus concidadãos. Era tido como corrupto incorrigível e excluído de qualquer possibilidade de restauração espiritual pelas leis da época.
+
+Ninguém sob hipótese alguma sentaria à mesma mesa ou jantaria com ele na sua casa. Porém, Jesus contrariou o sistema e sentou-se ao lado dele.`
+      },
+      {
+        title: 'Capítulo 2: Aceito Como Está',
+        estimatedReadTime: 4,
+        content: `O sistema desse mundo prega incansavelmente a barganha por mérito: "Lave suas vestes primeiro, prove que é confiável e então o aceitaremos na roda".
+
+Diferente disso, a graça proclama: "Você é aceito agora, do jeito exato que se encontra. A cura e a reorganização da sua vida serão fruto natural desse amor que te acolheu primeiro".`
+      },
+      {
+        title: 'Capítulo 3: A Mesa da Virada',
+        estimatedReadTime: 4,
+        content: `"Jesus não esperou Mateus melhorar para sentar à mesa com ele."
+
+Mateus levantou-se com o coração quebrantado e a cura de sua alma se desenhou passo a passo ao longo da sua caminhada com o Mestre.
+
+➜ Sua mesa está posta. Em www.somosodespertar.com.br você encontra o ebook completo e o convite para recomeçar.`
+      }
+    ]
+  },
+  {
+    id: 'tome_investigador',
+    title: 'O Investigador',
+    subtitle: 'Tomé',
+    author: '08 · O Investigador — Tomé',
+    description: 'Tomé ficou marcado para sempre como "o incrédulo" por causa de uma frase dita em um momento de dor: "Se eu não vir, não acreditarei." Mas sua honestidade profunda o levou além.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: O Peso de uma Frase',
+        estimatedReadTime: 4,
+        content: `Tomé carregou por gerações uma fama injusta pela frase desabafada no meio do luto: "Enquanto eu não contemplar a marca dos cravos e não colocar minhas mãos nela, não poderei crer."
+
+No entanto, o Mestre encarou sua indagação não como deboche insensato, mas como a mais pura e digna manifestação de honestidade. O cristianismo genuíno não te estimula a desligar o cérebro.`
+      },
+      {
+        title: 'Capítulo 2: O Toque da Realidade',
+        estimatedReadTime: 4,
+        content: `Jesus veio ao meio dos discípulos e estendeu especificamente as marcas físicas dos cravos para Tomé tocar e examinar. Ele não repreendeu a dúvida de seu seguidor de forma intolerante.
+
+A partir desse toque, Tomé proclamou a declaração mais bela do Novo Testamento: "Meu Senhor e meu Deus". A verdade não tem receio de perguntas sinceras.`
+      },
+      {
+        title: 'Capítulo 3: Crer Com Intelectualidade',
+        estimatedReadTime: 4,
+        content: `"A fé que nunca foi testada ou questionada corre o risco de ser uma fé frágil."
+
+A jornada autêntica do questionador é amparada pela própria consistência das evidências do amor eterno de Deus.
+
+➜ A verdade não teme perguntas. Em www.somosodespertar.com.br você encontra o ebook completo para continuar sua investigação.`
+      }
+    ]
+  },
+  {
+    id: 'tiago_alfeu_fiel',
+    title: 'O Fiel',
+    subtitle: 'Tiago (filho de Alfeu)',
+    author: '09 · O Fiel — Tiago (filho de Alfeu)',
+    description: 'Tiago é o discípulo que quase ninguém conhece. Ele não escreveu cartas, não pregou sermões famosos, não está nas manchetes. Mas ele foi fiel. Este livro é uma homenagem aos heróis anônimos.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: O Discípulo Oculto',
+        estimatedReadTime: 4,
+        content: `Tiago, filho de Alfeu, esteve presente nas reuniões reservadas, participou das orações silenciosas na madrugada e estava lá em todas as listas de apóstolos. Mas seu nome quase nunca é citado nos sermões triunfalistas.
+
+Este livro homenageia a persistência daqueles voluntários e heróis anônimos que sustentam o mover da graça longe do olhar das câmeras ou palcos de vaidades.`
+      },
+      {
+        title: 'Capítulo 2: Quem Chega Mais Cedo',
+        estimatedReadTime: 4,
+        content: `Antes de qualquer palavra ser dita diante da congregação dos santos, há alguém que chegou horas antes para destrancar as portas, passar o pano, acalentar os desesperados no banco da retaguarda e encher a garrafa de água.
+
+Essas almas não constam nos panfletos promocionais, mas a mesa existencial da igreja se sustenta integralmente sobre seus braços laboriosos e fiéis.`
+      },
+      {
+        title: 'Capítulo 3: O Alicerce Oculto',
+        estimatedReadTime: 4,
+        content: `"Não é sobre ser o melhor. É sobre simplemente não parar."
+
+Deus não mede a grandeza existencial de um ser humano pela dimensão do palanque que ocupa ou pelas curtidas sociais que coleciona.
+
+➜ A fidelidade invisível é a mais valiosa. Em www.somosodespertar.com.br você encontra o ebook completo e um movimento que valoriza quem continua.`
+      }
+    ]
+  },
+  {
+    id: 'tadeu_intercessor',
+    title: 'O Intercessor',
+    subtitle: 'Tadeu',
+    author: '10 · O Intercessor — Tadeu',
+    description: 'Tadeu fez apenas uma pergunta registrada nos Evangelhos: "Senhor, por que haverás de te manifestar a nós e não ao mundo?" Ele queria entender a força invisível da oração.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: Desejo de Intimidade',
+        estimatedReadTime: 4,
+        content: `A única indagação de Judas Tadeu externou um coração faminto: "Senhor, qual o motivo de te revelares intimamente aos teus companheiros fiéis e não sob a forma de espetáculo visível ao mundo?"
+
+Jesus respondeu que o amor genuíno e a guarda de suas palavras criam uma morada mística que independe do ativismo espalhafatoso dos templos vazios.`
+      },
+      {
+        title: 'Capítulo 2: Força Invisível',
+        estimatedReadTime: 4,
+        content: `Enquanto líderes pregam em palcos grandiosos e capturam todas as atenções, há crentes comuns velando nas madrugadas frias em profundo clamor secreto.
+
+Essa intercessão insistente, invisível e despida de empáfia funciona como o verdadeiro motor propulsor que move o altar da graça em direção aos oprimidos do mundo real.`
+      },
+      {
+        title: 'Capítulo 3: O Clamor da Madrugada',
+        estimatedReadTime: 4,
+        content: `"Orai sem cessar — não porque Deus seja surdo, mas porque o amor é incansável."
+
+A intercessão é carregar generosamente o fardo alheio nas costas espirituais diante de Deus sem requerer louvores de homens.
+
+➜ O poder silencioso da oração te espera em www.somosodespertar.com.br. Baixe o ebook e descubra como sustentar o movimento de joelhos.`
+      }
+    ]
+  },
+  {
+    id: 'simao_ativador',
+    title: 'O Ativador',
+    subtitle: 'Simão (o Zelote)',
+    author: '11 · O Ativador — Simão (o Zelote)',
+    description: 'Simão era um revolucionário armado de raiva e planos de mudança política. Quando encontrou Jesus, seu fogo não foi apagado — foi redirecionado para construir o Reino.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: O Fogo Redirecionado',
+        estimatedReadTime: 4,
+        content: `Antes de optar por caminhar com o carpinteiro de Nazaré, Simão pertencia à seita armada dos zelotes, cujo escopo primordial era decapitar tiranos romanos à força de espada.
+
+Jesus não precisou extirpar o calor interno ou amansar a ferocidade de Simão de forma condescendente. O Mestre apenas redirecionou aquela inquietação revolucionária para a propagação da graça.`
+      },
+      {
+        title: 'Capítulo 2: Inquietação Como Virtude',
+        estimatedReadTime: 4,
+        content: `Se o desespero e a injustiça social ao seu redor te machucam intimamente no cotidiano, assevere que essa inconformidade santa não constitui falha de conduta espiritual.
+
+Constitui, de verdade, um chamado sagrado. Deus raramente escolhe pessoas mansas e acomodadas com o caos estabelecido para semear as sementes do amanhã.`
+      },
+      {
+        title: 'Capítulo 3: Começar do Caos',
+        estimatedReadTime: 4,
+        content: `"Existe gente que olha para o caos da vida e pensa: alguém precisa começar."
+
+Simão não se recolheu no isolamento de um mosteiro estéril; ele pegou sua imensa fúria civilizatória e a converteu em atitude cooperativa de mesa.
+
+➜ Sua inquietação tem um propósito. Em www.somosodespertar.com.br você encontra o ebook completo e um movimento que não nasceu para assistir.`
       }
     ]
   },
   {
     id: 'paulo_semeador',
-    title: 'O Semeador — Paulo',
-    subtitle: 'O Poder de Plantar em Terras Difíceis',
-    author: 'O Despertar · Livro 11 — Paulo',
-    description: 'A formidável jornada de quem começou sozinho no campo hostil, ensinando o poder libertador da liderança servidora.',
-    isPremium: true,
+    title: 'O Semeador',
+    subtitle: 'Paulo',
+    author: '12 · O Semeador — Paulo',
+    description: 'Paulo começou como perseguidor implacável dos cristãos. Mas no caminho para Damasco, uma luz o derrubou. Ele se tornou o maior semeador e plantador de igrejas da história.',
+    isPremium: false,
     chapters: [
       {
-        title: 'Capítulo 1: De Perseguidor a Plantador',
+        title: 'Capítulo 1: O Perseguidor Que Caiu',
         estimatedReadTime: 4,
-        content: `Paulo começou do lado oposto: caçava cristãos com furor implacável e apoiava execuções sob o pretexto de zelo religioso.
+        content: `Paulo agia com fúria cega contra o movimento do Caminho, autorizando açoites e caçando fiéis com convicção dogmática nas sinagogas.
 
-Até que, no caminho de Damasco, uma luz o derrubou ao chão. Sua história prova que nenhum ser humano, por pior que pareça, está fora do alcance de um recomeço.`
+Após ser lançado ao chão pela luz clarividente na poeira de Damasco, sua vida mudou drasticamente de curso. A lição derradeira de Paulo é que ninguém, absolutamente ninguém, está além das linhas do perdão divino.`
       },
       {
-        title: 'Capítulo 2: O Princípio da Primeira Semente',
+        title: 'Capítulo 2: Semear Sozinho na Hostilidade',
         estimatedReadTime: 4,
-        content: `Todo grande movimento restaurador começa com um gesto pequeno e despretensioso: lançar uma semente de amor ao solo.
+        content: `Paulo não demorou aguardando aprovações consensuais, comissões de finanças ou palcos prontos e higienizados. Ele foi às ruas, bordou tendas para se manter e abriu mesas livres e acolhedoras em calabouços infectos e perante conselhos pagãos.
 
-"Não espere as multidões apoiarem. Comece sozinho, se for necessário." Liderança servidora não aguarda circunstâncias favoráveis, ela as cria compartilhando o pão.`
+Liderança servidora autêntica não fica cobrando condições prévias favoráveis; ela se ajoelha na poeira da hostilidade e lança corajosamente a primeira semente.`
       },
       {
-        title: 'Capítulo 3: Uma Cadeira para Iniciar a Mesa',
+        title: 'Capítulo 3: A Cadeira Única',
         estimatedReadTime: 4,
-        content: `Paulo viajou milhares de quilômetros, abrindo mesas em territórios hostis, sinagogas trancadas e calabouços úmidos.
+        content: `"Não espere as multidões apoiarem. Comece sozinho, se for estritamente necessário."
 
-Mas todas as suas cem comunidades começaram da mesma forma simples: com uma única cadeira vazia e um convite sincero para sentar e partilhar a verdade.`
-      }
-    ]
-  },
-  {
-    id: 'andre_conector',
-    title: 'O Conector — André',
-    subtitle: 'Não Precisa Ser Líder Para Mudar o Mundo',
-    author: 'O Despertar · Livro 12 — André',
-    description: 'A discreta história do homem que trouxe Pedro a Jesus e descobriu que o Evangelho se propaga de pessoa para pessoa, numa mesa comum.',
-    isPremium: true,
-    chapters: [
-      {
-        title: 'Capítulo 1: O Irmão do Famoso',
-        estimatedReadTime: 4,
-        content: `André era irmão de Simão Pedro, a grande estrela da igreja em Pentecostes. Ele nunca subiu a grandes palcos, mas foi quem encontrou Jesus primeiro e correu para dizer ao irmão: "Vem ver."
+Qualquer comunidade de mesa que hoje embeleza a nossa caminhada espiritual nasceu da humilde coragem de uma única pessoa estender uma cadeira vazia na sala e convidar outro sem pressa.
 
-Antes dos holofotes, houve alguém que se importou o suficiente para guiar o outro com dedicação.`
-      },
-      {
-        title: 'Capítulo 2: O Evangelho Não Requer Plataformas',
-        estimatedReadTime: 4,
-        content: `"Você não precisa de um grande palco para transformar o mundo. Você só precisa de uma mesa comum."
-
-O Evangelho não cresce de estrutura em estrutura ou de megafones para plateias passivas. Ele flui de pessoa para pessoa, no acolhimento diário.`
-      },
-      {
-        title: 'Capítulo 3: Criando Pontes Entre os Outros',
-        estimatedReadTime: 4,
-        content: `André era exímio em escutar atentamente e estender as mãos. Foi ele quem localizou o jovem com cinco pães e dois peixes na multidão com fome, e quem facilitou o acesso dos estrangeiros ao Mestre.
-
-Conectores de alma nos lembram que dar espaço e visibilidade aos outros é a própria essência da graça.`
+➜ Toda grande mesa começou com uma cadeira. Em www.somosodespertar.com.br você encontra o ebook completo e o convite para plantar sua primeira semente hoje.`
       }
     ]
   }
