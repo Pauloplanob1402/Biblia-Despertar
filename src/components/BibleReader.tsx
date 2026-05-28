@@ -40,8 +40,8 @@ export default function BibleReader({
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTestament, setActiveTestament] = useState<'todos' | 'velho' | 'novo'>('todos');
 
-  // Multi-translation loaded bibles states
-  const [translationName, setTranslationName] = useState<'acf' | 'nvi' | 'aa'>('acf');
+  // Single-translation (Using ACF - Almeida Corrigida Fiel, copyright/royalty-free)
+  const translationName = 'acf';
   const [loadedBibles, setLoadedBibles] = useState<{ [key: string]: RawTranslationBook[] }>({});
   const [syncStatus, setSyncStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
@@ -171,12 +171,8 @@ export default function BibleReader({
     setSelectedVerseKey(null); // Close
   };
 
-  const translateVersionName = (vName: 'acf' | 'nvi' | 'aa') => {
-    switch (vName) {
-      case 'acf': return 'Almeida Corrigida Fiel (ACF)';
-      case 'nvi': return 'Nova Versão Internacional (NVI)';
-      case 'aa': return 'Almeida Revista e Atualizada (AA)';
-    }
+  const translateVersionName = (vName: 'acf') => {
+    return 'Almeida Corrigida Fiel (ACF)';
   };
 
   return (
@@ -317,22 +313,9 @@ export default function BibleReader({
 
             {/* Translation switch and sync indicators */}
             <div className="flex flex-wrap items-center mt-2.5 gap-2">
-              <div className="flex bg-stone-100 p-0.5 rounded-lg border border-stone-200/50 shadow-sm shrink-0">
-                {(['acf', 'nvi', 'aa'] as const).map((ver) => (
-                  <button
-                    key={ver}
-                    id={`btn-switch-ver-${ver}`}
-                    onClick={() => setTranslationName(ver)}
-                    className={`px-3 py-1 text-[9px] font-mono font-bold uppercase rounded-md transition ${
-                      translationName === ver
-                        ? 'bg-white text-[#C08261] shadow-sm'
-                        : 'text-stone-500 hover:text-stone-800'
-                    }`}
-                  >
-                    {ver}
-                  </button>
-                ))}
-              </div>
+              <span className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase bg-stone-100 border border-stone-200 text-stone-700/90 rounded-md shadow-sm">
+                Almeida Corrigida Fiel (ACF)
+              </span>
 
               {/* Status Badge */}
               <div className="text-[10px] font-mono text-stone-500 flex items-center gap-1.5 shadow-inner">
@@ -412,7 +395,14 @@ export default function BibleReader({
                       Conecte-se à internet para carregar instantaneamente qualquer um dos 66 livros da bíblia em múltiplos formatos.
                     </p>
                     <button
-                      onClick={() => setTranslationName(translationName)} // trigger re-fetch retry
+                      onClick={() => {
+                        setLoadedBibles(prev => {
+                          const copy = { ...prev };
+                          delete copy[translationName];
+                          return copy;
+                        });
+                        setSyncStatus('loading');
+                      }}
                       className="mt-4 px-5 py-2 bg-stone-850 hover:bg-stone-900 text-white text-xs font-semibold rounded-xl shadow-sm transition active:scale-95 duration-150 inline-block"
                     >
                       Tentar Sincronizar Agora

@@ -135,36 +135,229 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-stone-900 flex flex-col md:flex-row antialiased selection:bg-[#C08261]/20">
       
-      {/* SIDEBAR: Desktop Premium Navigation Drawer (Width: 280px) */}
-      <aside className="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r border-stone-200/55 flex flex-col shrink-0 md:h-screen sticky top-0 z-30">
+      {/* MOBILE STICKY HEADER */}
+      <header className="md:hidden w-full bg-white border-b border-stone-200/55 flex items-center justify-between p-4 sticky top-0 z-30 shrink-0">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-stone-900 rounded-xl flex items-center justify-center text-white font-serif font-semibold shadow-inner">
+            B
+          </div>
+          <div className="text-left">
+            <h1 className="font-serif text-[13px] font-bold tracking-tight text-stone-850">Bíblia do Despertar</h1>
+            <span className="text-[8px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
+          </div>
+        </div>
+        
+        <button 
+          id="mobile-menu-toggle" 
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="px-3.5 py-1.5 text-xs font-mono font-bold tracking-wider uppercase text-[#C08261] bg-stone-50 hover:bg-stone-100 rounded-xl border border-stone-200/50 transition flex items-center space-x-1"
+        >
+          <span>Menu ☰</span>
+        </button>
+      </header>
+
+      {/* MOBILE TRANSPARENT DRAWER & BACKDROP OVERLAY */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Dark blur backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-stone-900 z-40 md:hidden"
+            />
+            {/* Slide-out drawer panel */}
+            <motion.aside
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 26, stiffness: 220 }}
+              className="fixed top-0 bottom-0 left-0 w-80 max-w-[85vw] bg-white z-50 shadow-2xl flex flex-col h-full border-r border-stone-200 md:hidden"
+            >
+              {/* Brand Header */}
+              <div className="p-5 border-b border-stone-100 flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-stone-900 rounded-xl flex items-center justify-center text-white font-serif font-semibold shadow-inner">
+                    B
+                  </div>
+                  <div className="text-left">
+                    <h1 className="font-serif text-[14px] font-bold tracking-tight text-stone-850">Bíblia do Despertar</h1>
+                    <span className="text-[8.5px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-2.5 py-1 text-[11px] font-mono font-medium text-[#C08261] bg-stone-50 hover:bg-stone-100 rounded-lg border border-stone-200/50"
+                >
+                  Fechar ✕
+                </button>
+              </div>
+
+              {/* User Profile context if exists */}
+              {currentIdentity && (
+                <div className="p-5 border-b border-stone-100 bg-stone-50/50 flex items-center space-x-3 text-left">
+                  <div 
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-serif shadow-sm shrink-0"
+                    style={{ backgroundColor: currentIdentity.hexColor }}
+                  >
+                    {currentIdentity.name.charAt(2)}
+                  </div>
+                  <div className="truncate">
+                    <span className="text-[9px] uppercase tracking-wider font-semibold text-stone-400 font-mono">Identidade Atual:</span>
+                    <h5 className="font-serif text-[13px] font-semibold text-stone-800 truncate">{currentIdentity.name}</h5>
+                  </div>
+                </div>
+              )}
+
+              {/* Drawer Navigation items list */}
+              <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+                <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 mb-2 text-left">Santuário</span>
+                
+                <button
+                  id="mobile-nav-home"
+                  onClick={() => { setActiveSection('home'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Heart size={14} />
+                    <span>Pausa & Respirar</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-bible"
+                  onClick={() => { setActiveSection('bible'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'bible' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Book size={14} />
+                    <span>Bíblia (ACF)</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-devotionals"
+                  onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'devotionals' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Feather size={14} />
+                    <span>30 Devocionais Reais</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-profiles"
+                  onClick={() => { setActiveSection('profiles'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'profiles' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Compass size={14} />
+                    <span>Os 12 Temperamentos</span>
+                  </span>
+                </button>
+
+                <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 pt-5 mb-2 text-left">Comunidade & Estudos</span>
+
+                <button
+                  id="mobile-nav-mesas"
+                  onClick={() => { setActiveSection('mesas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Coffee size={14} />
+                    <span>Mesas do Despertar</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-ebooks"
+                  onClick={() => { setActiveSection('ebooks'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'ebooks' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <FileText size={14} />
+                    <span>Catálogo Ebooks</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-profile"
+                  onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'profile' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <User size={14} />
+                    <span>Minha Jornada</span>
+                  </span>
+                </button>
+
+                <span className="text-[9px] uppercase font-mono tracking-widest text-[#8C6239] block px-3 pt-5 mb-2 text-left">Equipe Sênior</span>
+
+                <button
+                  id="mobile-nav-android-hub"
+                  onClick={() => { setActiveSection('android_hub'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'android_hub' ? 'bg-[#C08261]/15 text-[#C08261] font-semibold border-l-2 border-[#C08261]' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Code size={14} />
+                    <span>Código Android Studio</span>
+                  </span>
+                </button>
+              </nav>
+
+              {/* Drawer streak indicators */}
+              <div className="p-5 border-t border-stone-200 bg-stone-50 flex justify-between items-center text-stone-500 text-xs">
+                <div className="flex items-center space-x-1">
+                  <Flame size={14} className="text-[#C08261] animate-pulse" />
+                  <span className="font-mono font-medium">{progress.streak} dias de quietude</span>
+                </div>
+                <span className="text-[10px] text-stone-400 font-mono">v1.0</span>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+      
+      {/* SIDEBAR: Permanent Desktop Premium Navigation Panel (Width: 280px) */}
+      <aside className="hidden md:flex w-72 bg-white border-r border-stone-200/55 flex-col shrink-0 h-screen sticky top-0 z-30">
         
         {/* Brand Header */}
-        <div className="p-6 border-b border-stone-100 flex items-center justify-between bg-white z-40">
+        <div className="p-6 border-b border-stone-100 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-3">
             <div className="w-9 h-9 bg-stone-900 rounded-2xl flex items-center justify-center text-white font-serif font-semibold shadow-inner">
               B
             </div>
             <div className="text-left">
               <h1 className="font-serif text-[15px] font-bold tracking-tight text-stone-850">Bíblia do Despertar</h1>
-              <span className="text-[9px] font-mono tracking-widest text-[#C08261] uppercase">Contemplativa</span>
+              <span className="text-[9px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
             </div>
           </div>
-          
-          {/* Mobile hamburger button */}
-          <button 
-            id="mobile-menu-toggle" 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden px-3.5 py-1.5 text-xs font-mono font-bold tracking-wider uppercase text-[#C08261] bg-stone-50 hover:bg-stone-101 rounded-xl border border-stone-200/50 transition flex items-center space-x-1"
-          >
-            <span>{isMobileMenuOpen ? 'Fechar ✕' : 'Menu ☰'}</span>
-          </button>
         </div>
 
-        {/* User context card (Left mini-deck) - Collapsible on mobile */}
+        {/* User context card (Left mini-deck) */}
         {currentIdentity && (
-          <div className={`p-5 border-b border-stone-100 bg-stone-50/50 flex items-center space-x-3 text-left ${isMobileMenuOpen ? 'flex' : 'hidden md:flex'}`}>
+          <div className="p-5 border-b border-stone-100 bg-stone-50/50 flex items-center space-x-3 text-left">
             <div 
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-serif font-sans shadow-sm shrink-0"
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-serif shadow-sm shrink-0"
               style={{ backgroundColor: currentIdentity.hexColor }}
             >
               {currentIdentity.name.charAt(2)}
@@ -176,13 +369,13 @@ export default function App() {
           </div>
         )}
 
-        {/* Navigation lists (Airbnb/Calm style) - Collapsible on mobile */}
-        <nav className={`flex-1 p-4 space-y-1 overflow-y-auto ${isMobileMenuOpen ? 'block bg-white' : 'hidden md:block'}`}>
-          <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 mb-2 text-left">Santúario</span>
+        {/* Navigation lists */}
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 mb-2 text-left">Santuário</span>
           
           <button
             id="nav-home"
-            onClick={() => { setActiveSection('home'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+            onClick={() => { setActiveSection('home'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -196,7 +389,7 @@ export default function App() {
 
           <button
             id="nav-bible"
-            onClick={() => { setActiveSection('bible'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+            onClick={() => { setActiveSection('bible'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'bible' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -209,7 +402,7 @@ export default function App() {
 
           <button
             id="nav-devotionals"
-            onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+            onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'devotionals' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -222,7 +415,7 @@ export default function App() {
 
           <button
             id="nav-profiles"
-            onClick={() => { setActiveSection('profiles'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+            onClick={() => { setActiveSection('profiles'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'profiles' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -237,7 +430,7 @@ export default function App() {
 
           <button
             id="nav-mesas"
-            onClick={() => { setActiveSection('mesas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+            onClick={() => { setActiveSection('mesas'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -250,7 +443,7 @@ export default function App() {
 
           <button
             id="nav-ebooks"
-            onClick={() => { setActiveSection('ebooks'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+            onClick={() => { setActiveSection('ebooks'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'ebooks' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -263,7 +456,7 @@ export default function App() {
 
           <button
             id="nav-profile"
-            onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+            onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'profile' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -278,7 +471,7 @@ export default function App() {
 
           <button
             id="nav-android-hub"
-            onClick={() => { setActiveSection('android_hub'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+            onClick={() => { setActiveSection('android_hub'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'android_hub' ? 'bg-[#C08261]/15 text-[#C08261] font-semibold border-l-2 border-[#C08261]' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -290,8 +483,8 @@ export default function App() {
           </button>
         </nav>
 
-        {/* Footer streak count - Collapsible on mobile */}
-        <div className={`p-5 border-t border-stone-100 flex justify-between items-center bg-stone-50 text-stone-500 text-xs ${isMobileMenuOpen ? 'flex' : 'hidden md:flex'}`}>
+        {/* Footer streak count */}
+        <div className="p-5 border-t border-stone-100 flex justify-between items-center bg-stone-50 text-stone-500 text-xs">
           <div className="flex items-center space-x-1">
             <Flame size={14} className="text-[#C08261] animate-pulse" />
             <span className="font-mono font-medium">{progress.streak} dias de quietude</span>
