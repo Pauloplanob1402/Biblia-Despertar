@@ -30,7 +30,7 @@ const INITIAL_MESAS: Mesa[] = [
     id: 'mesa2',
     title: 'Mesa Reconciliação • Savassi',
     hostName: 'Pra. Glória Albuquerque',
-    hostBio: 'Buscadora contemplativa e conselheira espiritual focada na cura de feridas pós-traumas religiosos.',
+    hostBio: 'Caminhante contemplativa e conselheira focada na acolhida e cura de feridas por traumas religiosos.',
     city: 'Belo Horizonte',
     state: 'MG',
     type: 'In-person',
@@ -43,9 +43,9 @@ const INITIAL_MESAS: Mesa[] = [
   },
   {
     id: 'mesa3',
-    title: 'Mesa Contemplativa Digital',
+    title: 'Mesa do Recomeço Digital',
     hostName: 'Mateus Silveira',
-    hostBio: 'Pastor local no interior de Santa Catarina e apaixonado pela mística de Isaías.',
+    hostBio: 'Pastor local no interior de Santa Catarina e apaixonado pela profundidade de Isaías.',
     city: 'Online',
     state: 'SC',
     type: 'Online',
@@ -210,7 +210,7 @@ export default function MesasSection({ onStartChat, onOpenAuth }: MesasSectionPr
 
   const getIdentityLabel = (id: string) => {
     switch(id) {
-      case 'contemplative': return 'O Contemplativo 🕊️';
+      case 'contemplative': return 'Alma Silenciosa 🕊️';
       case 'rational': return 'O Reformador 📖';
       case 'emotional': return 'O Adorador 🔥';
       case 'practician': return 'O Prático 🌿';

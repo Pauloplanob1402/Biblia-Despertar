@@ -10,7 +10,7 @@ export const DEVOCIONAIS: Devotional[] = [
     id: 'dev1',
     title: 'A pressa é uma forma de ateísmo prático',
     scripture: 'Salmos 46:10 - "Aquietai-vos, e sabei que eu sou Deus."',
-    text: 'Vivemos correndo atrás de um amanhã que nunca chega, como se o sustento de todo o universo dependesse dos nossos passos estressados. Quando corremos sem parar, estamos sussurrando para nós mesmos: "Deus não vai dar conta, eu preciso fazer acontecer". A pressa rouba a nossa capacidade de ver o milagre do agora. A oração não é um meio para acelerar os planos do céu; é o lugar onde desaceleramos para respirar o amor que já nos foi dado de graça.',
+    text: 'Vivemos correndo atrás de um amanhã que nunca chega, como se o sustento de toda a criação dependesse dos nossos passos estressados. Quando corremos sem parar, estamos sussurrando para nós mesmos: "Deus não vai dar conta, eu preciso fazer acontecer". A pressa rouba a nossa capacidade de ver o milagre do agora. A oração não é um meio para acelerar os planos do céu; é o lugar onde desaceleramos para respirar o amor que já nos foi dado de graça.',
     pauseInstruction: 'Respire profundamente por 4 segundos. Segure por 4 segundos. Solte o ar devagar em 4 segundos. Sinta o peso saindo dos seus ombros.',
     prayer: 'Pai bondoso, perdoa-me pelo desespero disfarçado de produtividade. Escolho desacelerar para Te ver no silêncio da minha respiração. Amém.',
     graceInPractice: 'Durante as próximas 3 horas, não olhe para o celular enquanto conversa ou come. Esteja presente por inteiro.',
@@ -43,11 +43,11 @@ export const DEVOCIONAIS: Devotional[] = [
     id: 'dev4',
     title: 'O peso invisível do amanhã',
     scripture: 'Mateus 6:34 - "Não vos inquieteis, pois, pelo dia de amanhã; porque o dia de amanhã cuidará de si mesmo."',
-    text: 'A ansiedade é tentar viver o futuro no presente, gastando a energia de hoje com batalhas que ainda não existem. Imaginamos mil cenários trágicos e esquecemos que a graça de Deus não é cumulativa: ela é distribuída diariamente, como o maná no deserto. Você não tem graça hoje para suportar as dores de amanhã; mas amanhã, quando o sol nascer, a provisão e a misericórdia estarão lá, fresquinhas e suficientes para o dia.',
+    text: 'A ansiedade é tentar viver o futuro no presente, gastando as forças de hoje com batalhas que ainda não existem. Imaginamos mil cenários trágicos e esquecemos que a graça de Deus não é cumulativa: ela é distribuída diariamente, como o maná no deserto. Você não tem graça hoje para suportar as dores de amanhã; mas amanhã, quando o sol nascer, a provisão e a misericórdia estarão lá, fresquinhas e suficientes para o dia.',
     pauseInstruction: 'Feche os olhos. Concentre toda a sua atenção no peso que você sente no pescoço. Deixe-o ir com cada expiração lenta.',
     prayer: 'Deus de provisão, entrego-Te minhas preocupações financeiras e familiares do próximo mês. Descanso sabendo que Tu és o Senhor do tempo. Amém.',
     graceInPractice: 'Anote em um papel tudo o que te preocupa sobre o futuro. Guarde-o em uma gaveta fechada e repita mentalmente: "Dele cuidará o Senhor".',
-    reflectiveQuestion: 'Que fração da sua energia de hoje você está desperdiçando ao lutar contra fantasmas do futuro?',
+    reflectiveQuestion: 'Que fração das suas forças de hoje você está desperdiçando ao lutar contra fantasmas do futuro?',
     category: 'Sossego'
   },
   {

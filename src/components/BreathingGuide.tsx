@@ -157,7 +157,7 @@ export default function BreathingGuide() {
       <div className="flex items-center justify-between w-full border-b border-stone-100 pb-4 mb-2 z-10">
         <div className="flex items-center space-x-2">
           <div className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse" />
-          <p className="text-xs font-mono tracking-widest text-stone-500 uppercase">Espaço Contemplativo</p>
+          <p className="text-xs font-mono tracking-widest text-stone-500 uppercase">Respiro do Secreto</p>
         </div>
         <button
           id="btn-toggle-hum-sound"
@@ -165,7 +165,7 @@ export default function BreathingGuide() {
           className={`p-2 rounded-full transition-all duration-300 ${
             audioEnabled ? 'bg-amber-100 text-amber-800' : 'bg-stone-100 text-stone-400 hover:text-stone-700'
           }`}
-          title={audioEnabled ? "Silenciar ambiente" : "Ativar som de meditação"}
+          title={audioEnabled ? "Silenciar ambiente" : "Ativar som de quietude"}
         >
           {audioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
         </button>
@@ -237,7 +237,7 @@ export default function BreathingGuide() {
           {isPlaying ? config.text : 'Aquiete o seu coração'}
         </h3>
         <p className="text-stone-500 text-sm max-w-xs leading-relaxed">
-          {isPlaying ? config.desc : 'Clique em começar para darmos início a um ciclo prânico de 4 segundos de equilíbrio.'}
+          {isPlaying ? config.desc : 'Clique em começar para darmos início a um momento de silêncio e equilíbrio de 4 segundos.'}
         </p>
       </div>
 

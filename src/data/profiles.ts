@@ -8,14 +8,14 @@ import { SpiritualIdentity } from '../types';
 export const DESPERTAR_PROFILES: SpiritualIdentity[] = [
   {
     id: 'contemplativo',
-    name: 'O Contemplativo',
+    name: 'Alma Silenciosa',
     subtitle: 'A quietude na Presença Infinita',
     quote: 'Na quietude e na confiança estará a vossa força.',
     description: 'Você encontra Deus no silêncio, na pausa e no recolhimento. Rejeita o barulho superficial e as atividades frenéticas da rotina religiosa, sabendo que as palavras mais profundas são ditas no mistério do secreto.',
     scripture: 'Isaías 30:15 - "Porque assim diz o Senhor Deus... Em vos converterdes e em repousardes estaria a vossa salvação; no sossego e na confiança estaria a vossa força."',
     reflectiveQuestion: 'Como o medo do silêncio tem impedido você de ouvir os sussurros de carinho do Pai?',
     prayer: 'Pai do silêncio, aquieta minhas tempestades mentais. Ensina-me a não temer o vazio, pois é nele que Tua doce brisa sopra. Amém.',
-    archetype: 'O Místico Solitário',
+    archetype: 'Buscador Solitário',
     emotionalTrigger: 'Busca por profundidade em um mundo de ruídos incessantes.',
     coreFeeling: 'Desejo infinito de intimidade pura e desarmada.',
     hexColor: '#3F4E4F' // Deep forest grey/slate
@@ -87,7 +87,7 @@ export const DESPERTAR_PROFILES: SpiritualIdentity[] = [
     prayer: 'Príncipe da Paz, faça de mim uma ferramenta de reconciliação. Onde houver ódio, que eu leve o abraço sincero da Tua graça soberana. Amém.',
     archetype: 'O Tecedor de Pontes',
     emotionalTrigger: 'Desconforto físico e espiritual em ambientes cheios de discórdia e orgulho.',
-    coreFeeling: 'Harmonia cósmica inspirada pela sabedoria do Alto.',
+    coreFeeling: 'Paz profunda inspirada pela sabedoria do Alto.',
     hexColor: '#7882A4' // Dusty denim slate
   },
   {

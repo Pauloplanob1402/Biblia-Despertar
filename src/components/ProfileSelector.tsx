@@ -218,15 +218,15 @@ export default function ProfileSelector({ currentIdentityId, onSelectIdentity }:
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-black/10 p-5 rounded-2xl border border-white/5">
                     <div>
-                      <span className="text-[10px] uppercase font-mono tracking-widest text-white/50 block mb-1">Âncoras de Caráter</span>
+                      <span className="text-[10px] uppercase font-mono tracking-widest text-white/50 block mb-1">Sede e Busca</span>
                       <ul className="text-xs space-y-1 text-stone-200">
-                        <li>• <strong className="text-white">Arquétipo:</strong> {quizResult.archetype}</li>
-                        <li>• <strong className="text-white">Gatilho Emocional:</strong> {quizResult.emotionalTrigger}</li>
-                        <li>• <strong className="text-white">Sentimento Central:</strong> {quizResult.coreFeeling}</li>
+                        <li>• <strong className="text-white">Estilo:</strong> {quizResult.archetype}</li>
+                        <li>• <strong className="text-white">Sede Interior:</strong> {quizResult.emotionalTrigger}</li>
+                        <li>• <strong className="text-white">Anseio da Alma:</strong> {quizResult.coreFeeling}</li>
                       </ul>
                     </div>
                     <div>
-                      <span className="text-[10px] uppercase font-mono tracking-widest text-white/50 block mb-1">Versículo Farol</span>
+                      <span className="text-[10px] uppercase font-mono tracking-widest text-white/50 block mb-1">Palavra Viva</span>
                       <p className="text-[11px] leading-relaxed italic text-amber-100">{quizResult.scripture}</p>
                     </div>
                   </div>
@@ -324,12 +324,12 @@ export default function ProfileSelector({ currentIdentityId, onSelectIdentity }:
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                     <div className="p-4 bg-stone-50 border border-stone-200/50 rounded-xl text-xs space-y-1">
-                      <span className="font-semibold text-[#8C6239] block mb-1">Arquétipo & Emoções:</span>
-                      <p><strong>Gatilho:</strong> {selectedViewedProfile.emotionalTrigger}</p>
-                      <p><strong>Sentimento Central:</strong> {selectedViewedProfile.coreFeeling}</p>
+                      <span className="font-semibold text-[#8C6239] block mb-1">Caminho do Coração:</span>
+                      <p><strong>Sede Interior:</strong> {selectedViewedProfile.emotionalTrigger}</p>
+                      <p><strong>Anseio Profundo:</strong> {selectedViewedProfile.coreFeeling}</p>
                     </div>
                     <div className="p-4 bg-stone-50 border border-stone-200/50 rounded-xl text-xs">
-                      <span className="font-semibold text-[#C08261] block mb-1">Versículo Clave:</span>
+                      <span className="font-semibold text-[#C08261] block mb-1">Versículo Chave:</span>
                       <p className="italic text-stone-600">"{selectedViewedProfile.scripture}"</p>
                     </div>
                   </div>

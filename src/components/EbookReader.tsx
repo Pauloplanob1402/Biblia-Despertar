@@ -74,10 +74,10 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
       {!isReadingMode ? (
         <div className="space-y-6">
           <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-semibold">Biblioteca Espiritual</span>
-            <h3 className="font-serif text-3xl font-light text-stone-800">Ebooks do Ecossistema</h3>
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-bold">Livros da Jornada</span>
+            <h3 className="font-serif text-3xl font-light text-stone-800">Cultura de Graça</h3>
             <p className="text-stone-500 text-sm">
-              Explore literatura contemplativa exclusiva para guiar sua família, carreira, propósito e negócios à luz da cruz.
+              Explore os livros e guias oficiais do movimento O Despertar. Leituras leves e transformadoras para renovar sua caminhada sem o peso de performances.
             </p>
           </div>
 

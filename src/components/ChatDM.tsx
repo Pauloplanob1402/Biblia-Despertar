@@ -280,7 +280,7 @@ export default function ChatDM({
         {sharedVotes > 0 && (
           <div className="hidden sm:flex items-center space-x-1 bg-amber-50 border border-amber-200/55 px-3 py-1.5 rounded-full text-[10px] font-mono text-[#8C6239] font-medium leading-none">
             <span>🔥</span>
-            <span>{sharedVotes} meditações em comum</span>
+            <span>{sharedVotes} leituras em comum</span>
           </div>
         )}
       </div>
@@ -288,7 +288,7 @@ export default function ChatDM({
       {/* SHARED DEPRECATED BANNER FOR SMALL MESSAGES */}
       {sharedVotes > 0 && (
         <div className="sm:hidden bg-amber-50/70 border-b border-amber-200/40 py-1.5 text-center text-[10px] font-mono text-[#8C6239]">
-          🔥 Vocês compartilham {sharedVotes} afinidades meditativas
+          🔥 Vocês compartilham {sharedVotes} afinidades de fé
         </div>
       )}
 

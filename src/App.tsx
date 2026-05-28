@@ -19,6 +19,7 @@ import EbookReader from './components/EbookReader';
 import MesasSection from './components/MesasSection';
 import AuthModal from './components/AuthModal';
 import ChatDM from './components/ChatDM';
+import ManifestoSection from './components/ManifestoSection';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
@@ -224,11 +225,11 @@ export default function App() {
       <header className="md:hidden w-full bg-white border-b border-stone-200/55 flex items-center justify-between p-4 sticky top-0 z-30 shrink-0">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-stone-900 rounded-xl flex items-center justify-center text-white font-serif font-semibold shadow-inner">
-            B
+            D
           </div>
           <div className="text-left">
-            <h1 className="font-serif text-[13px] font-bold tracking-tight text-stone-850">Bíblia do Despertar</h1>
-            <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
+            <h1 className="font-serif text-[13px] font-bold tracking-tight text-stone-850">O Despertar</h1>
+            <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block font-semibold text-[10px]">Mesa e Caminho</span>
           </div>
         </div>
         
@@ -265,11 +266,11 @@ export default function App() {
               <div className="p-5 border-b border-stone-100 flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-stone-900 rounded-xl flex items-center justify-center text-white font-serif font-semibold shadow-inner">
-                    B
+                    D
                   </div>
                   <div className="text-left">
-                    <h1 className="font-serif text-[14px] font-bold tracking-tight text-stone-850">Bíblia do Despertar</h1>
-                    <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
+                    <h1 className="font-serif text-[14px] font-bold tracking-tight text-stone-850">O Despertar</h1>
+                    <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block font-semibold text-[10px]">Mesa e Caminho</span>
                   </div>
                 </div>
                 <button
@@ -316,8 +317,8 @@ export default function App() {
               )}
 
               {/* Drawer Navigation items list */}
-              <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-                <span className="text-[11px] uppercase font-mono tracking-wider font-semibold text-stone-500 block px-3 mb-2 text-left">Santuário</span>
+              <nav className="flex-1 p-4 space-y-1 overflow-y-auto w-full">
+                <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2 text-left">Santuário do Secreto</span>
                 
                 <button
                   id="mobile-nav-home"
@@ -328,7 +329,7 @@ export default function App() {
                 >
                   <span className="flex items-center space-x-2.5">
                     <Heart size={14} />
-                    <span>Pausa & Respirar</span>
+                    <span>Instante de Respiro</span>
                   </span>
                 </button>
 
@@ -341,7 +342,7 @@ export default function App() {
                 >
                   <span className="flex items-center space-x-2.5">
                     <Book size={14} />
-                    <span>Bíblia (ACF)</span>
+                    <span>Palavra Viva</span>
                   </span>
                 </button>
 
@@ -354,7 +355,7 @@ export default function App() {
                 >
                   <span className="flex items-center space-x-2.5">
                     <Feather size={14} />
-                    <span>30 Devocionais Reais</span>
+                    <span>30 Dias no Secreto</span>
                   </span>
                 </button>
 
@@ -367,11 +368,11 @@ export default function App() {
                 >
                   <span className="flex items-center space-x-2.5">
                     <Compass size={14} />
-                    <span>Os 12 Temperamentos</span>
+                    <span>Caminhos do Coração</span>
                   </span>
                 </button>
 
-                <span className="text-[11px] uppercase font-mono tracking-wider font-semibold text-stone-500 block px-3 pt-5 mb-2 text-left">Comunidade & Estudos</span>
+                <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 pt-5 mb-2 text-left">Mesa & Comunhão</span>
 
                 <button
                   id="mobile-nav-mesas"
@@ -382,7 +383,7 @@ export default function App() {
                 >
                   <span className="flex items-center space-x-2.5">
                     <Coffee size={14} />
-                    <span>Mesas do Despertar</span>
+                    <span>Mesas de Comunhão</span>
                   </span>
                 </button>
 
@@ -395,7 +396,7 @@ export default function App() {
                 >
                   <span className="flex items-center space-x-2.5">
                     <FileText size={14} />
-                    <span>Catálogo Ebooks</span>
+                    <span>Livros da Jornada</span>
                   </span>
                 </button>
 
@@ -408,7 +409,7 @@ export default function App() {
                 >
                   <span className="flex items-center space-x-2.5">
                     <User size={14} />
-                    <span>Minha Jornada</span>
+                    <span>Minha Caminhada</span>
                   </span>
                 </button>
               </nav>
@@ -433,11 +434,11 @@ export default function App() {
         <div className="p-6 border-b border-stone-100 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-3">
             <div className="w-9 h-9 bg-stone-900 rounded-2xl flex items-center justify-center text-white font-serif font-semibold shadow-inner">
-              B
+              D
             </div>
             <div className="text-left">
-              <h1 className="font-serif text-[15px] font-bold tracking-tight text-stone-850">Bíblia do Despertar</h1>
-              <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
+              <h1 className="font-serif text-[15px] font-bold tracking-tight text-stone-850">O Despertar</h1>
+              <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block font-semibold text-[10px]">Mesa e Caminho</span>
             </div>
           </div>
         </div>
@@ -479,7 +480,7 @@ export default function App() {
 
         {/* Navigation lists */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          <span className="text-[11px] uppercase font-mono tracking-wider font-semibold text-stone-500 block px-3 mb-2 text-left">Santuário</span>
+          <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2 text-left">Santuário do Secreto</span>
           
           <button
             id="nav-home"
@@ -490,7 +491,7 @@ export default function App() {
           >
             <span className="flex items-center space-x-2.5">
               <Heart size={14} />
-              <span>Pausa & Respirar</span>
+              <span>Instante de Respiro</span>
             </span>
             <ChevronRight size={12} className="opacity-0 group-hover:opacity-100" />
           </button>
@@ -504,7 +505,7 @@ export default function App() {
           >
             <span className="flex items-center space-x-2.5">
               <Book size={14} />
-              <span>Bíblia (ACF)</span>
+              <span>Palavra Viva</span>
             </span>
           </button>
 
@@ -517,7 +518,7 @@ export default function App() {
           >
             <span className="flex items-center space-x-2.5">
               <Feather size={14} />
-              <span>30 Devocionais Reais</span>
+              <span>30 Dias no Secreto</span>
             </span>
           </button>
 
@@ -530,11 +531,11 @@ export default function App() {
           >
             <span className="flex items-center space-x-2.5">
               <Compass size={14} />
-              <span>Os 12 Temperamentos</span>
+              <span>Caminhos do Coração</span>
             </span>
           </button>
 
-          <span className="text-[11px] uppercase font-mono tracking-wider font-semibold text-stone-500 block px-3 pt-5 mb-2 text-left">Comunidade & Estudos</span>
+          <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 pt-5 mb-2 text-left">Mesa & Comunhão</span>
 
           <button
             id="nav-mesas"
@@ -545,7 +546,7 @@ export default function App() {
           >
             <span className="flex items-center space-x-2.5">
               <Coffee size={14} />
-              <span>Mesas do Despertar</span>
+              <span>Mesas de Comunhão</span>
             </span>
           </button>
 
@@ -558,7 +559,7 @@ export default function App() {
           >
             <span className="flex items-center space-x-2.5">
               <FileText size={14} />
-              <span>Catálogo Ebooks</span>
+              <span>Livros da Jornada</span>
             </span>
           </button>
 
@@ -571,7 +572,7 @@ export default function App() {
           >
             <span className="flex items-center space-x-2.5">
               <User size={14} />
-              <span>Minha Jornada</span>
+              <span>Minha Caminhada</span>
             </span>
           </button>
         </nav>
@@ -707,80 +708,14 @@ export default function App() {
                 </div>
               </div>
 
-              {/* NOTA DO DESPERTAR — MANIFESTO */}
-              <div className="bg-stone-100/50 border border-stone-200/60 rounded-3xl p-8 md:p-12 text-center max-w-3xl mx-auto space-y-6 shadow-xs mt-10">
-                <div className="flex flex-col items-center space-y-2">
-                  <span className="text-2xl select-none text-[#C08261]">🕊️</span>
-                  <h3 className="font-serif tracking-wider uppercase font-semibold text-[#8C6239] text-[12px] font-mono leading-none">
-                    Nota do Despertar
-                  </h3>
-                  <div className="w-8 h-[1px] bg-[#C08261]/30 my-1" />
-                </div>
-
-                <div className="font-serif text-stone-700 space-y-5 leading-relaxed text-sm md:text-base max-w-2xl mx-auto italic">
-                  <p className="not-italic font-medium text-stone-900 text-base md:text-lg">
-                    O Despertar não existe para competir com igrejas. <br />
-                    Nem para criar mais um sistema.
-                  </p>
-                  
-                  <p>
-                    Existe para criar espaço onde pessoas possam <br className="hidden md:inline" /> reaprender a caminhar juntas.
-                  </p>
-
-                  <p className="text-stone-600 font-sans text-xs md:text-sm">
-                    Alguns chegam aqui despertando para a graça pela primeira vez. <br />
-                    Outros chegam cansados. <br />
-                    Feridos. <br />
-                    Parados. <br />
-                    Ou apenas tentando encontrar novamente aquilo que um dia fez sentido.
-                  </p>
-
-                  <p className="font-medium text-stone-850 not-italic">
-                    Todos são recebidos como peregrinos do mesmo caminho.
-                  </p>
-
-                  <p>
-                    Não confiamos em regras. <br />
-                    Confiamos em pessoas.
-                  </p>
-
-                  <p className="text-[#C08261] font-semibold not-italic text-[10px] tracking-wider uppercase font-mono">
-                    Porque o evangelho sempre cresceu assim.
-                  </p>
-
-                  <div className="flex justify-center py-2 select-none">
-                    <div className="w-1.5 h-1.5 bg-stone-300 rounded-full mx-1" />
-                    <div className="w-1.5 h-1.5 bg-stone-300 rounded-full mx-1" />
-                    <div className="w-1.5 h-1.5 bg-stone-300 rounded-full mx-1" />
-                  </div>
-
-                  <p className="leading-loose text-stone-800">
-                    Antes das estruturas, existiam mesas. <br />
-                    Antes dos movimentos, existiam pessoas. <br />
-                    Antes das multidões, existiam conversas honestas.
-                  </p>
-
-                  <p className="font-medium text-stone-900 not-italic">
-                    O Despertar acredita na simplicidade do evangelho vivido de perto: <br />
-                    <span className="text-[#C08261]">uma mesa aberta</span>, <br />
-                    <span>presença real</span>, <br />
-                    <span className="italic">graça suficiente</span>, <br />
-                    e <span className="font-semibold underline decoration-stone-300 underline-offset-4">pessoas caminhando juntas</span>.
-                  </p>
-
-                  <p className="text-stone-650 leading-normal font-sans text-xs md:text-sm">
-                    Tudo o que permanece começa pequeno. <br />
-                    Uma conversa. <br />
-                    Uma casa. <br />
-                    Uma mesa. <br />
-                    Uma vida alcançando outra.
-                  </p>
-
-                  <p className="text-[#8C6239] font-medium text-md pt-3">
-                    E talvez tenha sido assim desde o começo.
-                  </p>
-                </div>
-              </div>
+              {/* NOTA DO DESPERTAR — MANIFESTO SECTION */}
+              <ManifestoSection
+                onExploreMesas={() => setActiveSection('mesas')}
+                onOpenCreateMesa={() => setActiveSection('mesas')}
+                currentUserName={userProfile?.name || currentUser?.displayName || undefined}
+                onAuthenticate={() => setShowAuthModal(true)}
+                isAuthenticated={!!currentUser}
+              />
             </motion.div>
           )}
 
@@ -813,8 +748,8 @@ export default function App() {
               className="space-y-8 text-left"
             >
               <div className="text-center max-w-xl mx-auto space-y-1.5 border-b border-stone-100 pb-5 mb-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-semibold">Conversas de Secreto</span>
-                <h3 className="font-serif text-3xl font-light text-stone-800">Ritual dos 30 Devocionais</h3>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-bold">Conversas de Secreto</span>
+                <h3 className="font-serif text-3xl font-light text-stone-800">30 Dias no Secreto</h3>
                 <p className="text-stone-500 text-xs">Aprenda a andar de sandálias leves, longe de pesos religiosos e julgamentos.</p>
               </div>
 
@@ -1021,14 +956,14 @@ export default function App() {
             >
               <div className="border-b border-stone-105 pb-5">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-bold">Minha caminhada de Fé</span>
-                <h3 className="font-serif text-3xl font-light text-stone-850 mt-0.5">Jornada Espiritual</h3>
-                <p className="text-stone-500 text-xs">Acompanhe suas marcas de meditação íntima, notas e versículos favoritados.</p>
+                <h3 className="font-serif text-3xl font-light text-stone-850 mt-0.5">Minha Caminhada</h3>
+                <p className="text-stone-500 text-xs">Acompanhe seus tempos de quietude, notas e versículos favoritos.</p>
               </div>
 
               {/* Stat rows */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-white border border-stone-200/50 p-5 rounded-2xl flex flex-col align-left justify-center">
-                  <span className="text-[9px] uppercase font-mono text-stone-400">Streak Contemplativo</span>
+                  <span className="text-[9px] uppercase font-mono text-stone-400">Constância Diária</span>
                   <div className="flex items-baseline space-x-1 mt-1.5 text-stone-800">
                     <span className="text-2xl font-bold font-mono">{progress.streak}</span>
                     <span className="text-xs text-stone-400">dias</span>

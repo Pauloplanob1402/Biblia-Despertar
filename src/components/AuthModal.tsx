@@ -72,7 +72,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
     } catch (err: any) {
       console.error(err);
       let translated = err.message;
-      if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
         translated = 'E-mail ou senha incorretos.';
       } else if (err.code === 'auth/email-already-in-use') {
         translated = 'Este e-mail já está sendo utilizado por outro fiel.';
@@ -114,7 +114,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
             <p className="text-stone-500 text-xs leading-relaxed">
               {isLogin 
                 ? 'Conecte-se para reaver suas anotações, notas de leitura e mesas fraternas.'
-                : 'Crie sua conta para registrar suas meditações e conectar-se com outros buscadores.'
+                : 'Crie sua conta para registrar seus momentos de quietude e caminhar com outros peregrinos de Deus.'
               }
             </p>
           </div>
@@ -169,17 +169,17 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
 
                 {/* Initial Archetype select */}
                 <div className="flex flex-col space-y-1">
-                  <label className="text-[10px] uppercase font-mono tracking-wider text-stone-400">Selecione seu Perfil Contemplativo Inicial</label>
+                  <label className="text-[10px] uppercase font-mono tracking-wider text-stone-400 font-semibold">Como você prefere se aproximar de Deus?</label>
                   <select
                     id="auth-signup-archetype"
                     value={selectedArchetype}
                     onChange={(e) => setSelectedArchetype(e.target.value)}
                     className="w-full bg-stone-50 border border-stone-200/60 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-[#C08261]"
                   >
-                    <option value="contemplative">O Contemplativo (Silencioso, Introspectivo)</option>
-                    <option value="rational">O Reformador (Estudioso, Teológico)</option>
-                    <option value="emotional">O Adorador (Sensível, Carismático)</option>
-                    <option value="practician">O Prático (Ativo, Práticas de Serviço)</option>
+                    <option value="contemplative">No Silêncio e Secreto (Introspectivo)</option>
+                    <option value="rational">Na Leitura e Estudo (Teológico)</option>
+                    <option value="emotional">Na Entrega e Canto (Expressivo)</option>
+                    <option value="practician">Nas Atitudes e Serviço (Prático)</option>
                   </select>
                 </div>
               </>
