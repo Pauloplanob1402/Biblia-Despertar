@@ -855,22 +855,24 @@ export default function App() {
                 <div className="space-y-4">
                   <div className="flex items-center space-x-1.5 text-stone-800 border-b border-stone-100 pb-2">
                     <FileText size={16} className="text-[#C08261]" />
-                    <h4 className="font-serif text-lg font-medium">Minhas Diários e Mementos</h4>
+                    <h4 className="font-serif text-lg font-medium">Meus Diários e Reflexões</h4>
                   </div>
 
                   {progress.savedReflections.length === 0 ? (
-                    <p className="text-stone-400 text-xs py-8 text-center italic border border-dashed border-stone-200 rounded-2xl">
+                    <p className="text-stone-400 text-sm py-8 text-center italic border border-dashed border-stone-200 rounded-2xl">
                       Nenhuma anotação de diário guardada ainda. Explore os devocionais para escrever no secreto.
                     </p>
                   ) : (
-                    <div className="space-y-3.5 max-h-[360px] overflow-y-auto pr-1">
+                    <div className="space-y-3.5 max-h-[380px] overflow-y-auto pr-1">
                       {progress.savedReflections.map((ref) => (
-                        <div key={ref.id} className="bg-white border border-stone-200/50 p-4.5 rounded-2xl text-left space-y-1 shadow-xs">
-                          <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono">
+                        <div key={ref.id} className="bg-white border border-stone-200/50 p-5 rounded-2xl text-left space-y-2 shadow-xs">
+                          <div className="flex justify-between items-center text-xs text-stone-500 font-mono">
                             <span className="font-semibold text-[#8C6239]">{ref.verseRef}</span>
                             <span>{new Date(ref.createdAt).toLocaleDateString()}</span>
                           </div>
-                          <p className="text-xs text-stone-600 leading-relaxed font-serif">"{ref.reflectionText}"</p>
+                          <p className="text-sm md:text-base text-stone-700 leading-relaxed font-serif text-justify whitespace-pre-line">
+                            "{ref.reflectionText}"
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -885,22 +887,24 @@ export default function App() {
                   </div>
 
                   {progress.favoriteVerses.length === 0 ? (
-                    <p className="text-stone-400 text-xs py-8 text-center italic border border-dashed border-stone-200 rounded-2xl">
+                    <p className="text-stone-400 text-sm py-8 text-center italic border border-dashed border-stone-200 rounded-2xl">
                       Nenhum versículo favoritado ainda. Navegue na Bíblia e destaque sabedorias eternas.
                     </p>
                   ) : (
-                    <div className="space-y-3.5 max-h-[360px] overflow-y-auto pr-1">
+                    <div className="space-y-3.5 max-h-[380px] overflow-y-auto pr-1">
                       {progress.favoriteVerses.map((fav) => (
-                        <div key={fav.ref} className="bg-white border border-stone-200/50 p-4.5 rounded-2xl text-left space-y-1.5 shadow-xs relative">
+                        <div key={fav.ref} className="bg-white border border-stone-200/50 p-5 rounded-2xl text-left space-y-2.5 shadow-xs relative">
                           <button
                             id={`btn-remove-favorite-verse-${fav.ref}`}
                             onClick={() => handleRemoveFavoriteVerse(fav.ref)}
-                            className="absolute top-3.5 right-3.5 text-stone-400 hover:text-stone-700 text-[10px]"
+                            className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-xs transition"
                           >
                             Remover
                           </button>
-                          <span className="text-[10px] font-semibold text-[#C08261] font-mono">{fav.ref}</span>
-                          <p className="text-xs text-stone-605 leading-relaxed font-serif italic text-stone-700">"{fav.text}"</p>
+                          <span className="text-xs font-semibold text-[#C08261] font-mono">{fav.ref}</span>
+                          <p className="text-sm md:text-base leading-relaxed font-serif italic text-stone-800">
+                            "{fav.text}"
+                          </p>
                         </div>
                       ))}
                     </div>
