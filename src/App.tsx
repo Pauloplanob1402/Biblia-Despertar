@@ -17,7 +17,6 @@ import BibleReader from './components/BibleReader';
 import ProfileSelector from './components/ProfileSelector';
 import EbookReader from './components/EbookReader';
 import MesasSection from './components/MesasSection';
-import AndroidExporter from './components/AndroidExporter';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
@@ -25,7 +24,7 @@ import { DESPERTAR_PROFILES } from './data/profiles';
 import { UserProgress, Devotional, SpiritualIdentity } from './types';
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'android_hub'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile'>('home');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
@@ -143,7 +142,7 @@ export default function App() {
           </div>
           <div className="text-left">
             <h1 className="font-serif text-[13px] font-bold tracking-tight text-stone-850">Bíblia do Despertar</h1>
-            <span className="text-[8px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
+            <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
           </div>
         </div>
         
@@ -184,7 +183,7 @@ export default function App() {
                   </div>
                   <div className="text-left">
                     <h1 className="font-serif text-[14px] font-bold tracking-tight text-stone-850">Bíblia do Despertar</h1>
-                    <span className="text-[8.5px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
+                    <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
                   </div>
                 </div>
                 <button
@@ -205,7 +204,7 @@ export default function App() {
                     {currentIdentity.name.charAt(2)}
                   </div>
                   <div className="truncate">
-                    <span className="text-[9px] uppercase tracking-wider font-semibold text-stone-400 font-mono">Identidade Atual:</span>
+                    <span className="text-[11px] uppercase tracking-wider font-semibold text-stone-400 font-mono">Identidade Atual:</span>
                     <h5 className="font-serif text-[13px] font-semibold text-stone-800 truncate">{currentIdentity.name}</h5>
                   </div>
                 </div>
@@ -213,7 +212,7 @@ export default function App() {
 
               {/* Drawer Navigation items list */}
               <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-                <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 mb-2 text-left">Santuário</span>
+                <span className="text-[11px] uppercase font-mono tracking-wider font-semibold text-stone-500 block px-3 mb-2 text-left">Santuário</span>
                 
                 <button
                   id="mobile-nav-home"
@@ -267,7 +266,7 @@ export default function App() {
                   </span>
                 </button>
 
-                <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 pt-5 mb-2 text-left">Comunidade & Estudos</span>
+                <span className="text-[11px] uppercase font-mono tracking-wider font-semibold text-stone-500 block px-3 pt-5 mb-2 text-left">Comunidade & Estudos</span>
 
                 <button
                   id="mobile-nav-mesas"
@@ -307,21 +306,6 @@ export default function App() {
                     <span>Minha Jornada</span>
                   </span>
                 </button>
-
-                <span className="text-[9px] uppercase font-mono tracking-widest text-[#8C6239] block px-3 pt-5 mb-2 text-left">Equipe Sênior</span>
-
-                <button
-                  id="mobile-nav-android-hub"
-                  onClick={() => { setActiveSection('android_hub'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
-                    activeSection === 'android_hub' ? 'bg-[#C08261]/15 text-[#C08261] font-semibold border-l-2 border-[#C08261]' : 'text-stone-600 hover:bg-stone-50'
-                  }`}
-                >
-                  <span className="flex items-center space-x-2.5">
-                    <Code size={14} />
-                    <span>Código Android Studio</span>
-                  </span>
-                </button>
               </nav>
 
               {/* Drawer streak indicators */}
@@ -348,7 +332,7 @@ export default function App() {
             </div>
             <div className="text-left">
               <h1 className="font-serif text-[15px] font-bold tracking-tight text-stone-850">Bíblia do Despertar</h1>
-              <span className="text-[9px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
+              <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block">Contemplativa</span>
             </div>
           </div>
         </div>
@@ -363,7 +347,7 @@ export default function App() {
               {currentIdentity.name.charAt(2)}
             </div>
             <div className="truncate">
-              <span className="text-[9px] uppercase tracking-wider font-semibold text-stone-400 font-mono">Identidade Atual:</span>
+              <span className="text-[11px] uppercase tracking-wider font-semibold text-stone-550 font-mono">Identidade Atual:</span>
               <h5 className="font-serif text-[13px] font-semibold text-stone-800 truncate">{currentIdentity.name}</h5>
             </div>
           </div>
@@ -371,7 +355,7 @@ export default function App() {
 
         {/* Navigation lists */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 mb-2 text-left">Santuário</span>
+          <span className="text-[11px] uppercase font-mono tracking-wider font-semibold text-stone-500 block px-3 mb-2 text-left">Santuário</span>
           
           <button
             id="nav-home"
@@ -426,7 +410,7 @@ export default function App() {
             </span>
           </button>
 
-          <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 pt-5 mb-2 text-left">Comunidade & Estudos</span>
+          <span className="text-[11px] uppercase font-mono tracking-wider font-semibold text-stone-500 block px-3 pt-5 mb-2 text-left">Comunidade & Estudos</span>
 
           <button
             id="nav-mesas"
@@ -464,21 +448,6 @@ export default function App() {
             <span className="flex items-center space-x-2.5">
               <User size={14} />
               <span>Minha Jornada</span>
-            </span>
-          </button>
-
-          <span className="text-[9px] uppercase font-mono tracking-widest text-[#8C6239] block px-3 pt-5 mb-2 text-left">Equipe Sênior</span>
-
-          <button
-            id="nav-android-hub"
-            onClick={() => { setActiveSection('android_hub'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
-              activeSection === 'android_hub' ? 'bg-[#C08261]/15 text-[#C08261] font-semibold border-l-2 border-[#C08261]' : 'text-stone-600 hover:bg-stone-50'
-            }`}
-          >
-            <span className="flex items-center space-x-2.5">
-              <Code size={14} />
-              <span>Código Android Studio</span>
             </span>
           </button>
         </nav>
@@ -827,28 +796,6 @@ export default function App() {
                 completedChapters={progress.completedChapters}
                 onCompleteChapter={handleCompleteChapter}
               />
-            </motion.div>
-          )}
-
-          {/* ACTIVE PORT: ANDROID STUDENT SYSTEM AND CODE CONVERTER */}
-          {activeSection === 'android_hub' && !selectedDevotional && (
-            <motion.div
-              key="android_hub"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              className="space-y-6 text-left"
-            >
-              <div className="flex flex-col border-b border-stone-200 pb-5 mb-2 gap-1.5">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-semibold">Configuração Sênior Android Studio</span>
-                <h3 className="font-serif text-3xl font-light text-stone-800">Módulos Kotlin, Compose & Supabase</h3>
-                <p className="text-stone-500 text-xs text-justify">
-                  Este painel disponibiliza o projeto Android Studio real, compilável e completo baseado no SDK 35/Kotlin 2.0.
-                  Navegue pelos arquivos no explorer para ler, copiar e importar cada camada MVVM funcional.
-                </p>
-              </div>
-
-              <AndroidExporter />
             </motion.div>
           )}
 

@@ -318,7 +318,7 @@ export default function ProfileSelector({ currentIdentityId, onSelectIdentity }:
 
                 <div className="space-y-4 text-stone-700 text-sm">
                   <div>
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-stone-400 block">Identidade Essencial</span>
+                    <span className="text-[12px] uppercase font-mono tracking-wider text-stone-550 font-bold block">Identidade Essencial</span>
                     <p className="leading-relaxed mt-1">{selectedViewedProfile.description}</p>
                   </div>
 
@@ -336,11 +336,11 @@ export default function ProfileSelector({ currentIdentityId, onSelectIdentity }:
 
                   <div className="pt-3 border-t border-stone-100 space-y-3 text-xs">
                     <div>
-                      <strong className="block text-stone-500 uppercase tracking-widest text-[9px] mb-1">Questão de Reflexão Profunda</strong>
+                      <strong className="block text-stone-550 uppercase tracking-wider text-[11px] mb-1">Questão de Reflexão Profunda</strong>
                       <p className="italic font-serif pl-2 border-l border-[#C08261] text-stone-700">"{selectedViewedProfile.reflectiveQuestion}"</p>
                     </div>
                     <div>
-                      <strong className="block text-stone-500 uppercase tracking-widest text-[9px] mb-1">Oração do Secreto</strong>
+                      <strong className="block text-stone-550 uppercase tracking-wider text-[11px] mb-1">Oração do Secreto</strong>
                       <p className="bg-stone-50 border border-stone-100 p-3 rounded-xl italic font-serif leading-relaxed text-[#5C3D2E]">
                         "{selectedViewedProfile.prayer}"
                       </p>

@@ -239,10 +239,10 @@ export default function BibleReader({
         {/* Book Selector (Filtered Scrollable Box) */}
         <div className="space-y-4">
           <div>
-            <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 font-semibold">Selecione o Livro</span>
+            <span className="text-[12px] uppercase font-mono tracking-wider text-stone-550 font-bold">Selecione o Livro</span>
             <div className="flex flex-col space-y-1 mt-1.5 max-h-[190px] overflow-y-auto pr-1 border border-stone-200/40 rounded-xl p-1 bg-white shadow-inner">
               {filteredBooks.length === 0 ? (
-                <span className="text-[10px] text-stone-400 py-3 text-center">Nenhum livro encontrado</span>
+                <span className="text-[11px] text-stone-400 py-3 text-center">Nenhum livro encontrado</span>
               ) : (
                 filteredBooks.map((book) => (
                   <button
@@ -256,7 +256,7 @@ export default function BibleReader({
                     }`}
                   >
                     <span className="truncate">{book.name}</span>
-                    <span className="text-[9px] text-stone-400 shrink-0 font-mono font-normal">
+                    <span className="text-[10px] text-stone-500 shrink-0 font-mono font-normal">
                       {book.category === 'Velho Testamento' ? 'VT' : 'NT'}
                     </span>
                   </button>
@@ -267,7 +267,7 @@ export default function BibleReader({
 
           {/* Chapter Grid */}
           <div>
-            <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 font-semibold">
+            <span className="text-[12px] uppercase font-mono tracking-wider text-stone-550 font-bold">
               Capítulos ({selectedBook.chapterCount})
             </span>
             <div className="grid grid-cols-4 gap-1 mt-1.5 max-h-[150px] overflow-y-auto pr-1 border border-stone-200/40 rounded-xl p-1 bg-white shadow-inner">
