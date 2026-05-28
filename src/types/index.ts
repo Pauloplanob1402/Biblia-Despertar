@@ -40,6 +40,7 @@ export interface BibleBook {
   id: string;
   name: string;
   category: 'Velho Testamento' | 'Novo Testamento';
+  chapterCount: number;
   chapters: { [chapterNumber: number]: BibleVerse[] };
 }
 

@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { BIBLE_BOOKS } from '../data/bible';
-import { BookOpen, Highlighter, Bookmark, FileText, ChevronRight, X, Sparkles, Check } from 'lucide-react';
+import { BookOpen, Highlighter, Bookmark, FileText, ChevronRight, X, Sparkles, Check, Search, Globe, WifiOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface BibleReaderProps {
@@ -14,6 +14,12 @@ interface BibleReaderProps {
   onAddReflection: (ref: string, text: string) => void;
   favorites: { ref: string; text: string }[];
   reflections: { id: string; verseRef: string; reflectionText: string; createdAt: string }[];
+}
+
+interface RawTranslationBook {
+  abbrev: string;
+  name: string;
+  chapters: string[][];
 }
 
 export default function BibleReader({
@@ -30,24 +36,101 @@ export default function BibleReader({
   const [reflectionText, setReflectionText] = useState('');
   const [showReflectionsPanel, setShowReflectionsPanel] = useState(false);
 
-  const selectedBook = BIBLE_BOOKS.find(b => b.id === selectedBookId) || BIBLE_BOOKS[0];
-  const chaptersAvailable = Object.keys(selectedBook.chapters).map(Number).sort((a,b)=>a-b);
+  // Search & testament filter states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTestament, setActiveTestament] = useState<'todos' | 'velho' | 'novo'>('todos');
 
-  // Auto-correct chapter if selected book changes and earlier selected chapter isn't available
+  // Multi-translation loaded bibles states
+  const [translationName, setTranslationName] = useState<'acf' | 'nvi' | 'aa'>('acf');
+  const [loadedBibles, setLoadedBibles] = useState<{ [key: string]: RawTranslationBook[] }>({});
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const selectedBook = BIBLE_BOOKS.find(b => b.id === selectedBookId) || BIBLE_BOOKS[0];
+
+  // Dynamically load the selected raw Bible translation from reliable JSDelivr CDN
   useEffect(() => {
-    if (!selectedBook.chapters[selectedChapter]) {
-      const firstAvailable = Object.keys(selectedBook.chapters).map(Number).sort((a,b)=>a-b)[0];
-      setSelectedChapter(firstAvailable || 1);
+    if (loadedBibles[translationName]) {
+      setSyncStatus('success');
+      return;
+    }
+
+    setSyncStatus('loading');
+    const url = `https://cdn.jsdelivr.net/gh/thiagobodruk/bible@master/json/${translationName}.json`;
+
+    fetch(url)
+      .then(res => {
+        if (!res.ok) throw new Error('Falha na rede');
+        return res.json();
+      })
+      .then((data: RawTranslationBook[]) => {
+        setLoadedBibles(prev => ({
+          ...prev,
+          [translationName]: data
+        }));
+        setSyncStatus('success');
+      })
+      .catch(err => {
+        console.error('Erro ao ler bíblia completa:', err);
+        setSyncStatus('error');
+      });
+  }, [translationName, loadedBibles]);
+
+  // Dynamic correct selected default chapter when selected book updates due to chapter limits
+  useEffect(() => {
+    if (selectedChapter > selectedBook.chapterCount) {
+      setSelectedChapter(1);
     }
     setSelectedVerseKey(null);
-  }, [selectedBookId]);
+  }, [selectedBookId, selectedBook]);
 
-  const verses = selectedBook.chapters[selectedChapter] || [];
+  // Compute verses based on loaded translation or local comfort fallback
+  const currentVerses = useMemo(() => {
+    const activeBible = loadedBibles[translationName];
+    if (activeBible) {
+      // Find book index (0 to 65) matching chronological order
+      const bookIdx = BIBLE_BOOKS.findIndex(b => b.id === selectedBookId);
+      if (bookIdx !== -1 && activeBible[bookIdx]) {
+        const rawBook = activeBible[bookIdx];
+        const rawChapterVerses = rawBook.chapters?.[selectedChapter - 1]; // index is chapter - 1
+        if (rawChapterVerses) {
+          return rawChapterVerses.map((vText: string, idx: number) => ({
+            chapter: selectedChapter,
+            number: idx + 1,
+            text: vText
+          }));
+        }
+      }
+    }
+
+    // Dynamic standard fallback to local comfort verses
+    const offlineBookData = BIBLE_BOOKS.find(b => b.id === selectedBookId);
+    if (offlineBookData && offlineBookData.chapters[selectedChapter]) {
+      return offlineBookData.chapters[selectedChapter];
+    }
+    return [];
+  }, [translationName, loadedBibles, selectedBookId, selectedChapter]);
+
+  // Generate responsive chapter buttons array based on the book's chapter counts
+  const chaptersAvailable = useMemo(() => {
+    return Array.from({ length: selectedBook.chapterCount }, (_, i) => i + 1);
+  }, [selectedBook]);
+
+  // Filter 66 books instantly by input search query and testament choice
+  const filteredBooks = useMemo(() => {
+    return BIBLE_BOOKS.filter(book => {
+      const matchesSearch = book.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesTestament =
+        activeTestament === 'todos' ||
+        (activeTestament === 'velho' && book.category === 'Velho Testamento') ||
+        (activeTestament === 'novo' && book.category === 'Novo Testamento');
+      return matchesSearch && matchesTestament;
+    });
+  }, [searchQuery, activeTestament]);
 
   const handleVerseClick = (verseNum: number, verseText: string) => {
     const key = `${selectedBook.id}_${selectedChapter}_${verseNum}`;
     setSelectedVerseKey(prev => prev === key ? null : key);
-    
+
     // Autofill note input if active reflection exists
     const currentRefText = `${selectedBook.name} ${selectedChapter}:${verseNum}`;
     const existingRef = reflections.find(r => r.verseRef === currentRefText);
@@ -88,42 +171,110 @@ export default function BibleReader({
     setSelectedVerseKey(null); // Close
   };
 
+  const translateVersionName = (vName: 'acf' | 'nvi' | 'aa') => {
+    switch (vName) {
+      case 'acf': return 'Almeida Corrigida Fiel (ACF)';
+      case 'nvi': return 'Nova Versão Internacional (NVI)';
+      case 'aa': return 'Almeida Revista e Atualizada (AA)';
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
       {/* Sidebar: Navigation Books & Chapters */}
-      <div id="bible-navigation-panel" className="bg-stone-50/80 rounded-2xl p-5 border border-stone-200/50 space-y-5 lg:col-span-1">
+      <div id="bible-navigation-panel" className="bg-stone-50/80 rounded-2xl p-5 border border-stone-200/50 space-y-4 lg:col-span-1 shadow-sm">
         <div className="flex items-center space-x-2 text-[#8C6239] border-b border-stone-200 pb-3">
           <BookOpen size={18} />
           <h4 className="font-serif font-medium text-stone-800">Livros & Capítulos</h4>
         </div>
 
-        {/* Book Selector */}
+        {/* Search Input Filter */}
+        <div className="relative">
+          <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+          <input
+            id="input-search-bible-book"
+            type="text"
+            placeholder="Ir para o livro..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white border border-stone-200 rounded-xl pl-9 pr-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-[#C08261]"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+            >
+              <X size={12} />
+            </button>
+          )}
+        </div>
+
+        {/* Testament Tab Selectors */}
+        <div className="flex bg-stone-100 p-0.75 rounded-lg border border-stone-200/50">
+          <button
+            id="btn-filter-all"
+            onClick={() => setActiveTestament('todos')}
+            className={`flex-1 py-1 text-[10px] uppercase font-mono tracking-wider rounded-md transition ${
+              activeTestament === 'todos' ? 'bg-white text-stone-800 font-bold shadow-sm' : 'text-stone-500 hover:text-stone-700'
+            }`}
+          >
+            Todos
+          </button>
+          <button
+            id="btn-filter-velho"
+            onClick={() => setActiveTestament('velho')}
+            className={`flex-1 py-1 text-[10px] uppercase font-mono tracking-wider rounded-md transition ${
+              activeTestament === 'velho' ? 'bg-white text-stone-800 font-bold shadow-sm' : 'text-stone-500 hover:text-stone-700'
+            }`}
+          >
+            Velho
+          </button>
+          <button
+            id="btn-filter-novo"
+            onClick={() => setActiveTestament('novo')}
+            className={`flex-1 py-1 text-[10px] uppercase font-mono tracking-wider rounded-md transition ${
+              activeTestament === 'novo' ? 'bg-white text-stone-800 font-bold shadow-sm' : 'text-stone-500 hover:text-stone-700'
+            }`}
+          >
+            Novo
+          </button>
+        </div>
+
+        {/* Book Selector (Filtered Scrollable Box) */}
         <div className="space-y-4">
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-stone-400">Testamento</span>
-            <div className="flex flex-col space-y-1.5 mt-1.5">
-              {BIBLE_BOOKS.map((book) => (
-                <button
-                  id={`btn-select-book-${book.id}`}
-                  key={book.id}
-                  onClick={() => setSelectedBookId(book.id)}
-                  className={`flex items-center justify-between px-3 py-2 text-xs rounded-xl text-left transition-all ${
-                    selectedBookId === book.id
-                      ? 'bg-[#C08261]/10 text-[#C08261] font-semibold border-l-2 border-[#C08261]'
-                      : 'text-stone-600 hover:bg-stone-100'
-                  }`}
-                >
-                  <span>{book.name}</span>
-                  <span className="text-[10px] text-stone-400 font-normal">{book.category}</span>
-                </button>
-              ))}
+            <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 font-semibold">Selecione o Livro</span>
+            <div className="flex flex-col space-y-1 mt-1.5 max-h-[190px] overflow-y-auto pr-1 border border-stone-200/40 rounded-xl p-1 bg-white shadow-inner">
+              {filteredBooks.length === 0 ? (
+                <span className="text-[10px] text-stone-400 py-3 text-center">Nenhum livro encontrado</span>
+              ) : (
+                filteredBooks.map((book) => (
+                  <button
+                    id={`btn-select-book-${book.id}`}
+                    key={book.id}
+                    onClick={() => setSelectedBookId(book.id)}
+                    className={`flex items-center justify-between px-3 py-1.5 text-xs rounded-lg text-left transition-all ${
+                      selectedBookId === book.id
+                        ? 'bg-[#C08261]/10 text-[#C08261] font-semibold border-l-2 border-[#C08261]'
+                        : 'text-stone-600 hover:bg-stone-50'
+                    }`}
+                  >
+                    <span className="truncate">{book.name}</span>
+                    <span className="text-[9px] text-stone-400 shrink-0 font-mono font-normal">
+                      {book.category === 'Velho Testamento' ? 'VT' : 'NT'}
+                    </span>
+                  </button>
+                ))
+              )}
             </div>
           </div>
 
           {/* Chapter Grid */}
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-stone-400">Capítulo</span>
-            <div className="grid grid-cols-4 gap-1.5 mt-2">
+            <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 font-semibold">
+              Capítulos ({selectedBook.chapterCount})
+            </span>
+            <div className="grid grid-cols-4 gap-1 mt-1.5 max-h-[150px] overflow-y-auto pr-1 border border-stone-200/40 rounded-xl p-1 bg-white shadow-inner">
               {chaptersAvailable.map((ch) => (
                 <button
                   id={`btn-select-chapter-${ch}`}
@@ -134,8 +285,8 @@ export default function BibleReader({
                   }}
                   className={`py-1.5 text-xs font-mono rounded-lg transition-all ${
                     selectedChapter === ch
-                      ? 'bg-stone-800 text-white font-bold'
-                      : 'bg-white hover:bg-stone-200 text-stone-700 border border-stone-200'
+                      ? 'bg-stone-850 text-white font-bold shadow-md'
+                      : 'bg-stone-50 hover:bg-stone-100 text-stone-700 border border-stone-200/50'
                   }`}
                 >
                   {ch}
@@ -148,24 +299,66 @@ export default function BibleReader({
         <button
           id="btn-toggle-saved-reflections"
           onClick={() => setShowReflectionsPanel(!showReflectionsPanel)}
-          className="w-full flex items-center justify-center space-x-1.5 px-4 py-2 bg-stone-100 hover:bg-stone-200/80 rounded-xl text-xs text-stone-600 transition"
+          className="w-full flex items-center justify-center space-x-1.5 px-4 py-2 bg-stone-100 hover:bg-[#C08261]/5 hover:text-[#C08261] rounded-xl text-xs text-stone-600 transition duration-200"
         >
           <FileText size={14} />
-          <span>{showReflectionsPanel ? "Ocultar Anotações" : "Ver Minhas Anotações"}</span>
+          <span>{showReflectionsPanel ? "Voltar ao Leitor" : "Ver Minhas Anotações"}</span>
         </button>
       </div>
 
       {/* Main Study Read Window */}
-      <div id="bible-verse-container" className="lg:col-span-3 bg-white border border-stone-200/40 rounded-3xl p-8 shadow-sm relative min-h-[480px]">
+      <div id="bible-verse-container" className="lg:col-span-3 bg-white border border-stone-200/40 rounded-3xl p-6 md:p-8 shadow-sm relative min-h-[480px]">
         {/* Book Header */}
-        <div className="flex items-center justify-between border-b border-stone-100 pb-5 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-100 pb-5 mb-6 gap-4">
           <div>
             <h2 className="text-3xl font-serif font-light text-stone-900 tracking-tight">
-              {selectedBook.name} <span className="font-mono text-xl text-[#C08261]">Cap. {selectedChapter}</span>
+              {selectedBook.name} <span className="font-mono text-xl text-[#C08261] font-semibold">Cap. {selectedChapter}</span>
             </h2>
-            <p className="text-amber-700/70 text-xs font-mono tracking-widest uppercase mt-1">Almeida Corrigida Fiel (ACF)</p>
+
+            {/* Translation switch and sync indicators */}
+            <div className="flex flex-wrap items-center mt-2.5 gap-2">
+              <div className="flex bg-stone-100 p-0.5 rounded-lg border border-stone-200/50 shadow-sm shrink-0">
+                {(['acf', 'nvi', 'aa'] as const).map((ver) => (
+                  <button
+                    key={ver}
+                    id={`btn-switch-ver-${ver}`}
+                    onClick={() => setTranslationName(ver)}
+                    className={`px-3 py-1 text-[9px] font-mono font-bold uppercase rounded-md transition ${
+                      translationName === ver
+                        ? 'bg-white text-[#C08261] shadow-sm'
+                        : 'text-stone-500 hover:text-stone-800'
+                    }`}
+                  >
+                    {ver}
+                  </button>
+                ))}
+              </div>
+
+              {/* Status Badge */}
+              <div className="text-[10px] font-mono text-stone-500 flex items-center gap-1.5 shadow-inner">
+                {syncStatus === 'loading' && (
+                  <span className="flex items-center text-amber-600 gap-1 animate-pulse font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    Sincronizando bíblia...
+                  </span>
+                )}
+                {syncStatus === 'success' && (
+                  <span className="flex items-center text-emerald-600 gap-1 bg-emerald-50 px-2 py-0.5 rounded-md font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Completa Off-line
+                  </span>
+                )}
+                {syncStatus === 'error' && (
+                  <span className="flex items-center text-amber-700 gap-1 bg-amber-50 px-2 py-0.5 rounded-md" title="Passagens offline de segurança. Sincronize para ler todos os 66 livros.">
+                    <WifiOff size={11} className="text-amber-600" />
+                    Conforto Offline
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="flex space-x-1">
+
+          <div className="flex space-x-1 self-end md:self-center">
             <span className="w-2 h-2 rounded-full bg-stone-200" />
             <span className="w-2 h-2 rounded-full bg-[#C08261]/40" />
             <span className="w-2 h-2 rounded-full bg-[#C08261]" />
@@ -176,20 +369,20 @@ export default function BibleReader({
         {showReflectionsPanel ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-serif text-lg text-stone-800">Minhas Reflexões Espirituais</h3>
-              <button onClick={() => setShowReflectionsPanel(false)} className="text-stone-400 hover:text-stone-700 text-xs flex items-center space-x-0.5">
+              <h3 className="font-serif text-lg text-stone-800 font-medium">Minhas Reflexões Espirituais</h3>
+              <button onClick={() => setShowReflectionsPanel(false)} className="text-stone-400 hover:text-[#C08261] text-xs flex items-center space-x-0.5 transition">
                 <span>Leitor</span> <ChevronRight size={14} />
               </button>
             </div>
 
             {reflections.length === 0 ? (
-              <div className="py-12 text-center text-stone-400 text-sm">
+              <div className="py-16 text-center text-stone-400 text-sm">
                 Nenhuma nota salva pelo caminho ainda. Toque em qualquer versículo para registrar um devocional íntimo.
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {reflections.map((ref) => (
-                  <div key={ref.id} className="bg-stone-50 border border-stone-200/60 p-4 rounded-2xl relative">
+                  <div key={ref.id} className="bg-stone-50 border border-stone-200/60 p-4 rounded-2xl relative shadow-sm hover:border-[#C08261]/30 transition duration-150">
                     <span className="text-[10px] font-mono text-stone-400 absolute top-3 right-4">
                       {new Date(ref.createdAt).toLocaleDateString('pt-BR')}
                     </span>
@@ -201,112 +394,141 @@ export default function BibleReader({
             )}
           </div>
         ) : (
-          <div className="space-y-6 md:space-y-8 select-text">
-            {verses.map((verse) => {
-              const key = `${selectedBook.id}_${selectedChapter}_${verse.number}`;
-              const highlightColor = highlightedVerses[key];
-              const isSelected = selectedVerseKey === key;
+          <div className="select-text">
+            {currentVerses.length === 0 ? (
+              <div className="py-20 text-center space-y-4">
+                {syncStatus === 'loading' ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-8 h-8 border-3 border-[#C08261] border-t-transparent rounded-full animate-spin" />
+                    <span className="text-xs text-stone-500 font-mono">Buscando as escrituras sagradas para você...</span>
+                  </div>
+                ) : (
+                  <div className="max-w-md mx-auto space-y-3 px-4">
+                    <span className="text-amber-600 bg-amber-50 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2 font-bold text-lg">💡</span>
+                    <p className="text-stone-700 font-serif text-sm font-semibold">
+                      Esta passagem ({selectedBook.name} {selectedChapter}) está disponível na nuvem.
+                    </p>
+                    <p className="text-xs text-stone-400 leading-relaxed">
+                      Conecte-se à internet para carregar instantaneamente qualquer um dos 66 livros da bíblia em múltiplos formatos.
+                    </p>
+                    <button
+                      onClick={() => setTranslationName(translationName)} // trigger re-fetch retry
+                      className="mt-4 px-5 py-2 bg-stone-850 hover:bg-stone-900 text-white text-xs font-semibold rounded-xl shadow-sm transition active:scale-95 duration-150 inline-block"
+                    >
+                      Tentar Sincronizar Agora
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-6 md:space-y-8 select-text">
+                {currentVerses.map((verse) => {
+                  const key = `${selectedBook.id}_${selectedChapter}_${verse.number}`;
+                  const highlightColor = highlightedVerses[key];
+                  const isSelected = selectedVerseKey === key;
 
-              return (
-                <div key={verse.number} className="relative group">
-                  <p
-                    id={`verse-${verse.number}`}
-                    onClick={() => handleVerseClick(verse.number, verse.text)}
-                    className={`font-serif text-base md:text-lg leading-relaxed text-stone-800 cursor-pointer rounded-lg p-2.5 transition-all text-justify ${
-                      highlightColor ? highlightColor : ''
-                    } ${
-                      isSelected ? 'ring-1 ring-[#C08261]/30 bg-[#C08261]/5' : 'hover:bg-stone-50/50'
-                    }`}
-                  >
-                    <span className="font-mono text-xs text-[#C08261]/80 mr-2 font-normal select-none inline-block w-6 text-right">
-                      {verse.number}
-                    </span>
-                    {verse.text}
-                  </p>
-
-                  {/* Inline interactive verse toolbox */}
-                  <AnimatePresence>
-                    {isSelected && (
-                      <motion.div
-                        id={`toolbar-${key}`}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="mt-2.5 p-4 bg-stone-50 border border-stone-200 rounded-2xl grid grid-cols-1 md:grid-cols-5 gap-3 items-center z-10 relative"
+                  return (
+                    <div key={verse.number} className="relative group">
+                      <p
+                        id={`verse-${verse.number}`}
+                        onClick={() => handleVerseClick(verse.number, verse.text)}
+                        className={`font-serif text-[15px] sm:text-[17px] leading-relaxed text-stone-800 cursor-pointer rounded-lg p-2.5 transition-all text-justify ${
+                          highlightColor ? highlightColor : ''
+                        } ${
+                          isSelected ? 'ring-1 ring-[#C08261]/35 bg-[#C08261]/5 shadow-sm' : 'hover:bg-stone-50/50'
+                        }`}
                       >
-                        {/* Selector highlight color */}
-                        <div className="md:col-span-2 flex items-center space-x-2">
-                          <Highlighter size={14} className="text-stone-500" />
-                          <span className="text-xs text-stone-500">Destaque:</span>
-                          <div className="flex space-x-1.5">
-                            <button
-                              id="btn-highlight-clay"
-                              onClick={() => toggleHighlight(key, 'bg-[#C08261]/15 decoration-[#C08261]')}
-                              className="w-5 h-5 rounded-full bg-[#C08261]/30 border border-orange-300 hover:scale-110 transition"
-                            />
-                            <button
-                              id="btn-highlight-gold"
-                              onClick={() => toggleHighlight(key, 'bg-amber-100 decoration-amber-400')}
-                              className="w-5 h-5 rounded-full bg-amber-100 border border-amber-300 hover:scale-110 transition"
-                            />
-                            <button
-                              id="btn-highlight-sky"
-                              onClick={() => toggleHighlight(key, 'bg-blue-50 decoration-blue-300')}
-                              className="w-5 h-5 rounded-full bg-blue-50 border border-blue-300 hover:scale-110 transition"
-                            />
-                            <button
-                              id="btn-highlight-none"
-                              onClick={() => toggleHighlight(key, 'bg-transparent')}
-                              className="w-5 h-5 rounded-full border border-stone-300 flex items-center justify-center text-stone-500 hover:scale-110 transition text-[9px]"
-                            >
-                              <X size={10} />
-                            </button>
-                          </div>
-                        </div>
+                        <span className="font-mono text-xs text-[#C08261]/80 mr-2 font-normal select-none inline-block w-6 text-right">
+                          {verse.number}
+                        </span>
+                        {verse.text}
+                      </p>
 
-                        {/* Favorite switch */}
-                        <div className="flex md:col-span-1">
-                          <button
-                            id="btn-toggle-favorite-verse"
-                            onClick={() => handleFavoriteToggle(verse.number, verse.text)}
-                            className={`flex items-center space-x-1 px-3 py-1.5 text-xs rounded-xl transition ${
-                              isFavorited(verse.number)
-                                ? 'bg-amber-100 text-amber-800'
-                                : 'bg-white hover:bg-stone-200/60 text-stone-600 border border-stone-200'
-                            }`}
+                      {/* Inline interactive verse toolbox */}
+                      <AnimatePresence>
+                        {isSelected && (
+                          <motion.div
+                            id={`toolbar-${key}`}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="mt-2.5 p-4 bg-stone-50 border border-stone-200 rounded-2xl grid grid-cols-1 md:grid-cols-5 gap-3 items-center z-10 relative shadow-inner"
                           >
-                            <Bookmark size={13} fill={isFavorited(verse.number) ? 'currentColor' : 'none'} />
-                            <span>{isFavorited(verse.number) ? 'Salvo' : 'Favoritar'}</span>
-                          </button>
-                        </div>
+                            {/* Selector highlight color */}
+                            <div className="md:col-span-2 flex items-center space-x-2">
+                              <Highlighter size={14} className="text-stone-500" />
+                              <span className="text-xs text-stone-500 font-mono">Destaque:</span>
+                              <div className="flex space-x-1.5">
+                                <button
+                                  id="btn-highlight-clay"
+                                  onClick={() => toggleHighlight(key, 'bg-[#C08261]/15 decoration-[#C08261]')}
+                                  className="w-5 h-5 rounded-full bg-[#C08261]/30 border border-orange-300 hover:scale-110 transition"
+                                />
+                                <button
+                                  id="btn-highlight-gold"
+                                  onClick={() => toggleHighlight(key, 'bg-amber-100 decoration-amber-400')}
+                                  className="w-5 h-5 rounded-full bg-amber-100 border border-amber-300 hover:scale-110 transition"
+                                />
+                                <button
+                                  id="btn-highlight-sky"
+                                  onClick={() => toggleHighlight(key, 'bg-blue-50 decoration-blue-300')}
+                                  className="w-5 h-5 rounded-full bg-blue-50 border border-blue-300 hover:scale-110 transition"
+                                />
+                                <button
+                                  id="btn-highlight-none"
+                                  onClick={() => toggleHighlight(key, 'bg-transparent')}
+                                  className="w-5 h-5 rounded-full border border-stone-300 flex items-center justify-center text-stone-500 hover:scale-110 transition text-[9px]"
+                                >
+                                  <X size={10} />
+                                </button>
+                              </div>
+                            </div>
 
-                        {/* Reflection field */}
-                        <div className="md:col-span-2 flex space-x-1.5">
-                          <input
-                            id="input-reflection-verse"
-                            type="text"
-                            placeholder="Anote algo no secreto..."
-                            value={reflectionText}
-                            onChange={(e) => setReflectionText(e.target.value)}
-                            className="bg-white border border-stone-200 rounded-xl px-3 py-1.5 text-xs flex-1 focus:outline-none focus:ring-1 focus:ring-[#C08261]"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') saveReflection(verse.number);
-                            }}
-                          />
-                          <button
-                            id="btn-save-reflection"
-                            onClick={() => saveReflection(verse.number)}
-                            className="px-3 py-1.5 bg-stone-800 hover:bg-stone-900 text-white text-xs font-medium rounded-xl transition flex items-center justify-center"
-                          >
-                            <Check size={13} />
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
+                            {/* Favorite switch */}
+                            <div className="flex md:col-span-1">
+                              <button
+                                id="btn-toggle-favorite-verse"
+                                onClick={() => handleFavoriteToggle(verse.number, verse.text)}
+                                className={`flex items-center space-x-1 px-3 py-1.5 text-xs rounded-xl transition ${
+                                  isFavorited(verse.number)
+                                    ? 'bg-amber-100 text-amber-800 font-semibold'
+                                    : 'bg-white hover:bg-stone-100 text-stone-600 border border-stone-200'
+                                }`}
+                              >
+                                <Bookmark size={13} fill={isFavorited(verse.number) ? 'currentColor' : 'none'} />
+                                <span>{isFavorited(verse.number) ? 'Salvo' : 'Favoritar'}</span>
+                              </button>
+                            </div>
+
+                            {/* Reflection field */}
+                            <div className="md:col-span-2 flex space-x-1.5">
+                              <input
+                                id="input-reflection-verse"
+                                type="text"
+                                placeholder="Anote algo no secreto..."
+                                value={reflectionText}
+                                onChange={(e) => setReflectionText(e.target.value)}
+                                className="bg-white border border-stone-200 rounded-xl px-3 py-1.5 text-xs flex-1 focus:outline-none focus:ring-1 focus:ring-[#C08261]"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') saveReflection(verse.number);
+                                }}
+                              />
+                              <button
+                                id="btn-save-reflection"
+                                onClick={() => saveReflection(verse.number)}
+                                className="px-3 py-1.5 bg-stone-800 hover:bg-stone-900 text-white text-xs font-medium rounded-xl transition flex items-center justify-center"
+                              >
+                                <Check size={13} />
+                              </button>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </div>

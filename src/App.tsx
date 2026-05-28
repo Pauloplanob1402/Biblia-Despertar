@@ -27,6 +27,7 @@ import { UserProgress, Devotional, SpiritualIdentity } from './types';
 export default function App() {
   const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'android_hub'>('home');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // User profile persistent state engine
   const [progress, setProgress] = useState<UserProgress>(() => {
@@ -138,7 +139,7 @@ export default function App() {
       <aside className="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r border-stone-200/55 flex flex-col shrink-0 md:h-screen sticky top-0 z-30">
         
         {/* Brand Header */}
-        <div className="p-6 border-b border-stone-100 flex items-center justify-between">
+        <div className="p-6 border-b border-stone-100 flex items-center justify-between bg-white z-40">
           <div className="flex items-center space-x-3">
             <div className="w-9 h-9 bg-stone-900 rounded-2xl flex items-center justify-center text-white font-serif font-semibold shadow-inner">
               B
@@ -148,14 +149,22 @@ export default function App() {
               <span className="text-[9px] font-mono tracking-widest text-[#C08261] uppercase">Contemplativa</span>
             </div>
           </div>
-          <p className="text-[10px] font-mono text-stone-400 font-semibold md:hidden">Menu</p>
+          
+          {/* Mobile hamburger button */}
+          <button 
+            id="mobile-menu-toggle" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden px-3.5 py-1.5 text-xs font-mono font-bold tracking-wider uppercase text-[#C08261] bg-stone-50 hover:bg-stone-101 rounded-xl border border-stone-200/50 transition flex items-center space-x-1"
+          >
+            <span>{isMobileMenuOpen ? 'Fechar ✕' : 'Menu ☰'}</span>
+          </button>
         </div>
 
-        {/* User context card (Left mini-deck) */}
+        {/* User context card (Left mini-deck) - Collapsible on mobile */}
         {currentIdentity && (
-          <div className="p-5 border-b border-stone-100 bg-stone-50/50 flex items-center space-x-3 text-left">
+          <div className={`p-5 border-b border-stone-100 bg-stone-50/50 flex items-center space-x-3 text-left ${isMobileMenuOpen ? 'flex' : 'hidden md:flex'}`}>
             <div 
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-serif font-normal shadow-sm shrink-0"
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-serif font-sans shadow-sm shrink-0"
               style={{ backgroundColor: currentIdentity.hexColor }}
             >
               {currentIdentity.name.charAt(2)}
@@ -167,13 +176,13 @@ export default function App() {
           </div>
         )}
 
-        {/* Navigation lists (Airbnb/Calm style) */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        {/* Navigation lists (Airbnb/Calm style) - Collapsible on mobile */}
+        <nav className={`flex-1 p-4 space-y-1 overflow-y-auto ${isMobileMenuOpen ? 'block bg-white' : 'hidden md:block'}`}>
           <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 mb-2 text-left">Santúario</span>
           
           <button
             id="nav-home"
-            onClick={() => { setActiveSection('home'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('home'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -187,7 +196,7 @@ export default function App() {
 
           <button
             id="nav-bible"
-            onClick={() => { setActiveSection('bible'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('bible'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'bible' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -200,7 +209,7 @@ export default function App() {
 
           <button
             id="nav-devotionals"
-            onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'devotionals' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -213,7 +222,7 @@ export default function App() {
 
           <button
             id="nav-profiles"
-            onClick={() => { setActiveSection('profiles'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('profiles'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'profiles' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -228,7 +237,7 @@ export default function App() {
 
           <button
             id="nav-mesas"
-            onClick={() => { setActiveSection('mesas'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('mesas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -241,7 +250,7 @@ export default function App() {
 
           <button
             id="nav-ebooks"
-            onClick={() => { setActiveSection('ebooks'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('ebooks'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'ebooks' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -254,7 +263,7 @@ export default function App() {
 
           <button
             id="nav-profile"
-            onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
               activeSection === 'profile' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
@@ -265,13 +274,13 @@ export default function App() {
             </span>
           </button>
 
-          <span className="text-[9px] uppercase font-mono tracking-widest text-stone-400 block px-3 pt-5 mb-2 text-left">Equipe Sênior</span>
+          <span className="text-[9px] uppercase font-mono tracking-widest text-[#8C6239] block px-3 pt-5 mb-2 text-left">Equipe Sênior</span>
 
           <button
             id="nav-android-hub"
-            onClick={() => { setActiveSection('android_hub'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('android_hub'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
-              activeSection === 'android_hub' ? 'bg-amber-600/15 text-amber-300 font-semibold border-l-2 border-amber-500' : 'text-stone-600 hover:bg-stone-50'
+              activeSection === 'android_hub' ? 'bg-[#C08261]/15 text-[#C08261] font-semibold border-l-2 border-[#C08261]' : 'text-stone-600 hover:bg-stone-50'
             }`}
           >
             <span className="flex items-center space-x-2.5">
@@ -281,8 +290,8 @@ export default function App() {
           </button>
         </nav>
 
-        {/* Footer streak count */}
-        <div className="p-5 border-t border-stone-100 flex justify-between items-center bg-stone-50 text-stone-500 text-xs">
+        {/* Footer streak count - Collapsible on mobile */}
+        <div className={`p-5 border-t border-stone-100 flex justify-between items-center bg-stone-50 text-stone-500 text-xs ${isMobileMenuOpen ? 'flex' : 'hidden md:flex'}`}>
           <div className="flex items-center space-x-1">
             <Flame size={14} className="text-[#C08261] animate-pulse" />
             <span className="font-mono font-medium">{progress.streak} dias de quietude</span>

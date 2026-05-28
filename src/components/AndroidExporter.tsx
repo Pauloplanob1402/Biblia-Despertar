@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'motion/react';
 export default function AndroidExporter() {
   const [selectedFilePath, setSelectedFilePath] = useState<string>(ANDROID_PROJECT_FILES[0].path);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [codeFontSize, setCodeFontSize] = useState<number>(13); // default is 13px (larger and clearer by default)
 
   const selectedFile = ANDROID_PROJECT_FILES.find(f => f.path === selectedFilePath) || ANDROID_PROJECT_FILES[0];
 
@@ -104,32 +105,55 @@ export default function AndroidExporter() {
             </p>
           </div>
 
-          <button
-            id="btn-copy-android-source"
-            onClick={handleCopyCode}
-            className={`flex items-center space-x-1.5 px-4.5 py-2 rounded-xl text-xs font-semibold shadow transition-all shrink-0 self-start sm:self-center ${
-              copySuccess 
-                ? 'bg-emerald-600 text-white shadow-emerald-900/10' 
-                : 'bg-stone-800 hover:bg-stone-700 hover:border-stone-600 text-white border border-stone-700'
-            }`}
-          >
-            {copySuccess ? (
-              <>
-                <Check size={14} />
-                <span>Copiado com sucesso!</span>
-              </>
-            ) : (
-              <>
-                <Copy size={13} />
-                <span>Copiar Código Fonte</span>
-              </>
-            )}
-          </button>
+          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+            {/* Font Sizer */}
+            <div className="flex items-center space-x-1 bg-stone-850 px-2.5 py-1.5 rounded-xl border border-stone-800 text-[11px] font-mono shrink-0">
+              <span className="text-stone-400 mr-1.5">Fonte:</span>
+              <button 
+                id="btn-decrease-font"
+                onClick={() => setCodeFontSize(prev => Math.max(10, prev - 1))} 
+                className="w-5 h-5 flex items-center justify-center bg-stone-900 rounded-lg hover:bg-stone-950 text-white font-bold transition active:scale-95"
+                title="Diminuir fonte"
+              >-</button>
+              <span className="text-amber-250 font-bold w-9 text-center text-stone-200">{codeFontSize}px</span>
+              <button 
+                id="btn-increase-font"
+                onClick={() => setCodeFontSize(prev => Math.min(24, prev + 1))} 
+                className="w-5 h-5 flex items-center justify-center bg-stone-900 rounded-lg hover:bg-stone-950 text-white font-bold transition active:scale-95"
+                title="Aumentar fonte"
+              >+</button>
+            </div>
+
+            <button
+              id="btn-copy-android-source"
+              onClick={handleCopyCode}
+              className={`flex items-center space-x-1.5 px-4.5 py-2 rounded-xl text-xs font-semibold shadow transition-all shrink-0 ${
+                copySuccess 
+                  ? 'bg-emerald-600 text-white shadow-emerald-900/10' 
+                  : 'bg-stone-800 hover:bg-stone-700 hover:border-stone-600 text-white border border-stone-700'
+              }`}
+            >
+              {copySuccess ? (
+                <>
+                  <Check size={14} />
+                  <span>Copiado!</span>
+                </>
+              ) : (
+                <>
+                  <Copy size={13} />
+                  <span>Copiar Código</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Main code editor representation window */}
-        <div className="flex-1 bg-stone-950 rounded-2xl border border-stone-800 p-5 font-mono text-xs overflow-auto max-h-[420px] shadow-inner text-left">
-          <pre className="text-amber-50 opacity-90 leading-relaxed whitespace-pre font-mono">
+        <div className="flex-1 bg-stone-950 rounded-2xl border border-stone-800 p-5 font-mono overflow-auto max-h-[420px] shadow-inner text-left">
+          <pre 
+            className="text-amber-50 opacity-90 leading-relaxed whitespace-pre font-mono"
+            style={{ fontSize: `${codeFontSize}px` }}
+          >
             {selectedFile.sourceCode}
           </pre>
         </div>

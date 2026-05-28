@@ -6,10 +6,29 @@
 import { BibleBook } from '../types';
 
 export const BIBLE_BOOKS: BibleBook[] = [
+  { id: 'genesis', name: 'Gênesis', category: 'Velho Testamento', chapterCount: 50, chapters: {} },
+  { id: 'exodo', name: 'Êxodo', category: 'Velho Testamento', chapterCount: 40, chapters: {} },
+  { id: 'levitico', name: 'Levítico', category: 'Velho Testamento', chapterCount: 27, chapters: {} },
+  { id: 'numeros', name: 'Números', category: 'Velho Testamento', chapterCount: 36, chapters: {} },
+  { id: 'deuteronomio', name: 'Deuteronômio', category: 'Velho Testamento', chapterCount: 34, chapters: {} },
+  { id: 'josue', name: 'Josué', category: 'Velho Testamento', chapterCount: 24, chapters: {} },
+  { id: 'juizes', name: 'Juízes', category: 'Velho Testamento', chapterCount: 21, chapters: {} },
+  { id: 'rute', name: 'Rute', category: 'Velho Testamento', chapterCount: 4, chapters: {} },
+  { id: '1samuel', name: '1 Samuel', category: 'Velho Testamento', chapterCount: 31, chapters: {} },
+  { id: '2samuel', name: '2 Samuel', category: 'Velho Testamento', chapterCount: 24, chapters: {} },
+  { id: '1reis', name: '1 Reis', category: 'Velho Testamento', chapterCount: 22, chapters: {} },
+  { id: '2reis', name: '2 Reis', category: 'Velho Testamento', chapterCount: 25, chapters: {} },
+  { id: '1cronicas', name: '1 Crônicas', category: 'Velho Testamento', chapterCount: 29, chapters: {} },
+  { id: '2cronicas', name: '2 Crônicas', category: 'Velho Testamento', chapterCount: 36, chapters: {} },
+  { id: 'esdras', name: 'Esdras', category: 'Velho Testamento', chapterCount: 10, chapters: {} },
+  { id: 'neemias', name: 'Neemias', category: 'Velho Testamento', chapterCount: 13, chapters: {} },
+  { id: 'ester', name: 'Ester', category: 'Velho Testamento', chapterCount: 10, chapters: {} },
+  { id: 'jo', name: 'Jó', category: 'Velho Testamento', chapterCount: 42, chapters: {} },
   {
     id: 'salmos',
     name: 'Salmos',
     category: 'Velho Testamento',
+    chapterCount: 150,
     chapters: {
       23: [
         { chapter: 23, number: 1, text: "O SENHOR é o meu pastor, nada me faltará." },
@@ -40,10 +59,14 @@ export const BIBLE_BOOKS: BibleBook[] = [
       ]
     }
   },
+  { id: 'proverbios', name: 'Provérbios', category: 'Velho Testamento', chapterCount: 31, chapters: {} },
+  { id: 'eclesiastes', name: 'Eclesiastes', category: 'Velho Testamento', chapterCount: 12, chapters: {} },
+  { id: 'canticos', name: 'Cânticos', category: 'Velho Testamento', chapterCount: 8, chapters: {} },
   {
     id: 'isaias',
     name: 'Isaías',
     category: 'Velho Testamento',
+    chapterCount: 66,
     chapters: {
       30: [
         { chapter: 30, number: 15, text: "Porque assim diz o Senhor Deus, o Santo de Israel: Em vos converterdes e em repousardes estaria a vossa salvação; no sossego e na confiança estaria a vossa força, mas não quisestes." },
@@ -56,10 +79,30 @@ export const BIBLE_BOOKS: BibleBook[] = [
       ]
     }
   },
+  { id: 'jeremias', name: 'Jeremias', category: 'Velho Testamento', chapterCount: 52, chapters: {} },
+  { id: 'lamentacoes', name: 'Lamentações', category: 'Velho Testamento', chapterCount: 5, chapters: {} },
+  { id: 'ezequiel', name: 'Ezequiel', category: 'Velho Testamento', chapterCount: 48, chapters: {} },
+  { id: 'daniel', name: 'Daniel', category: 'Velho Testamento', chapterCount: 12, chapters: {} },
+  { id: 'oseias', name: 'Oséias', category: 'Velho Testamento', chapterCount: 14, chapters: {} },
+  { id: 'joel', name: 'Joel', category: 'Velho Testamento', chapterCount: 3, chapters: {} },
+  { id: 'amos', name: 'Amós', category: 'Velho Testamento', chapterCount: 9, chapters: {} },
+  { id: 'obadias', name: 'Obadias', category: 'Velho Testamento', chapterCount: 1, chapters: {} },
+  { id: 'jonas', name: 'Jonas', category: 'Velho Testamento', chapterCount: 4, chapters: {} },
+  { id: 'miqueias', name: 'Miquéias', category: 'Velho Testamento', chapterCount: 7, chapters: {} },
+  { id: 'naum', name: 'Naum', category: 'Velho Testamento', chapterCount: 3, chapters: {} },
+  { id: 'habacuque', name: 'Habacuque', category: 'Velho Testamento', chapterCount: 3, chapters: {} },
+  { id: 'sofonias', name: 'Sofonias', category: 'Velho Testamento', chapterCount: 3, chapters: {} },
+  { id: 'ageu', name: 'Ageu', category: 'Velho Testamento', chapterCount: 2, chapters: {} },
+  { id: 'zacarias', name: 'Zacarias', category: 'Velho Testamento', chapterCount: 14, chapters: {} },
+  { id: 'malaquias', name: 'Malaquias', category: 'Velho Testamento', chapterCount: 4, chapters: {} },
+  { id: 'mateus', name: 'Mateus', category: 'Novo Testamento', chapterCount: 28, chapters: {} },
+  { id: 'marcos', name: 'Marcos', category: 'Novo Testamento', chapterCount: 16, chapters: {} },
+  { id: 'lucas', name: 'Lucas', category: 'Novo Testamento', chapterCount: 24, chapters: {} },
   {
     id: 'joao',
     name: 'João',
     category: 'Novo Testamento',
+    chapterCount: 21,
     chapters: {
       1: [
         { chapter: 1, number: 1, text: "No princípio era o Verbo, e o Verbo estava com Deus, e o Verbo era Deus." },
@@ -71,7 +114,7 @@ export const BIBLE_BOOKS: BibleBook[] = [
         { chapter: 1, number: 14, text: "E o Verbo se fez carne, e habitou entre nós, e vimos a sua glória, como a glória do unigênito do Pai, cheio de graça e de verdade." }
       ],
       15: [
-        { chapter: 15, number: 1, text: "Eu sou la videira verdadeira, e meu Pai é o lavrador." },
+        { chapter: 15, number: 1, text: "Eu sou a videira verdadeira, e meu Pai é o lavrador." },
         { chapter: 15, number: 4, text: "Estai em mim, e eu em vós; como a vara de si mesma não pode dar fruto, se não estiver na videira, assim também vós, se não estiverdes em mim." },
         { chapter: 15, number: 5, text: "Eu sou a videira, vós as varas; quem está em mim, e eu nele, esse dá muito fruto; porque sem mim nada podeis fazer." },
         { chapter: 15, number: 9, text: "Como o Pai me amou, também eu vos amei a vós; permanecei no meu amor." },
@@ -80,18 +123,46 @@ export const BIBLE_BOOKS: BibleBook[] = [
       ]
     }
   },
+  { id: 'atos', name: 'Atos', category: 'Novo Testamento', chapterCount: 28, chapters: {} },
   {
     id: 'romanos',
     name: 'Romanos',
     category: 'Novo Testamento',
+    chapterCount: 16,
     chapters: {
       8: [
         { chapter: 8, number: 1, text: "Portanto, agora nenhuma condenação há para os que estão em Cristo Jesus, que não andam segundo a carne, mas segundo o Espírito." },
         { chapter: 8, number: 14, text: "Porque todos os que são guiados pelo Espírito de Deus, esses são filhos de Deus." },
         { chapter: 8, number: 28, text: "E sabemos que todas as coisas contribuem juntamente para o bem daqueles que amam a Deus, daqueles que são chamados segundo o seu propósito." },
-        { chapter: 8, number: 38, text: "Porque estou certo de que, nem a morte, ni a vida, nem os anjos, nem os principados, nem as potências, nem as coisas do presente, nem as do porvir," },
+        { chapter: 8, number: 38, text: "Porque estou certo de que, nem a morte, nem a vida, nem os anjos, nem os principados, nem as potências, nem as coisas do presente, nem as do porvir," },
         { chapter: 8, number: 39, text: "Nem a altura, nem a profundidade, nem alguma outra criatura nos poderá separar do amor de Deus, que está em Cristo Jesus nosso Senhor." }
       ]
     }
-  }
+  },
+  { id: '1corintios', name: '1 Coríntios', category: 'Novo Testamento', chapterCount: 16, chapters: {} },
+  { id: '2corintios', name: '2 Coríntios', category: 'Novo Testamento', chapterCount: 13, chapters: {} },
+  { id: 'galatas', name: 'Gálatas', category: 'Novo Testamento', chapterCount: 6, chapters: {} },
+  { id: 'efesios', name: 'Efésios', category: 'Novo Testamento', chapterCount: 6, chapters: {} },
+  { id: 'filipenses', name: 'Filipenses', category: 'Novo Testamento', chapterCount: 4, chapters: {} },
+  { id: 'colossenses', name: 'Colossenses', category: 'Novo Testamento', chapterCount: 4, chapters: {} },
+  { id: '1tessalonicenses', name: '1 Tessalonicenses', category: 'Novo Testamento', chapterCount: 5, chapters: {} },
+  { id: '2tessalonicenses', name: '2 Tessalonicenses', category: 'Novo Testamento', chapterCount: 3, chapters: {} },
+  { id: '1timoteo', name: '1 Timóteo', category: 'Novo Testamento', chapterCount: 6, chapters: {} },
+  { id: '2timoteo', name: '2 Timóteo', category: 'Novo Testamento', chapterCount: 4, chapters: {} },
+  { id: 'tito', name: 'Tito', category: 'Novo Testamento', chapterCount: 3, chapters: {} },
+  { id: 'filemom', name: 'Filemom', category: 'Novo Testamento', chapterCount: 1, chapters: {} },
+  { id: 'hebreus', name: 'Hebreus', category: 'Novo Testamento', chapterCount: 13, chapters: {} },
+  { id: 'tiago', name: 'Tiago', category: 'Novo Testamento', chapterCount: 5, chapters: {} },
+  { id: '1pedro', name: '1 Pedro', category: 'Novo Testamento', chapterCount: 5, chapters: {} },
+  { id: '2pedro', name: '2 Pedro', category: 'Novo Testamento', chapterCount: 3, chapters: {} },
+  { id: '1joao', name: '1 João', category: 'Novo Testamento', chapterCount: 5, chapters: {} },
+  { id: '2joao', name: '2 João', category: 'Novo Testamento', chapterCount: 1, chapters: {} },
+  { id: '3joao', name: '3 João', category: 'Novo Testamento', chapterCount: 1, chapters: {} },
+  { id: 'judas', name: 'Judas', category: 'Novo Testamento', chapterCount: 1, chapters: {} },
+  { id: 'apocalipse', name: 'Apocalipse', category: 'Novo Testamento', chapterCount: 22, chapters: {} }
 ];
+
+// Helper to determine the index of the book in the Protestant 66-book order
+export function getBookOrderIndex(bookId: string): number {
+  return BIBLE_BOOKS.findIndex(b => b.id === bookId);
+}
