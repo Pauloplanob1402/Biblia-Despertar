@@ -396,29 +396,29 @@ export default function ProfileSelector({ currentIdentityId, onSelectIdentity }:
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-black/10 p-5 rounded-2xl border border-white/5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-black/25 p-5 md:p-6 rounded-2xl border border-white/10">
                     <div>
-                      <span className="text-[10px] uppercase font-mono tracking-widest text-white/50 block mb-1">Caminho do Coração</span>
-                      <ul className="text-xs space-y-1 text-stone-200">
+                      <span className="text-xs uppercase font-mono tracking-wider text-white/60 block mb-2 font-semibold">Caminho do Coração</span>
+                      <ul className="text-sm space-y-1.5 text-stone-100">
                         <li>• <strong className="text-white">Estilo:</strong> {quizResult.archetype}</li>
-                        <li>• <strong className="text-white">Sustento Intimo:</strong> {quizResult.emotionalTrigger}</li>
+                        <li>• <strong className="text-white">Sustento Íntimo:</strong> {quizResult.emotionalTrigger}</li>
                         <li>• <strong className="text-white">Anseio Profundo:</strong> {quizResult.coreFeeling}</li>
                       </ul>
                     </div>
                     <div>
-                      <span className="text-[10px] uppercase font-mono tracking-widest text-white/50 block mb-1">Palavra Farol</span>
-                      <p className="text-[11px] leading-relaxed italic text-amber-105">{quizResult.scripture}</p>
+                      <span className="text-xs uppercase font-mono tracking-wider text-white/60 block mb-2 font-semibold">Palavra Farol</span>
+                      <p className="text-sm leading-relaxed italic text-amber-100/90 font-serif">"{quizResult.scripture}"</p>
                     </div>
                   </div>
 
-                  <div className="border-t border-white/10 pt-5 space-y-4">
+                  <div className="border-t border-white/10 pt-5 space-y-5">
                     <div>
-                      <strong className="text-xs text-[#EAD0B3] uppercase tracking-wider block mb-1">Questão Reflexiva</strong>
-                      <p className="text-xs italic text-stone-200">"{quizResult.reflectiveQuestion}"</p>
+                      <strong className="text-sm text-[#EAD0B3] font-sans font-semibold uppercase tracking-wider block mb-1.5">Questão Reflexiva</strong>
+                      <p className="text-sm md:text-base italic text-stone-100 font-serif leading-relaxed px-1">"{quizResult.reflectiveQuestion}"</p>
                     </div>
-                    <div className="pt-2">
-                      <strong className="text-xs text-[#EAD0B3] uppercase tracking-wider block mb-1">Oração do Secreto</strong>
-                      <p className="text-xs bg-white/5 p-4 rounded-xl border border-white/5 text-stone-100 leading-relaxed font-serif italic">
+                    <div className="pt-1">
+                      <strong className="text-sm text-[#EAD0B3] font-sans font-semibold uppercase tracking-wider block mb-1.5">Oração do Secreto</strong>
+                      <p className="text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5 text-stone-100 leading-relaxed font-serif italic">
                         "{quizResult.prayer}"
                       </p>
                     </div>
@@ -542,25 +542,25 @@ export default function ProfileSelector({ currentIdentityId, onSelectIdentity }:
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <div className="p-4 bg-stone-50 border border-stone-100 rounded-xl text-xs space-y-1">
-                      <span className="font-semibold text-[#8C6239] block mb-1">Caminho do Coração</span>
+                    <div className="p-4 bg-stone-50 border border-stone-150 rounded-xl text-sm space-y-1.5 text-stone-750">
+                      <span className="font-semibold text-[#8C6239] text-base block mb-1">Caminho do Coração</span>
                       <p><strong>Cuidado Íntimo:</strong> {selectedViewedProfile.emotionalTrigger}</p>
                       <p><strong>Anseio da Alma:</strong> {selectedViewedProfile.coreFeeling}</p>
                     </div>
-                    <div className="p-4 bg-stone-50 border border-stone-100 rounded-xl text-xs">
-                      <span className="font-semibold text-[#C08261] block mb-1">Versículo Farol</span>
-                      <p className="italic text-stone-600">"{selectedViewedProfile.scripture}"</p>
+                    <div className="p-4 bg-stone-50 border border-stone-150 rounded-xl text-sm text-stone-750">
+                      <span className="font-semibold text-[#C08261] text-base block mb-1">Versículo Farol</span>
+                      <p className="italic text-stone-700 font-serif leading-relaxed text-sm md:text-base">"{selectedViewedProfile.scripture}"</p>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-stone-100 space-y-3 text-xs">
+                  <div className="pt-6 border-t border-stone-200/60 space-y-5">
                     <div>
-                      <strong className="block text-stone-400 uppercase tracking-wider text-[11px] mb-1">Questão de Reflexão Profunda</strong>
-                      <p className="italic font-serif pl-2 border-l border-[#C08261] text-stone-700">"{selectedViewedProfile.reflectiveQuestion}"</p>
+                      <strong className="block text-stone-500 font-sans font-semibold uppercase tracking-wider text-xs mb-1.5">Questão de Reflexão Profunda</strong>
+                      <p className="italic font-serif pl-3 border-l-2 border-[#C08261] text-stone-800 text-sm md:text-base leading-relaxed">"{selectedViewedProfile.reflectiveQuestion}"</p>
                     </div>
                     <div>
-                      <strong className="block text-stone-400 uppercase tracking-wider text-[11px] mb-1">Oração do Secreto</strong>
-                      <p className="bg-stone-50 border border-stone-100 p-3 rounded-xl italic font-serif leading-relaxed text-[#5C3D2E]">
+                      <strong className="block text-stone-500 font-sans font-semibold uppercase tracking-wider text-xs mb-1.5">Oração do Secreto</strong>
+                      <p className="bg-stone-50 border border-stone-150 p-4 rounded-xl italic font-serif leading-relaxed text-stone-850 text-sm md:text-base">
                         "{selectedViewedProfile.prayer}"
                       </p>
                     </div>

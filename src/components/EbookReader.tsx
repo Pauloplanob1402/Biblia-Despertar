@@ -49,10 +49,10 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
 
   const getFontClass = () => {
     switch (fontSize) {
-      case 'sm': return 'text-sm';
-      case 'md': return 'text-base';
-      case 'lg': return 'text-lg md:text-xl';
-      case 'xl': return 'text-xl md:text-2xl';
+      case 'sm': return 'text-base';
+      case 'md': return 'text-lg';
+      case 'lg': return 'text-xl md:text-2xl';
+      case 'xl': return 'text-2xl md:text-3xl';
     }
   };
 
@@ -146,33 +146,33 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
               {/* Reader Settings and font config */}
               <div className="flex items-center space-x-4">
                 {/* Font selector */}
-                <div className="flex items-center border-r border-stone-200 pr-4 space-x-1">
-                  <span className="text-[10px] text-stone-400 font-mono uppercase mr-1">Fonte:</span>
+                <div className="flex items-center border-r border-stone-200 pr-4 space-x-1.5">
+                  <span className="text-xs text-stone-500 font-mono uppercase mr-1.5">Fonte:</span>
                   <button
                     id="btn-font-sm"
                     onClick={() => setFontSize('sm')}
-                    className={`p-1.5 rounded-lg text-[10px] ${fontSize === 'sm' ? 'bg-stone-800 text-white font-bold' : 'text-stone-500 hover:bg-stone-200'}`}
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold ${fontSize === 'sm' ? 'bg-stone-800 text-white font-bold' : 'text-stone-600 hover:bg-stone-200 bg-stone-150/70'}`}
                   >
                     A-
                   </button>
                   <button
                     id="btn-font-md"
                     onClick={() => setFontSize('md')}
-                    className={`p-1.5 rounded-lg text-xs ${fontSize === 'md' ? 'bg-stone-800 text-white font-bold' : 'text-stone-500 hover:bg-stone-200'}`}
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold ${fontSize === 'md' ? 'bg-stone-800 text-white font-bold' : 'text-stone-600 hover:bg-stone-200 bg-stone-150/70'}`}
                   >
                     A
                   </button>
                   <button
                     id="btn-font-lg"
                     onClick={() => setFontSize('lg')}
-                    className={`p-1.5 rounded-lg text-sm ${fontSize === 'lg' ? 'bg-stone-800 text-white font-bold' : 'text-stone-500 hover:bg-stone-200'}`}
+                    className={`px-2.5 py-1.5 rounded-lg text-sm font-semibold ${fontSize === 'lg' ? 'bg-stone-800 text-white font-bold' : 'text-stone-600 hover:bg-stone-200 bg-stone-150/70'}`}
                   >
                     A+
                   </button>
                   <button
                     id="btn-font-xl"
                     onClick={() => setFontSize('xl')}
-                    className={`p-1.5 rounded-lg text-base ${fontSize === 'xl' ? 'bg-stone-800 text-white font-bold' : 'text-stone-500 hover:bg-stone-200'}`}
+                    className={`px-2.5 py-1.5 rounded-lg text-base font-semibold ${fontSize === 'xl' ? 'bg-stone-800 text-white font-bold' : 'text-stone-600 hover:bg-stone-200 bg-stone-150/70'}`}
                   >
                     A++
                   </button>
@@ -220,12 +220,12 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                     </p>
 
                     {/* Contemplative Chapter Ending Actions following movement guidelines */}
-                    <div className="mt-12 pt-8 border-t border-stone-200/20 space-y-5">
-                      <div className="text-center font-serif italic text-xs text-stone-500/90">
+                    <div className="mt-12 pt-8 border-t border-stone-200/20 space-y-6">
+                      <div className="text-center font-serif italic text-sm md:text-base text-stone-600 font-medium">
                         O que queima no seu coração agora?
                       </div>
                       
-                      <div className="flex flex-wrap justify-center gap-2.5">
+                      <div className="flex flex-wrap justify-center gap-3">
                         {activeChapterIndex < selectedBook.chapters.length - 1 ? (
                           <button
                             id="btn-cozy-next"
@@ -233,7 +233,7 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                               onCompleteChapter(selectedBook.id, activeChapterIndex);
                               setActiveChapterIndex(idx => idx + 1);
                             }}
-                            className="px-4 py-2 md:px-5 bg-[#C08261] hover:bg-[#b07353] text-white text-xs font-semibold rounded-xl tracking-wide transition shadow-xs"
+                            className="px-5 py-2.5 bg-[#C08261] hover:bg-[#b07353] text-white text-sm font-semibold rounded-xl tracking-wide transition shadow-xs"
                           >
                             Continue caminhando
                           </button>
@@ -244,7 +244,7 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                               onCompleteChapter(selectedBook.id, activeChapterIndex);
                               setIsReadingMode(false);
                             }}
-                            className="px-4 py-2 md:px-5 bg-[#C08261] hover:bg-[#b07353] text-white text-xs font-semibold rounded-xl tracking-wide transition shadow-xs"
+                            className="px-5 py-2.5 bg-[#C08261] hover:bg-[#b07353] text-white text-sm font-semibold rounded-xl tracking-wide transition shadow-xs"
                           >
                             Concluir esta leitura
                           </button>
@@ -255,7 +255,7 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                           onClick={() => {
                             setReaderTheme(readerTheme === 'dark' ? 'ivory' : 'dark');
                           }}
-                          className="px-4 py-2 bg-stone-500/10 hover:bg-stone-500/15 text-stone-600 text-xs font-medium rounded-xl transition"
+                          className="px-5 py-2.5 bg-stone-500/10 hover:bg-stone-500/15 text-stone-700 text-sm font-medium rounded-xl transition"
                         >
                           {readerTheme === 'dark' ? 'Iluminar leitura' : 'Ler em silêncio (Modo Escuro)'}
                         </button>
@@ -265,7 +265,7 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                           onClick={() => {
                             window.dispatchEvent(new CustomEvent('change-section', { detail: 'home' }));
                           }}
-                          className="px-4 py-2 bg-stone-500/10 hover:bg-stone-500/15 text-stone-600 text-xs font-medium rounded-xl transition"
+                          className="px-5 py-2.5 bg-stone-500/10 hover:bg-stone-500/15 text-stone-700 text-sm font-medium rounded-xl transition"
                         >
                           Sentar mais um pouco (Respirar)
                         </button>
@@ -275,7 +275,7 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                           onClick={() => {
                             window.dispatchEvent(new CustomEvent('change-section', { detail: 'mesas' }));
                           }}
-                          className="px-4 py-2 bg-[#8C6239]/10 hover:bg-[#8C6239]/15 text-[#8C6239] text-xs font-semibold rounded-xl transition border border-[#8C6239]/20"
+                          className="px-5 py-2.5 bg-[#8C6239]/10 hover:bg-[#8C6239]/15 text-[#8C6239] text-sm font-semibold rounded-xl transition border border-[#8C6239]/20"
                         >
                           Levar isso para uma Mesa
                         </button>

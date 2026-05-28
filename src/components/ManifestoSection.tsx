@@ -234,17 +234,17 @@ export default function ManifestoSection({
           <cite className="font-serif text-[#8C6239] text-base font-medium not-italic">
             “Onde estiverem dois ou três reunidos em meu nome, ali eu estou.”
           </cite>
-          <span className="font-mono text-[9px] uppercase tracking-widest text-stone-400 font-bold">
+          <span className="font-mono text-xs uppercase tracking-widest text-stone-500 font-bold">
             Mateus 18:20
           </span>
         </div>
 
         {/* Nudge Options Wrapper */}
-        <div className="pt-4 flex flex-col sm:flex-row justify-center items-center gap-2 max-w-md mx-auto">
+        <div className="pt-4 flex flex-col sm:flex-row justify-center items-center gap-3 max-w-lg mx-auto">
           {isAuthenticated ? (
             <button
               onClick={onOpenCreateMesa}
-              className="w-full sm:flex-1 py-3 bg-[#C08261] hover:bg-[#b07353] text-white text-xs font-semibold rounded-2xl transition shadow-xs flex items-center justify-center space-x-1.5"
+              className="w-full sm:flex-1 py-3 bg-[#C08261] hover:bg-[#b07353] text-white text-sm font-semibold rounded-2xl transition shadow-xs flex items-center justify-center space-x-1.5"
             >
               <span>Dar Vida a Esta Mesa</span>
               <ArrowRight size={14} />
@@ -252,7 +252,7 @@ export default function ManifestoSection({
           ) : (
             <button
               onClick={onAuthenticate}
-              className="w-full sm:flex-1 py-3 bg-[#C08261] hover:bg-[#b07353] text-white text-xs font-semibold rounded-2xl transition shadow-xs flex items-center justify-center space-x-1.5"
+              className="w-full sm:flex-1 py-3 bg-[#C08261] hover:bg-[#b07353] text-white text-sm font-semibold rounded-2xl transition shadow-xs flex items-center justify-center space-x-1.5"
             >
               <span>Consagrar Minha Mesa</span>
               <ArrowRight size={14} />
@@ -261,13 +261,13 @@ export default function ManifestoSection({
 
           <button
             onClick={onExploreMesas}
-            className="w-full sm:flex-1 py-3 bg-white border border-stone-200 text-stone-605 text-xs font-semibold rounded-2xl hover:bg-stone-50 transition"
+            className="w-full sm:flex-1 py-3 bg-white border border-stone-200 text-stone-750 text-sm font-semibold rounded-2xl hover:bg-stone-50 transition"
           >
             Ver as Mesas Ativas
           </button>
         </div>
 
-        <p className="text-[10px] text-stone-405 font-mono max-w-xs mx-auto leading-normal select-none">
+        <p className="text-xs text-stone-500 font-mono max-w-sm mx-auto leading-normal select-none">
           Crie, inspire os amigos ou participe. O acolhimento ao próximo é um chamado de todos os peregrinos de Deus.
         </p>
       </div>

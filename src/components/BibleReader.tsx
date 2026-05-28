@@ -519,13 +519,13 @@ export default function BibleReader({
                       <p
                         id={`verse-${verse.number}`}
                         onClick={() => handleVerseClick(verse.number, verse.text)}
-                        className={`font-serif text-[15px] sm:text-[17px] leading-relaxed text-stone-800 cursor-pointer rounded-lg p-2.5 transition-all text-justify ${
+                        className={`font-serif text-[17px] sm:text-xl leading-relaxed text-stone-850 cursor-pointer rounded-lg p-3 transition-all text-justify ${
                           highlightColor ? highlightColor : ''
                         } ${
                           isSelected ? 'ring-1 ring-[#C08261]/35 bg-[#C08261]/5 shadow-sm' : 'hover:bg-stone-50/50'
                         }`}
                       >
-                        <span className="font-mono text-xs text-[#C08261]/80 mr-2 font-normal select-none inline-block w-6 text-right">
+                        <span className="font-mono text-sm text-[#C08261] mr-2 font-normal select-none inline-block w-6 text-right">
                           {verse.number}
                         </span>
                         {verse.text}

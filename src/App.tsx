@@ -241,7 +241,7 @@ export default function App() {
             D
           </div>
           <div className="text-left">
-            <h1 className="font-serif text-[13px] font-bold tracking-tight text-stone-850">O Despertar</h1>
+            <h1 className="font-serif text-[13px] font-bold tracking-tight text-stone-850">Somos o Despertar</h1>
             <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block font-semibold text-[10px]">Mesa e Caminho</span>
           </div>
         </div>
@@ -282,7 +282,7 @@ export default function App() {
                     D
                   </div>
                   <div className="text-left">
-                    <h1 className="font-serif text-[14px] font-bold tracking-tight text-stone-850">O Despertar</h1>
+                    <h1 className="font-serif text-[14px] font-bold tracking-tight text-stone-850">Somos o Despertar</h1>
                     <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block font-semibold text-[10px]">Mesa e Caminho</span>
                   </div>
                 </div>
@@ -450,7 +450,7 @@ export default function App() {
               D
             </div>
             <div className="text-left">
-              <h1 className="font-serif text-[15px] font-bold tracking-tight text-stone-850">O Despertar</h1>
+              <h1 className="font-serif text-[15px] font-bold tracking-tight text-stone-850">Somos o Despertar</h1>
               <span className="text-[11px] font-mono tracking-widest text-[#C08261] uppercase leading-none block font-semibold text-[10px]">Mesa e Caminho</span>
             </div>
           </div>
@@ -820,41 +820,41 @@ export default function App() {
                 </div>
 
                 <div className="border-b border-stone-100 pb-5 space-y-2">
-                  <span className="px-2.5 py-0.5 bg-[#C08261]/10 text-[#C08261] text-[9px] font-semibold font-mono rounded-full tracking-wider uppercase">
+                  <span className="px-3 py-1 bg-[#C08261]/10 text-[#C08261] text-xs font-semibold font-mono rounded-full tracking-wider uppercase">
                     Reflexão • {selectedDevotional.category}
                   </span>
                   <h2 className="text-3xl font-serif font-light text-stone-850 leading-snug">{selectedDevotional.title}</h2>
-                  <p className="text-xs text-stone-400 font-mono italic font-semibold">{selectedDevotional.scripture}</p>
+                  <p className="text-sm text-stone-550 font-mono italic font-semibold">{selectedDevotional.scripture}</p>
                 </div>
 
                 {/* Main Meditative Prose */}
-                <p className="font-serif text-stone-700 text-[15px] md:text-base leading-relaxed text-justify space-y-4 whitespace-pre-line">
+                <p className="font-serif text-stone-800 text-base md:text-lg leading-relaxed text-justify space-y-4 whitespace-pre-line">
                   {selectedDevotional.text}
                 </p>
 
                 {/* Moment of quiet breathing block */}
-                <div id="devotional-breathing-box" className="p-5 bg-gradient-to-r from-stone-50 to-stone-100 border border-stone-200/50 rounded-2xl space-y-3">
-                  <div className="flex items-center space-x-2 text-xs font-semibold text-stone-700">
+                <div id="devotional-breathing-box" className="p-6 bg-gradient-to-r from-stone-50 to-stone-100 border border-stone-150 rounded-2xl space-y-3">
+                  <div className="flex items-center space-x-2 text-sm font-semibold text-stone-700">
                     <Clock size={14} className="text-[#C08261] animate-spin" />
-                    <span className="font-mono uppercase tracking-wider text-[10px]">Pausa para respiração</span>
+                    <span className="font-mono uppercase tracking-wider text-xs">Pausa para respiração</span>
                   </div>
-                  <p className="text-xs text-stone-600 italic font-serif leading-relaxed">
+                  <p className="text-sm md:text-base text-stone-750 italic font-serif leading-relaxed">
                     {selectedDevotional.pauseInstruction}
                   </p>
                 </div>
 
                 {/* Prayer / Oração do Secreto */}
                 <div className="space-y-2">
-                  <span className="text-[9px] uppercase tracking-widest font-mono text-stone-400 font-semibold block">Oração do Secreto</span>
-                  <blockquote className="p-4 bg-amber-50/20 border-l-2 border-[#C08261] text-xs font-serif italic text-stone-700 leading-relaxed rounded-r-xl">
+                  <span className="text-xs uppercase tracking-wider font-mono text-stone-550 font-semibold block">Oração do Secreto</span>
+                  <blockquote className="p-5 bg-amber-50/20 border-l-2 border-[#C08261] text-sm md:text-base font-serif italic text-stone-850 leading-relaxed rounded-r-xl">
                     "{selectedDevotional.prayer}"
                   </blockquote>
                 </div>
 
                 {/* Grace in practice */}
                 <div className="space-y-2">
-                  <span className="text-[9px] uppercase tracking-widest font-mono text-stone-400 font-semibold block">A Graça em prática no seu dia</span>
-                  <p className="text-xs text-stone-600 leading-normal pl-1">
+                  <span className="text-xs uppercase tracking-wider font-mono text-stone-550 font-semibold block">A Graça em prática no seu dia</span>
+                  <p className="text-sm md:text-base text-stone-750 leading-relaxed pl-1">
                     • {selectedDevotional.graceInPractice}
                   </p>
                 </div>
@@ -862,8 +862,8 @@ export default function App() {
                 {/* Reflective input box */}
                 <div className="border-t border-stone-100 pt-6 space-y-4">
                   <div className="space-y-1">
-                    <span className="text-[10px] uppercase tracking-widest font-mono text-[#8C6239] font-semibold block">Pergunta Reflexiva</span>
-                    <p className="text-xs italic text-stone-600 font-serif">"{selectedDevotional.reflectiveQuestion}"</p>
+                    <span className="text-xs uppercase tracking-wider font-mono text-[#8C6239] font-semibold block">Pergunta Reflexiva</span>
+                    <p className="text-sm md:text-base italic text-stone-850 font-serif leading-relaxed pl-1">"{selectedDevotional.reflectiveQuestion}"</p>
                   </div>
 
                   <div className="flex space-x-2">
@@ -871,7 +871,7 @@ export default function App() {
                       id="input-devotional-journal-note"
                       type="text"
                       placeholder="Responda em silêncio o que queima em sua mente..."
-                      className="bg-stone-50 border border-stone-250 rounded-xl px-4 py-2.5 text-xs flex-1 focus:outline-none focus:ring-1 focus:ring-[#C08261]"
+                      className="bg-stone-50 border border-stone-250 rounded-xl px-4 py-3 text-sm flex-1 focus:outline-none focus:ring-1 focus:ring-[#C08261] text-stone-800"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           const val = (e.currentTarget as HTMLInputElement).value;
@@ -891,7 +891,7 @@ export default function App() {
                           input.value = '';
                         }
                       }}
-                      className="px-4 py-2 bg-stone-900 border border-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl transition flex items-center justify-center shadow-xs"
+                      className="px-5 py-3 bg-stone-900 border border-stone-900 hover:bg-black text-white text-sm font-semibold rounded-xl transition flex items-center justify-center shadow-xs"
                     >
                       <Check size={14} />
                     </button>
