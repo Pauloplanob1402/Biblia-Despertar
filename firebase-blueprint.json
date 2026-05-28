@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with spiritual stats",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "avatarEmoji": { "type": "string" },
+        "currentIdentityId": { "type": "string" },
+        "streak": { "type": "integer" },
+        "totalVotes": { "type": "integer" },
+        "ideasShared": { "type": "integer" },
+        "joinedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "email", "avatarEmoji"]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "description": "Direct message chat meta between users",
+      "type": "object",
+      "properties": {
+        "participants": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastMessage": { "type": "string" },
+        "lastAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["participants", "createdAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Individual chat message",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "senderUid": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "readBy": { "type": "array" },
+        "reactions": { "type": "object" }
+      },
+      "required": ["text", "senderUid", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Saved user profiles"
+    },
+    "/conversations/{cid}": {
+      "schema": { "$ref": "#/entities/Conversation" },
+      "description": "Chat conversations"
+    },
+    "/conversations/{cid}/messages/{msgId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Chat messages inside a conversation"
+    }
+  }
+}

@@ -17,38 +17,124 @@ import BibleReader from './components/BibleReader';
 import ProfileSelector from './components/ProfileSelector';
 import EbookReader from './components/EbookReader';
 import MesasSection from './components/MesasSection';
+import AuthModal from './components/AuthModal';
+import ChatDM from './components/ChatDM';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
 import { DESPERTAR_PROFILES } from './data/profiles';
 import { UserProgress, Devotional, SpiritualIdentity } from './types';
+import { auth, db } from './lib/firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile'>('home');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
+  // Firebase Auth states
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [chatContact, setChatContact] = useState<{ uid: string; name: string; emoji?: string } | null>(null);
+
   // User profile persistent state engine
-  const [progress, setProgress] = useState<UserProgress>(() => {
-    const saved = localStorage.getItem('despertar_progress_v2');
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) { /* fallback */ }
-    }
-    return {
-      streak: 3, // Starting encouragement streak
-      lastActive: new Date().toISOString().split('T')[0],
-      savedReflections: [],
-      favoriteVerses: [],
-      completedChapters: [],
-      currentIdentityId: null,
-      answers: {}
-    };
+  const [progress, setProgress] = useState<UserProgress>({
+    streak: 3, // Starting encouragement streak
+    lastActive: new Date().toISOString().split('T')[0],
+    savedReflections: [],
+    favoriteVerses: [],
+    completedChapters: [],
+    currentIdentityId: null,
+    answers: {}
   });
 
-  // Sync state changes to localStorage
+  // Track Firebase Auth state changes
   useEffect(() => {
-    localStorage.setItem('despertar_progress_v2', JSON.stringify(progress));
-  }, [progress]);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setCurrentUser(user);
+        
+        // Fetch user progress from Firestore
+        try {
+          const userDocRef = doc(db, 'users', user.uid);
+          const userDocSnap = await getDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            const data = userDocSnap.data();
+            setUserProfile(data);
+            setProgress({
+              streak: data.streak ?? 3,
+              lastActive: data.lastActive ?? new Date().toISOString().split('T')[0],
+              savedReflections: data.savedReflections ?? [],
+              favoriteVerses: data.favoriteVerses ?? [],
+              completedChapters: data.completedChapters ?? [],
+              currentIdentityId: data.currentIdentityId ?? null,
+              answers: data.answers ?? {}
+            });
+          } else {
+            // First time user, create progress in Firestore
+            await setDoc(userDocRef, {
+              uid: user.uid,
+              name: user.displayName || 'Peregrino',
+              email: user.email || '',
+              avatarEmoji: '🕊️',
+              streak: 3,
+              lastActive: new Date().toISOString().split('T')[0],
+              savedReflections: [],
+              favoriteVerses: [],
+              completedChapters: [],
+              currentIdentityId: null,
+              answers: {}
+            }, { merge: true });
+          }
+        } catch (err) {
+          console.error("Error loading user profile from Firestore:", err);
+        }
+      } else {
+        setCurrentUser(null);
+        setUserProfile(null);
+        // Fallback to local storage for guests
+        const saved = localStorage.getItem('despertar_progress_v2');
+        if (saved) {
+          try {
+            setProgress(JSON.parse(saved));
+          } catch (e) {
+            // fallback
+          }
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Sync state changes to Firestore/localStorage
+  useEffect(() => {
+    if (currentUser) {
+      const syncToFirestore = async () => {
+        try {
+          const userDocRef = doc(db, 'users', currentUser.uid);
+          await setDoc(userDocRef, {
+            streak: progress.streak,
+            lastActive: progress.lastActive,
+            savedReflections: progress.savedReflections,
+            favoriteVerses: progress.favoriteVerses,
+            completedChapters: progress.completedChapters,
+            currentIdentityId: progress.currentIdentityId,
+            answers: progress.answers
+          }, { merge: true });
+        } catch (err) {
+          console.error("Error syncing progress to Firestore:", err);
+        }
+      };
+      
+      syncToFirestore();
+    } else {
+      localStorage.setItem('despertar_progress_v2', JSON.stringify(progress));
+    }
+  }, [progress, currentUser]);
+
 
   // Determine emotional greeting based on local time
   const getTimeBasedGreeting = () => {
@@ -195,18 +281,37 @@ export default function App() {
               </div>
 
               {/* User Profile context if exists */}
-              {currentIdentity && (
-                <div className="p-5 border-b border-stone-100 bg-stone-50/50 flex items-center space-x-3 text-left">
-                  <div 
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-serif shadow-sm shrink-0"
-                    style={{ backgroundColor: currentIdentity.hexColor }}
+              {currentUser ? (
+                <div className="p-5 border-b border-stone-100 bg-stone-50/50 flex items-center justify-between text-left">
+                  <div className="flex items-center space-x-3 truncate">
+                    <div className="w-10 h-10 rounded-xl bg-orange-100/80 flex items-center justify-center text-xl shadow-xs shrink-0 select-none">
+                      {userProfile?.avatarEmoji || '🕊️'}
+                    </div>
+                    <div className="truncate">
+                      <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-stone-400 block font-bold leading-none mb-0.5">Identidade Ativa:</span>
+                      <h5 className="font-serif text-sm font-semibold text-[#C08261] truncate leading-tight">
+                        {userProfile?.name || currentUser.displayName || 'Buscador'}
+                      </h5>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => { signOut(auth); setChatContact(null); }}
+                    className="text-[9px] uppercase font-mono font-bold tracking-wider text-rose-700 bg-rose-50 border border-rose-200 px-2 py-1.5 rounded-lg hover:bg-rose-100 transition duration-150 shrink-0 ml-2"
                   >
-                    {currentIdentity.name.charAt(2)}
-                  </div>
-                  <div className="truncate">
-                    <span className="text-[11px] uppercase tracking-wider font-semibold text-stone-400 font-mono">Identidade Atual:</span>
-                    <h5 className="font-serif text-[13px] font-semibold text-stone-800 truncate">{currentIdentity.name}</h5>
-                  </div>
+                    Sair
+                  </button>
+                </div>
+              ) : (
+                <div className="p-5 border-b border-stone-100 bg-[#C08261]/5 text-left flex flex-col space-y-2.5">
+                  <p className="text-[11px] text-stone-600 leading-normal font-sans">
+                    Modo visitante ativo. Para salvar suas reflexões e conversar com outros peregrinos, entre ou crie sua conta.
+                  </p>
+                  <button
+                    onClick={() => { setShowAuthModal(true); setIsMobileMenuOpen(false); }}
+                    className="w-full text-center py-2.5 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-black transition"
+                  >
+                    Entrar / Criar Conta
+                  </button>
                 </div>
               )}
 
@@ -338,18 +443,37 @@ export default function App() {
         </div>
 
         {/* User context card (Left mini-deck) */}
-        {currentIdentity && (
-          <div className="p-5 border-b border-stone-100 bg-stone-50/50 flex items-center space-x-3 text-left">
-            <div 
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-serif shadow-sm shrink-0"
-              style={{ backgroundColor: currentIdentity.hexColor }}
+        {currentUser ? (
+          <div className="p-5 border-b border-stone-100 bg-stone-50/50 flex items-center justify-between text-left">
+            <div className="flex items-center space-x-3 truncate">
+              <div className="w-10 h-10 rounded-xl bg-orange-100/80 flex items-center justify-center text-xl shadow-xs shrink-0 select-none">
+                {userProfile?.avatarEmoji || '🕊️'}
+              </div>
+              <div className="truncate">
+                <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-stone-400 block font-bold leading-none mb-0.5">Identidade Ativa:</span>
+                <h5 className="font-serif text-sm font-semibold text-[#C08261] truncate leading-tight">
+                  {userProfile?.name || currentUser.displayName || 'Buscador'}
+                </h5>
+              </div>
+            </div>
+            <button 
+              onClick={() => { signOut(auth); setChatContact(null); }}
+              className="text-[9px] uppercase font-mono font-bold tracking-wider text-rose-700 bg-rose-50 border border-rose-200 px-2 py-1.5 rounded-lg hover:bg-rose-100 transition duration-150 shrink-0 ml-2"
             >
-              {currentIdentity.name.charAt(2)}
-            </div>
-            <div className="truncate">
-              <span className="text-[11px] uppercase tracking-wider font-semibold text-stone-550 font-mono">Identidade Atual:</span>
-              <h5 className="font-serif text-[13px] font-semibold text-stone-800 truncate">{currentIdentity.name}</h5>
-            </div>
+              Sair
+            </button>
+          </div>
+        ) : (
+          <div className="p-5 border-b border-stone-100 bg-[#C08261]/5 text-left flex flex-col space-y-2.5">
+            <p className="text-[11px] text-stone-600 leading-normal font-sans">
+              Modo visitante ativo. Para salvar suas reflexões e conversar com outros peregrinos, entre ou crie sua conta.
+            </p>
+            <button
+              onClick={() => setShowAuthModal(true)}
+              className="w-full text-center py-2.5 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-black transition"
+            >
+              Entrar / Criar Conta
+            </button>
           </div>
         )}
 
@@ -582,6 +706,81 @@ export default function App() {
                   </div>
                 </div>
               </div>
+
+              {/* NOTA DO DESPERTAR — MANIFESTO */}
+              <div className="bg-stone-100/50 border border-stone-200/60 rounded-3xl p-8 md:p-12 text-center max-w-3xl mx-auto space-y-6 shadow-xs mt-10">
+                <div className="flex flex-col items-center space-y-2">
+                  <span className="text-2xl select-none text-[#C08261]">🕊️</span>
+                  <h3 className="font-serif tracking-wider uppercase font-semibold text-[#8C6239] text-[12px] font-mono leading-none">
+                    Nota do Despertar
+                  </h3>
+                  <div className="w-8 h-[1px] bg-[#C08261]/30 my-1" />
+                </div>
+
+                <div className="font-serif text-stone-700 space-y-5 leading-relaxed text-sm md:text-base max-w-2xl mx-auto italic">
+                  <p className="not-italic font-medium text-stone-900 text-base md:text-lg">
+                    O Despertar não existe para competir com igrejas. <br />
+                    Nem para criar mais um sistema.
+                  </p>
+                  
+                  <p>
+                    Existe para criar espaço onde pessoas possam <br className="hidden md:inline" /> reaprender a caminhar juntas.
+                  </p>
+
+                  <p className="text-stone-600 font-sans text-xs md:text-sm">
+                    Alguns chegam aqui despertando para a graça pela primeira vez. <br />
+                    Outros chegam cansados. <br />
+                    Feridos. <br />
+                    Parados. <br />
+                    Ou apenas tentando encontrar novamente aquilo que um dia fez sentido.
+                  </p>
+
+                  <p className="font-medium text-stone-850 not-italic">
+                    Todos são recebidos como peregrinos do mesmo caminho.
+                  </p>
+
+                  <p>
+                    Não confiamos em regras. <br />
+                    Confiamos em pessoas.
+                  </p>
+
+                  <p className="text-[#C08261] font-semibold not-italic text-[10px] tracking-wider uppercase font-mono">
+                    Porque o evangelho sempre cresceu assim.
+                  </p>
+
+                  <div className="flex justify-center py-2 select-none">
+                    <div className="w-1.5 h-1.5 bg-stone-300 rounded-full mx-1" />
+                    <div className="w-1.5 h-1.5 bg-stone-300 rounded-full mx-1" />
+                    <div className="w-1.5 h-1.5 bg-stone-300 rounded-full mx-1" />
+                  </div>
+
+                  <p className="leading-loose text-stone-800">
+                    Antes das estruturas, existiam mesas. <br />
+                    Antes dos movimentos, existiam pessoas. <br />
+                    Antes das multidões, existiam conversas honestas.
+                  </p>
+
+                  <p className="font-medium text-stone-900 not-italic">
+                    O Despertar acredita na simplicidade do evangelho vivido de perto: <br />
+                    <span className="text-[#C08261]">uma mesa aberta</span>, <br />
+                    <span>presença real</span>, <br />
+                    <span className="italic">graça suficiente</span>, <br />
+                    e <span className="font-semibold underline decoration-stone-300 underline-offset-4">pessoas caminhando juntas</span>.
+                  </p>
+
+                  <p className="text-stone-650 leading-normal font-sans text-xs md:text-sm">
+                    Tudo o que permanece começa pequeno. <br />
+                    Uma conversa. <br />
+                    Uma casa. <br />
+                    Uma mesa. <br />
+                    Uma vida alcançando outra.
+                  </p>
+
+                  <p className="text-[#8C6239] font-medium text-md pt-3">
+                    E talvez tenha sido assim desde o começo.
+                  </p>
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -770,7 +969,7 @@ export default function App() {
             </motion.div>
           )}
 
-          {/* ACTIVE PORT: COMMUNITY FELLOWSHIP DINNER TABLES */}
+          {/* ACTIVE PORT: COMMUNITY FELLOWSHIP DINNER TABLES / CHAT */}
           {activeSection === 'mesas' && !selectedDevotional && (
             <motion.div
               key="mesas"
@@ -779,7 +978,19 @@ export default function App() {
               exit={{ opacity: 0, x: -15 }}
               className="space-y-2"
             >
-              <MesasSection />
+              {chatContact ? (
+                <ChatDM
+                  contactUid={chatContact.uid}
+                  contactName={chatContact.name}
+                  contactEmoji={chatContact.emoji || '👥'}
+                  onBack={() => setChatContact(null)}
+                />
+              ) : (
+                <MesasSection
+                  onStartChat={(uid, name, emoji) => setChatContact({ uid, name, emoji })}
+                  onOpenAuth={() => setShowAuthModal(true)}
+                />
+              )}
             </motion.div>
           )}
 
@@ -915,6 +1126,8 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
+
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 }
