@@ -51,6 +51,19 @@ export default function App() {
     answers: {}
   });
 
+  // Listener for dynamic section change custom events across components
+  useEffect(() => {
+    const handleChangeSection = (e: Event) => {
+      const targetDetail = (e as CustomEvent).detail;
+      if (targetDetail) {
+        setSelectedDevotional(null);
+        setActiveSection(targetDetail);
+      }
+    };
+    window.addEventListener('change-section', handleChangeSection);
+    return () => window.removeEventListener('change-section', handleChangeSection);
+  }, []);
+
   // Track Firebase Auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -640,7 +653,7 @@ export default function App() {
                           onClick={() => setActiveSection('profiles')}
                           className="text-xs text-[#C08261] font-semibold flex items-center space-x-0.5 hover:underline"
                         >
-                          <span>Estudar meu temperamento</span>
+                          <span>Relembrar meu jeito de caminhar</span>
                           <ChevronRight size={14} />
                         </button>
                       </div>
@@ -649,9 +662,9 @@ export default function App() {
                     <div className="bg-amber-50/40 border border-amber-200/40 rounded-3xl p-6 shadow-xs flex flex-col items-center justify-center text-center space-y-3">
                       <Compass size={24} className="text-[#C08261]" />
                       <div className="space-y-1">
-                        <h5 className="font-serif font-semibold text-stone-800 text-sm">Qual o seu Perfil dos 12?</h5>
+                        <h5 className="font-serif font-semibold text-stone-800 text-sm">Qual o seu jeito de caminhar?</h5>
                         <p className="text-stone-500 text-xs max-w-xs">
-                          Faça nosso mapeamento silencioso comportamental para descobrir como sua alma melhor se conecta com Deus.
+                          Descubra qual destas 12 histórias se parece mais com o seu coração e como você se conecta com Ele, com os outros e consigo mesmo.
                         </p>
                       </div>
                       <button
@@ -659,7 +672,7 @@ export default function App() {
                         onClick={() => setActiveSection('profiles')}
                         className="mt-1.5 px-4 py-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl transition shadow-xs"
                       >
-                        Iniciar Mapeamento
+                        Iniciar Descoberta
                       </button>
                     </div>
                   )}

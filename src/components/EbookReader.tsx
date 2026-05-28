@@ -218,6 +218,69 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                     <p className={`font-serif leading-relaxed text-justify space-y-4 whitespace-pre-line ${getFontClass()}`}>
                       {currentChapter.content}
                     </p>
+
+                    {/* Contemplative Chapter Ending Actions following movement guidelines */}
+                    <div className="mt-12 pt-8 border-t border-stone-200/20 space-y-5">
+                      <div className="text-center font-serif italic text-xs text-stone-500/90">
+                        O que queima no seu coração agora?
+                      </div>
+                      
+                      <div className="flex flex-wrap justify-center gap-2.5">
+                        {activeChapterIndex < selectedBook.chapters.length - 1 ? (
+                          <button
+                            id="btn-cozy-next"
+                            onClick={() => {
+                              onCompleteChapter(selectedBook.id, activeChapterIndex);
+                              setActiveChapterIndex(idx => idx + 1);
+                            }}
+                            className="px-4 py-2 md:px-5 bg-[#C08261] hover:bg-[#b07353] text-white text-xs font-semibold rounded-xl tracking-wide transition shadow-xs"
+                          >
+                            Continue caminhando
+                          </button>
+                        ) : (
+                          <button
+                            id="btn-cozy-finish"
+                            onClick={() => {
+                              onCompleteChapter(selectedBook.id, activeChapterIndex);
+                              setIsReadingMode(false);
+                            }}
+                            className="px-4 py-2 md:px-5 bg-[#C08261] hover:bg-[#b07353] text-white text-xs font-semibold rounded-xl tracking-wide transition shadow-xs"
+                          >
+                            Concluir esta leitura
+                          </button>
+                        )}
+
+                        <button
+                          id="btn-cozy-dark"
+                          onClick={() => {
+                            setReaderTheme(readerTheme === 'dark' ? 'ivory' : 'dark');
+                          }}
+                          className="px-4 py-2 bg-stone-500/10 hover:bg-stone-500/15 text-stone-600 text-xs font-medium rounded-xl transition"
+                        >
+                          {readerTheme === 'dark' ? 'Iluminar leitura' : 'Ler em silêncio (Modo Escuro)'}
+                        </button>
+
+                        <button
+                          id="btn-cozy-quiet"
+                          onClick={() => {
+                            window.dispatchEvent(new CustomEvent('change-section', { detail: 'home' }));
+                          }}
+                          className="px-4 py-2 bg-stone-500/10 hover:bg-stone-500/15 text-stone-600 text-xs font-medium rounded-xl transition"
+                        >
+                          Sentar mais um pouco (Respirar)
+                        </button>
+
+                        <button
+                          id="btn-cozy-table"
+                          onClick={() => {
+                            window.dispatchEvent(new CustomEvent('change-section', { detail: 'mesas' }));
+                          }}
+                          className="px-4 py-2 bg-[#8C6239]/10 hover:bg-[#8C6239]/15 text-[#8C6239] text-xs font-semibold rounded-xl transition border border-[#8C6239]/20"
+                        >
+                          Levar isso para uma Mesa
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

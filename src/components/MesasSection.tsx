@@ -114,6 +114,14 @@ export default function MesasSection({ onStartChat, onOpenAuth }: MesasSectionPr
 
   // Real-time Firestore users listener
   useEffect(() => {
+    const handleOpenCreateMesa = () => {
+      setShowCreateModal(true);
+    };
+    window.addEventListener('open-create-mesa', handleOpenCreateMesa);
+    return () => window.removeEventListener('open-create-mesa', handleOpenCreateMesa);
+  }, []);
+
+  useEffect(() => {
     if (!currentUserId) return;
 
     const queryUsers = query(collection(db, 'users'));

@@ -52,37 +52,38 @@ export default function ManifestoSection({
         
         <div className="space-y-3.5 z-10 relative">
           <span className="text-[10px] uppercase font-mono tracking-widest text-[#8C6239] font-bold">
-            Um Chamado de Retorno às Origens
+            Um jeito simples de caminhar
           </span>
           <h2 className="font-serif text-3xl md:text-5xl font-extralight text-stone-850 tracking-tight leading-tight">
-            “Vinde a mim.”
+            Você não precisa chegar pronto para sentar à mesa.
           </h2>
           <p className="text-stone-400 font-serif italic text-xs md:text-sm">
-            Foi assim que tudo começou.
+            O Despertar é um lugar onde pessoas reais reaprendem a caminhar com Deus juntas.
           </p>
         </div>
 
         {/* Storytelling Slider */}
         <div className="font-serif text-stone-700 space-y-6 leading-relaxed max-w-2xl mx-auto text-sm md:text-base border-l border-stone-200/60 pl-6 md:pl-10 text-justify italic">
-          <p className="not-italic font-medium text-stone-900 text-base md:text-lg">
-            Antes dos sistemas. <br />
-            Antes dos palcos e das estruturas pesadas. <br />
-            Antes das multidões ansiosas.
+          <p className="not-italic font-medium text-stone-900 text-base md:text-lg text-center">
+            No início, não havia palcos, templos grandiosos ou cobranças pesadas. <br />
+            Havia apenas um convite simples. <br />
+            E pessoas que apareciam exatamente como eram.
           </p>
           
-          <p className="not-italic text-stone-850">
-            Havia apenas <span className="font-serif italic font-semibold text-[#8C6239]">pessoas</span>.
+          <p className="not-italic text-stone-850 text-center">
+            Talvez a conversa mais importante da sua vida não aconteça num palco. <br />
+            <span className="font-serif italic font-semibold text-[#8C6239]">Talvez aconteça ao redor de uma mesa.</span>
           </p>
 
-          <p className="text-stone-600 font-sans text-xs md:text-sm leading-relaxed non-italic">
-            Pessoas sentando à mesa de forma demorada, partilhando o pão com sinceridade. <br />
+          <p className="text-stone-600 font-sans text-xs md:text-sm leading-relaxed non-italic text-center">
+            Pessoas sentando à mesa de forma demorada, partilhando o pão com simplicidade. <br />
             Reacendendo a fé umas nas outras em cada olhar de escuta mútua. <br />
-            Criando espaços onde a graça, tão sufocada por debates vazios, consegue finalmente respirar em paz novamente.
+            Criando espaços onde a graça consegue finalmente respirar em paz novamente.
           </p>
 
           <p className="font-medium text-stone-900 not-italic text-center py-2 md:py-4 border-y border-stone-100 max-w-lg mx-auto">
-            Talvez o seu próximo passo espiritual não seja encontrar um lugar. <br />
-            <span className="text-[#C08261] font-serif italic">Talvez seja criar um.</span>
+            Talvez seu próximo passo espiritual não seja encontrar um lugar. <br />
+            <span className="text-[#C08261] font-serif italic">Talvez seja apenas criar um espaço acolhedor.</span>
           </p>
         </div>
       </div>
@@ -225,8 +226,8 @@ export default function ManifestoSection({
 
       {/* SECTION 3: THE COGNITIVE REVELATION (Mateus 18:20) */}
       <div className="bg-[#C08261]/5 border border-[#C08261]/20 rounded-3xl p-8 relative md:p-10 text-center space-y-6">
-        <blockquote className="font-serif text-stone-800 text-sm md:text-base leading-relaxed italic max-w-2xl mx-auto text-justify">
-          "Porque o evangelho sempre cresceu assim, sem alvos corporativos ou marketing forçado: vida inspirando vida, casa abrindo as portas para receber casa, mesa acolhendo mesa na base de conversas francas e humildes..."
+        <blockquote className="font-serif text-stone-800 text-sm md:text-base leading-relaxed italic max-w-2xl mx-auto text-center font-medium">
+          "O amor sempre andou assim. De casa em casa, de mesa em mesa. Sem palcos, sem cobranças de desempenho ou rituais complicados. Apenas pessoas acolhendo pessoas ao redor do pão e do café quente."
         </blockquote>
 
         <div className="flex flex-col items-center space-y-1">
