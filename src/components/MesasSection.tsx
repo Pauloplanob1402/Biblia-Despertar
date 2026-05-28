@@ -83,10 +83,15 @@ interface Pilgrim {
 interface MesasSectionProps {
   onStartChat: (uid: string, name: string, emoji: string) => void;
   onOpenAuth: () => void;
+  initialTab?: 'mesas' | 'pilgrims';
 }
 
-export default function MesasSection({ onStartChat, onOpenAuth }: MesasSectionProps) {
-  const [activeSubTab, setActiveSubTab] = useState<'mesas' | 'pilgrims'>('mesas');
+export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'mesas' }: MesasSectionProps) {
+  const [activeSubTab, setActiveSubTab] = useState<'mesas' | 'pilgrims'>(initialTab);
+
+  useEffect(() => {
+    setActiveSubTab(initialTab);
+  }, [initialTab]);
   const [mesas, setMesas] = useState<Mesa[]>(INITIAL_MESAS);
   const [searchCity, setSearchCity] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'In-person' | 'Online'>('all');

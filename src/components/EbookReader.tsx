@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { DESPERTAR_EBOOKS } from '../data/ebooks';
 import { Ebook } from '../types';
-import { BookOpen, AlertCircle, ShoppingBag, Lock, Check, ChevronLeft, ChevronRight, Minimize2, ZoomIn, ZoomOut, Compass, Sparkles } from 'lucide-react';
+import { BookOpen, AlertCircle, ShoppingBag, Lock, Check, ChevronLeft, ChevronRight, Minimize2, ZoomIn, ZoomOut, Compass, Sparkles, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface EbookReaderProps {
@@ -25,6 +25,37 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
   const [fontSize, setFontSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('md');
   const [readerTheme, setReaderTheme] = useState<'ivory' | 'white' | 'dark'>('ivory');
 
+  const downloadEbook = (book: Ebook) => {
+    const headerTitle = `===========================================
+    A JORNADA DO DESPERTAR: ${book.title.toUpperCase()}
+    ${book.subtitle}
+    Autor: ${book.author}
+===========================================
+Descrição: ${book.description}
+-------------------------------------------\n\n`;
+
+    const bodyText = book.chapters.map((chap, i) => {
+      return `[Capítulo ${i + 1}: ${chap.title}]\n\n${chap.content}\n\n-----------------------------`;
+    }).join('\n\n');
+
+    const footerText = `\n\n===========================================
+Acesse o movimento completo em:
+www.somosodespertar.com.br
+O Despertar - Cultura de Graça & Conectividade
+===========================================`;
+
+    const finalContent = headerTitle + bodyText + footerText;
+    const blob = new Blob([finalContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `ebook_${book.id}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const handleBookClick = (book: Ebook) => {
     if (book.isPremium && !unlockedBooks.includes(book.id)) {
       setSelectedBook(book);
@@ -32,7 +63,7 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
     } else {
       setSelectedBook(book);
       setActiveChapterIndex(0);
-      setIsReadingMode(false);
+      setIsReadingMode(true);
     }
   };
 
@@ -113,15 +144,28 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                     <p className="text-xs text-stone-500 leading-relaxed line-clamp-4">{book.description}</p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-stone-100">
+                  <div className="flex items-center justify-between pt-4 border-t border-stone-100 z-20">
                     <span className="text-[10px] text-stone-400 font-medium">{book.chapters.length} Capítulos</span>
-                    <button
-                      id={`btn-open-ebook-${book.id}`}
-                      className="text-xs font-semibold text-[#C08261] flex items-center space-x-1 hover:underline"
-                    >
-                      <span>{isLocked ? 'Comprar' : 'Acessar'}</span>
-                      <ChevronRight size={14} />
-                    </button>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        id={`btn-download-ebook-${book.id}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          downloadEbook(book);
+                        }}
+                        className="p-2 border border-stone-200 bg-white rounded-xl hover:bg-stone-50 text-stone-600 hover:text-[#C08261] transition duration-200"
+                        title="Baixar eBook gratuito como .txt"
+                      >
+                        <Download size={12} />
+                      </button>
+                      <button
+                        id={`btn-open-ebook-${book.id}`}
+                        className="text-xs font-semibold text-[#C08261] flex items-center space-x-0.5 hover:underline"
+                      >
+                        <span>{isLocked ? 'Comprar' : 'Acessar'}</span>
+                        <ChevronRight size={14} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -278,6 +322,16 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                           className="px-5 py-2.5 bg-[#8C6239]/10 hover:bg-[#8C6239]/15 text-[#8C6239] text-sm font-semibold rounded-xl transition border border-[#8C6239]/20"
                         >
                           Levar isso para uma Mesa
+                        </button>
+
+                        <button
+                          id="btn-cozy-download-full"
+                          onClick={() => downloadEbook(selectedBook)}
+                          className="px-5 py-2.5 bg-emerald-600/10 hover:bg-[#6B8A30]/15 text-[#6B8A30] text-sm font-semibold rounded-xl transition border border-[#6B8A30]/20 flex items-center justify-center space-x-1"
+                          title="Baixar eBook Completo (.txt)"
+                        >
+                          <Download size={14} />
+                          <span>Baixar eBook Completo (.txt)</span>
                         </button>
                       </div>
                     </div>

@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Compass, Book, Coffee, User, Bookmark, Feather, 
   Flame, Sparkles, Clock, Heart, Calendar, ArrowLeft, 
-  AlertCircle, ChevronRight, Terminal, FileText, Check, Code 
+  AlertCircle, ChevronRight, Terminal, FileText, Check, Code, MessageSquare 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -31,6 +31,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile'>('home');
+  const [mesasSubTab, setMesasSubTab] = useState<'mesas' | 'pilgrims'>('mesas');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
@@ -389,14 +390,27 @@ export default function App() {
 
                 <button
                   id="mobile-nav-mesas"
-                  onClick={() => { setActiveSection('mesas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
-                    activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                    activeSection === 'mesas' && mesasSubTab === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
                   }`}
                 >
                   <span className="flex items-center space-x-2.5">
                     <Coffee size={14} />
                     <span>Mesas de Comunhão</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-chat"
+                  onClick={() => { setActiveSection('mesas'); setMesasSubTab('pilgrims'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'mesas' && mesasSubTab === 'pilgrims' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <MessageSquare size={14} />
+                    <span>Chat & Conexões</span>
                   </span>
                 </button>
 
@@ -552,14 +566,27 @@ export default function App() {
 
           <button
             id="nav-mesas"
-            onClick={() => { setActiveSection('mesas'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
-              activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+              activeSection === 'mesas' && mesasSubTab === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
             }`}
           >
             <span className="flex items-center space-x-2.5">
               <Coffee size={14} />
               <span>Mesas de Comunhão</span>
+            </span>
+          </button>
+
+          <button
+            id="nav-chat"
+            onClick={() => { setActiveSection('mesas'); setMesasSubTab('pilgrims'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'mesas' && mesasSubTab === 'pilgrims' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <MessageSquare size={14} />
+              <span>Chat & Conexões</span>
             </span>
           </button>
 
@@ -937,6 +964,7 @@ export default function App() {
                 <MesasSection
                   onStartChat={(uid, name, emoji) => setChatContact({ uid, name, emoji })}
                   onOpenAuth={() => setShowAuthModal(true)}
+                  initialTab={mesasSubTab}
                 />
               )}
             </motion.div>

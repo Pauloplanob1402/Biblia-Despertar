@@ -64,95 +64,6 @@ GRAÇA EM PRÁTICA: A graça não está no conhecimento acumulado. Está no enco
 Pausa — Quando foi a última vez que você sentiu que estava diante de Deus — e não apenas diante de uma estrutura sobre Ele?`
       },
       {
-        title: 'Capítulo Três: Deus nunca teve medo da sua honestidade',
-        estimatedReadTime: 4,
-        content: `Você pode falar tudo. Ele já sabe. E continua aqui. Uma das maiores mentiras que a religião performática ensina é que você precisa se apresentar bem diante de Deus.
-
-Então você aprende a orar com as palavras certas. A confessar os pecados certos. A demonstrar a contrição certa. E no meio de tudo isso, a sua oração real — a que você diria se não houvesse plateia — nunca é dita.
-
-Os Salmos existem para desfazer essa mentira. Davi gritou com Deus. Questionou. Acusou. Implorou. Reclamou do silêncio. Expressou raiva, desespero e confusão — e foi chamado de homem segundo o coração de Deus. Não porque era perfeito. Porque era honesto.
-
-"Até quando, Senhor? Continuarás a me ignorar para sempre?" (Salmo 13:1) — isso não é falta de fé. É fé suficientemente forte para confrontar em vez de fingir. A honestidade diante de Deus não ofende a Ele. Ofende a religião. Há uma diferença enorme entre os dois.
-
-O que você nunca disse a Ele — mas queria dizer? Comece aí. Não com as palavras certas. Com as suas.
-
-GRAÇA EM PRÁTICA: A graça suporta o peso de toda a sua honestidade sem tremer. Ela foi feita para isso.
-
-Pausa — O que você nunca disse a Deus porque parecia errado demais para dizer?`
-      },
-      {
-        title: 'Capítulo Quatro: O que Jesus fazia com pessoas cansadas',
-        estimatedReadTime: 4,
-        content: `Ele nunca pediu para elas se animarem. Ele sentou com elas.
-
-Existe um padrão no ministério de Jesus que a maioria das igrejas nunca copiou: Ele procurava os cansados. Não os motivados. Não os entusiasmados. Não os que tinham mais forças espirituais para dar. Os cansados.
-
-A mulher curvada há dezoito anos. O paralítico à beira do tanque há trinta e oito. Os discípulos dormindo no Getsêmani quando deveriam estar acordados. Ele nunca os repreendeu pelo cansaço.
-
-Mateus 11:28 é talvez o versículo mais honesto do Novo Testamento sobre como Jesus vê quem está exausto: "Vinde a mim, todos os que estais cansados e sobrecarregados, e eu vos darei descanso." Ele não disse: "se animem e depois venham." Disse: "venham exatamente assim."
-
-O cansaço espiritual não é sinal de fraqueza da fé. Às vezes é sinal de que você levou a fé a sério demais para continuar fingindo que está bem.
-
-Jesus é o único ser que nunca vai te pedir para performar o quanto você o ama. Ele prefere que você apareça honesto e exausto a que você apareça animado e vazio.
-
-GRAÇA EM PRÁTICA: O descanso que Jesus oferece não é recompensa para os que aguentaram. É presente para os que pararam de aguentar.
-
-Pausa — Do que você está mais cansado espiritualmente agora?`
-      },
-      {
-        title: 'Capítulo Cinco: A graça chega antes da mudança completa',
-        estimatedReadTime: 4,
-        content: `Você não precisa mudar para ser encontrado. O encontro é o que muda.
-
-A teologia da performance ensina que você muda e então é aceito. A graça ensina o contrário: você é aceito, e então — aos povos, no tempo certo, sem violência — você muda. A diferença não é pequena. É tudo.
-
-O filho pródigo não voltou para casa depois de ter melhorado. Voltou quebrado, com o discurso de arrependimento ensaiado, esperando ser tratado como empregado. O pai correu na direção dele antes que ele chegasse. Antes que o discurso fosse dito. Antes que a mudança fosse comprovada.
-
-A graça não espera evidências de transformação para agir. Ela age, e a transformação vem como consequência — não como pré-requisito. Isso muda tudo sobre como você se apresenta diante de Deus. Você não precisa chegar melhorado. Só precisa chegar.
-
-"Mas Deus demonstra seu amor por nós pelo fato de Cristo ter morrido por nós quando ainda éramos pecadores." (Romanos 5:8) — quando ainda éramos. Não depois de termos melhorado.
-
-GRAÇA EM PRÁTICA: A graça é o encontro que antecede a mudança — não a recompensa que a segue.
-
-Pausa — Em que área da sua vida você ainda acredita que precisa melhorar antes de se aproximar de Deus?`
-      },
-      {
-        title: 'Capítulo Seis: Quando parar de fingir vira começo',
-        estimatedReadTime: 5,
-        content: `O fim da performance não é uma perda. É uma porta.
-
-Existe um medo real por trás da performance religiosa: se eu parar de fingir que estou bem, o que vai restar? É uma pergunta honesta. E merece uma resposta honesta: vai restar você. E isso é suficiente para começar.
-
-A performance espiritual cansa porque exige energia contínua para sustentar uma imagem que não é real. Quando você para, essa energia fica disponível para outra coisa — para busca real, para relacionamentos honestos, para um encontro sem máscara. O fim da performance não é o fim da fé. Na maioria das vezes, é onde a fé real começa.
-
-Nicodemos foi até Jesus de noite — provavelmente com medo de ser visto. Mas foi. E essa escolha de aparecer, mesmo escondido, mesmo com medo, foi suficiente para mudar tudo. Jesus não o repreendeu por ir de noite. Recebeu a visita.
-
-Você não precisa de coragem total para dar o próximo passo. Só precisa de coragem suficiente para aparecer — do jeito que você está.
-
-"O Senhor está perto dos que têm o coração quebrantado e salva os que têm o espírito abatido." (Salmo 34:18)
-
-GRAÇA EM PRÁTICA: Parar de fingir não é fraqueza. É o ato mais corajoso que uma pessoa cansada pode fazer.
-
-Pausa — O que mudaria na sua vida se você parasse de sustentar uma imagem espiritual que não é verdadeira?`
-      },
-      {
-        title: 'Capítulo Sete: Fé viva respira melhor sem performance',
-        estimatedReadTime: 5,
-        content: `Você não perdeu a fé. Ela estava sufocada. Agora pode respirar.
-
-Há uma diferença entre fé morta e fé sufocada. Fé morta não existe mais. Fé sufocada existe — está viva — mas não consegue respirar debaixo do peso da performance, das expectativas, do cansaço acumulado.
-
-Quando você remove o peso, ela volta. Não da forma que era antes — mais performática, mais animada, mais barulhenta. Volta de forma diferente: mais quieta, mais honesta, mais sua.
-
-Paulo escreve em Gálatas 5:1: "Foi para a liberdade que Cristo nos libertou. Portanto, permaneçam firmes e não se deixem submeter novamente a um jugo de escravidão." O jugo de escravidão que ele menciona não é apenas pecado moral. É também o peso de ter que merecer, de ter que performar, de ter que parecer forte quando você está fraco.
-
-A fé que respira é simples: acredita que Deus é bom quando tudo vai bem e quando nada vai. Não precisa de música alta para existir. Não precisa de plateia para ser real. Essa é a fé do Desperto. Não a que chega com pompa — a que fica quando tudo o que não era essencial foi embora.
-
-GRAÇA EM PRÁTICA: Fé que respira não precisa impressionar ninguém. Ela só precisa ser verdadeira.
-
-Pausa — Como seria sua fé se você tirasse toda a pressão de parecer espiritualmente correto?`
-      },
-      {
         title: 'O Passo: Um convite sem pressão',
         estimatedReadTime: 4,
         content: `Você chegou até aqui. Sete conversas. Sete pausas. E provavelmente algumas perguntas que ainda não têm resposta.
@@ -162,16 +73,8 @@ O Passo não acontece num altar. Não tem microfone. Não tem plateia. Acontece 
 O que você pode fazer a seguir:
 — Encontrar uma Mesa perto de você no site do Despertar.
 — Ler o próximo ebook da série: Caminhante.
-— Simplesmente voltar aqui quando precisar.
 
-"O Senhor te chamou pelo teu nome; és meu" (Isaías 43:1).
-
-CARTÃO DE COMPROMISSO (Cinco afirmações para carregar):
-1. Eu não preciso estar com tudo resolvido para me aproximar de Deus.
-2. A minha honestidade não assusta a graça.
-3. Caminhar é suficiente. Eu não preciso correr.
-4. A fé que sobreviveu ao meu cansaço é mais real do que qualquer performance.
-5. Eu sou um Desperto — e isso já é um começo.`
+"O Senhor te chamou pelo teu nome; és meu" (Isaías 43:1).`
       }
     ]
   },
@@ -192,10 +95,6 @@ Não para quem acabou de começar — essa é a promessa do Ebook 01, Desperto. 
 
 É para o meio. Para a zona estranha onde você já não é mais quem era — mas ainda não é quem está se tornando. Esse lugar é desconfortável. E ao mesmo tempo é exatamente onde a maioria das transformações reais acontece.
 
-Você vai encontrar aqui sete conversas sobre o que significa continuar caminhando quando não há garantias, quando o destino ainda está na neblina, e quando o cansaço é mais real do que a inspiração.
-
-Cada capítulo termina com uma pausa. Use.
-
 "Andai no Espírito e não satisfareis os desejos da carne." (Gálatas 5:16 — NVI)`
       },
       {
@@ -205,144 +104,9 @@ Cada capítulo termina com uma pausa. Use.
 
 Existe uma mentira silenciosa que a maioria das pessoas espirituais carrega sem perceber: a ideia de que há um ponto certo onde você deveria estar — e que você está aquém dele.
 
-Alguém da sua idade já plantou igrejas. Outro já tem uma vida espiritual impecável. Você ainda está resolvendo as mesmas questões de dez anos atrás. Essa comparação é o veneno que transforma a jornada da fé num teste de performance.
-
-João Batista e Jesus eram primos. João começou antes, batizou multidões, foi chamado de profeta. Jesus só começou o ministério público aos trinta anos. Não havia atraso. Havia tempo.
-
-"O Senhor não tarda em cumprir a sua promessa, como julgam alguns. Pelo contrário, ele é paciente." (2 Pedro 3:9 — NVI).
-
 Caminhante não é o que ficou para trás. É o que continua. E continuar, quando tudo convida a parar, é o ato de fé mais subestimado que existe. Você não está atrasado. Está exatamente onde uma pessoa honesta estaria depois de tudo que você viveu.
 
-GRAÇA EM PRÁTICA: A graça não tem relógio. Ela não mede o quanto você já deveria ter crescido. Ela caminha no seu ritmo — e nunca fica impaciente.
-
-Pausa — Em que área da sua vida você se sente "atrasado" espiritualmente? De onde vem essa régua?`
-      },
-      {
-        title: 'Capítulo Dois: A diferença entre pertencer e participar',
-        estimatedReadTime: 4,
-        content: `Você pode frequentar um lugar por anos sem nunca pertencer a ele. Participar é aparecer. Pertencer é ser esperado.
-
-Existe uma diferença enorme — e a maioria das pessoas nunca a verbalizou, mas sentiu. Você pode estar presente em todos os cultos, eventos e reuniões de um lugar e ainda assim sair de lá sem que ninguém teria notado se você não viesse. Isso não é julgamento. É diagnóstico.
-
-A Igreja primitiva não era uma reunião de pessoas que participavam de algo. Era uma comunidade onde as pessoas pertenciam umas às outras. "Todos os que creram estavam juntos e tinham tudo em comum." (Atos 2:44).
-
-Pertencer exige ser visto. Não a versão arrumada — a versão real. Com as dúvidas, o cansaço, a alegria que não cabe em si e a dor que não tem nome.
-
-Você não precisa de um lugar maior. Precisa de um lugar onde seja esperado pelo nome. O Despertar não oferece um serviço. Oferece uma Mesa. E numa mesa, todo mundo percebe quando uma cadeira está vazia.
-
-GRAÇA EM PRÁTICA: A graça cria pertencimento antes de exigir contribuição. Você é recebido antes de ser útil. Sempre foi assim.
-
-Pausa — Existe algum lugar onde você é esperado pelo nome — onde alguém notaria se você não viesse?`
-      },
-      {
-        title: 'Capítulo Três: O que acontece quando você para de correr',
-        estimatedReadTime: 4,
-        content: `A espiritualidade que você está procurando não está na próxima conferência.
-
-Existe um tipo de pessoa espiritual que está sempre no próximo evento. O retiro que vai mudar tudo. O livro que vai responder às dúvidas. O pastor que vai finalmente resolver os impasses. Essa pessoa raramente está quieta o suficiente para ouvir o que já está dentro dela.
-
-Elias, depois de uma das maiores vitórias espirituais da Bíblia, fugiu para o deserto e pediu para morrer. Deus não o repreendeu. Não o mandou de volta ao trabalho imediatamente. Mandou um anjo preparar comida. "Levanta-te e come, porque a jornada é longa demais para ti." (1 Reis 19:7).
-
-A jornada é longa demais para você carregar sem parar. Parar não é desistir. É o ato de sabedoria que permite que você continue.
-
-O Caminhante aprende cedo que a espiritualidade não é aceleração — é ritmo. Dias de caminhada, dias de descanso. Meses de crescimento visível, meses de silêncio frutífero. O que você precisa talvez não seja mais um conteúdo espiritual. Talvez seja uma Mesa onde possa simplesmente sentar — sem precisar ter progredido desde a última vez.
-
-GRAÇA EM PRÁTICA: A graça descansa. Ela não exige que você chegue exausto para merecer atenção. Ela prepara comida e diz: levanta quando estiver pronto.
-
-Pausa — Quando foi a última vez que você ficou quieto o suficiente para ouvir algo que não veio de fora?`
-      },
-      {
-        title: 'Capítulo Quatro: Fé que caminha na neblina',
-        estimatedReadTime: 4,
-        content: `Você não precisa ver o destino para dar o próximo passo.
-
-A maioria das pessoas quer certeza antes de se mover. Quer saber para onde vai, quanto tempo leva e o que encontra no caminho. A fé bíblica nunca funcionou assim.
-
-Abraão saiu sem saber para onde ia. "Pela fé, Abraão obedeceu quando foi chamado para ir a um lugar que depois receberia como herança; e saiu sem saber para onde ia." (Hebreus 11:8). Sem mapa. Sem GPS. Só a próxima instrução e a confiança de que haveria outra depois.
-
-A neblina não é ausência de Deus. Muitas vezes é a presença dele funcionando de um jeito que você ainda não aprendeu a reconhecer. O Caminhante não tem todas as respostas. Tem a próxima pergunta certa. E a coragem de seguir mesmo sem ver o fim.
-
-Isso não é irresponsabilidade. É a forma mais honesta de fé que existe — a que não depende de evidência completa para continuar.
-
-GRAÇA EM PRÁTICA: A graça ilumina o próximo passo — não o mapa inteiro. Ela confia que você vai precisar de luz para o passo depois. E dará.
-
-Pausa — Qual é o próximo passo que você consegue ver — mesmo sem enxergar o destino?`
-      },
-      {
-        title: 'Capítulo Cinco: As pessoas certas para caminhar junto',
-        estimatedReadTime: 5,
-        content: `A qualidade da sua jornada depende de quem caminha ao seu lado.
-
-Jesus não percorreu a Palestina sozinho. Chamou doze. Dos doze, havia três com quem era ainda mais próximo. Desses três, havia um que se recostava no seu peito durante as refeições.
-
-Intimidade em camadas. Não havia contradição nisso — havia sabedoria. Você não precisa de uma multidão para caminhar bem. Precisa de uma ou duas pessoas que podem te fazer a pergunta que ninguém mais faz — e esperar pela resposta real.
-
-"Como o ferro afia o ferro, assim uma pessoa afia a outra." (Provérbios 27:17).
-
-O problema é que esse tipo de relação não aparece em eventos. Nasce devagar, em conversas repetidas, em aparecer mesmo quando não há nada especial acontecendo. Uma Mesa não é um programa. É o lugar onde esse tipo de relação tem chance de nascer.
-
-Pergunte-se: existe alguém na sua vida que sabe de verdade como você está? Não a versão que você posta. A versão que você pensa às três da manhã.
-
-GRAÇA EM PRÁTICA: A graça nos foi dada individualmente — mas raramente é descoberta sozinhos. Ela tende a aparecer no rosto de alguém que ficou quando poderia ter ido embora.
-
-Pausa — Quem na sua vida sabe como você realmente está — não a versão que você apresenta?`
-      },
-      {
-        title: 'Capítulo Seis: O que o cansaço espiritual está tentando te dizer',
-        estimatedReadTime: 5,
-        content: `O cansaço não é inimigo da fé. Às vezes é o mensageiro mais honesto que ela tem.
-
-Quando você está espiritualmente cansado, a primeira reação da maioria é tentar resolver isso com mais: mais oração, mais leitura, mais compromisso. Mas e se o cansaço não fosse um problema a resolver? E se fosse uma mensagem a ouvir?
-
-O cansaço espiritual costuma aparecer quando existe um desalinhamento — entre o que você professa crer e o que realmente experimenta. Entre a fé que você declara e a vida que você vive. Esse desalinhamento não é fraqueza. É honestidade tentando emergir.
-
-O Caminhante aprende a sentar com o cansaço em vez de fugir dele. A perguntar: o que isso está tentando me mostrar? O que dentro de mim ainda não foi dito em voz alta?
-
-Muitas vezes a resposta não precisa de solução imediata. Precisa de uma Mesa onde possa ser dita — e recebida por pessoas que não vão tentar consertar você antes de te ouvir.
-
-"Ele cura os de coração quebrantado e cura as suas feridas." (Salmos 147:3)
-
-GRAÇA EM PRÁTICA: A graça não tem pressa para te curar. Ela senta com você no cansaço e permanece até que você esteja pronto para o próximo passo.
-
-Pausa — O que o seu cansaço espiritual está tentando te dizer que você ainda não quis ouvir?`
-      },
-      {
-        title: 'Capítulo Sete: Caminhar é suficiente',
-        estimatedReadTime: 5,
-        content: `Você não precisa ser um herói da fé para pertencer a esse movimento.
-
-Existe uma última mentira que precisa ser desmontada antes de você virar a última página deste ebook. A mentira de que o Despertar é para pessoas que já chegaram a algum lugar. Não é.
-
-É para quem está caminhando. Devagar, rápido, com dúvidas, com certezas, com alegria, com cansaço — qualquer forma de caminhar conta.
-
-A Bíblia não descreve os discípulos como pessoas que tinham tudo resolvido. Descreve pessoas comuns que um dia ouviram "segue-me" — e foram. Com medo. Com perguntas. Com as bagagens que tinham. "Eles imediatamente deixaram as redes e o seguiram." (Mateus 4:20).
-
-Não limparam a barca antes. Não terminaram o trabalho. Não pediram uma semana para se preparar. Foram.
-
-Você não precisa estar pronto para começar a caminhar no Despertar. Só precisa estar disposto a aparecer — do jeito que você está agora. E isso, neste movimento, é mais do que suficiente.
-
-GRAÇA EM PRÁTICA: A graça não espera você estar pronto. Ela começa a trabalhar exatamente no ponto em que você aparece.
-
-Pausa — O que você está esperando resolver antes de começar a se envolver de verdade?`
-      },
-      {
-        title: 'O Passo: Um convite sem pressão',
-        estimatedReadTime: 4,
-        content: `Você terminou sete conversas sobre caminhar. Sobre pertencer. Sobre continuar quando não há garantias. Não há altar aqui. Só uma pergunta simples: Você está disposto a aparecer — mesmo sem ter chegado?
-
-Se sim, o próximo passo é simples:
-— Encontre uma Mesa perto de você.
-— Ou abra a sua porta para que uma comece.
-— Ou leia o próximo ebook: Enraizado.
-
-"O Senhor te chamou pelo teu nome; és meu." (Isaías 43:1 — NVI)
-
-CARTÃO DE COMPROMISSO (Cinco lembretes para o Caminhante):
-1. Eu não estou atrasado. Estou exatamente onde uma pessoa honesta estaria.
-2. Pertencer é diferente de participar — e eu escolho pertencer.
-3. Minha dúvida não me exclui. Ela é parte do caminho.
-4. Caminhar devagar ainda é caminhar.
-5. Eu apareço — do jeito que estou. E isso é suficiente.`
+"O Senhor não tarda em cumprir a sua promessa, como julgam alguns. Pelo contrário, ele é paciente." (2 Pedro 3:9 — NVI).`
       }
     ]
   },
@@ -359,81 +123,373 @@ CARTÃO DE COMPROMISSO (Cinco lembretes para o Caminhante):
         estimatedReadTime: 3,
         content: `Se você está lendo isso, provavelmente não chegou por acaso. Chegou porque algo em você está cansado — cansado de performance, de precisar parecer forte, de frequentar lugares onde a dúvida não tem cadeira.
 
-Existe uma fé que não precisa de palco. Uma comunidade que não exige máscara na entrada. Um espaço onde carregar culpa por estar exausto da religião não faz o menor sentido — porque todos que estão aqui já carregaram isso também.
-
-O Despertar não é uma nova denominação. Não tem CNPJ. Não vai te pedir para largar sua tradição. É apenas um espaço onde você pode parar de fingir — e descobrir que a graça já estava te esperando lá.
-
 "A graça não é uma doutrina a ser estudada. É um peso que some quando alguém finalmente para de tentar merecer."
 
 Este documento não é um regulamento. É um convite. Cada palavra aqui foi escolhida para ser leve — porque quem chega ao Despertar já carregou peso demais.`
       },
       {
-        title: 'Parte I: Quem você é aqui',
+        title: 'Vocabulário da Graça',
         estimatedReadTime: 4,
-        content: `Nenhum desses nomes é um título. São descrições honestas de onde você está no caminho.
+        content: `DESPERTO: o que a maioria chama de "convertido" — mas vai muito além disso. Desperto não é quem nunca errou. É quem parou de fingir que estava bem.
 
-DESPERTO
-o que a maioria chama de "convertido" — mas vai muito além disso. Você não chegou aqui porque estava bem. Chegou porque algo dentro de você se recusou a continuar fingindo. Desperto não é quem nunca errou. É quem parou de fingir que estava bem. É o momento em que a honestidade vence a performance — e isso, por si só, já é um despertar.
-"Acorda, tu que dormes, levanta-te dentre os mortos, e Cristo te iluminará." (Efésios 5:14)
+CAMINHANTE: o que a maioria chama de "membro" — sem a pressão. Você não precisa ter chegado. Só precisa estar andando.
 
-CAMINHANTE
-o que a maioria chama de "membro" — mas sem a pressão que isso carrega. Você não precisa ter chegado. Só precisa estar andando. Caminhante é quem aparece. Que ainda tem dúvidas — e vem assim mesmo. Que não tem todas as respostas — e não finge que tem. Caminhar é suficiente. Aqui ninguém corre.
-"Andai no Espírito e não satisfareis os desejos da carne." (Gálatas 5:16)
+ENRAIZADO: o que a maioria chama de "líder" — sem a hierarquia. É quem tem história suficiente para ser âncora, cuidando e permanecendo quando fica difícil.`
+      }
+    ]
+  },
+  {
+    id: 'pedro_faisca',
+    title: 'A Faísca — Pedro',
+    subtitle: 'Sentir Demais, Errar Demais, Não Desistir',
+    author: 'O Despertar · Livro 2 — Pedro',
+    description: 'Para quem sente demais, erra demais e ainda assim não abre mão de continuar nas mãos com quem pode direcionar esse fogo sagrado.',
+    isPremium: true,
+    chapters: [
+      {
+        title: 'Capítulo 1: Pedro Era Exagerado',
+        estimatedReadTime: 4,
+        content: `Falava antes de pensar. Agia antes de calcular. Amava com uma intensidade que assustava até a si mesmo.
 
-ENRAIZADO
-o que a maioria chama de "líder" — mas sem o peso hierárquico. Não é quem chegou mais longe. É quem ficou de pé quando tudo tentou derrubá-lo. Enraizado é quem tem história suficiente para ser âncora — não por autoridade, mas por consistência. Aparece. Cuida. Não some quando fica difícil. Isso, no Despertar, é tudo.
-"Como recebestes Cristo Jesus, o Senhor, assim andai nele, enraizados e edificados nele." (Colossenses 2:6-7)`
+Pedro não era o discípulo mais equilibrado — era o mais inteiro. E foi exatamente esse homem impulsivo, de limites nítidos e erros públicos, que Jesus escolheu para liderar a igreja primitiva.
+
+Deus prefere a intensidade que erra por tentar demais do que a apatia que nunca se move. A graça encontra utilidade no seu fogo, contanto que esteja nas mãos certas.`
       },
       {
-        title: 'Parte II: Como nos cuidamos',
+        title: 'Capítulo 2: As Quedas e o Choro Amargo',
         estimatedReadTime: 4,
-        content: `Toda relação saudável no Despertar é horizontal. Não há quem está acima — só quem chegou antes.
+        content: `A trajetória de Pedro é uma estrada pavimentada de extremos:
+1. A Promessa Exagerada: "Jamais te negarei, mesmo que todos corram."
+2. Os Três "Não": A negação tripla no pátio, sob o peso do medo, antes que o galo cantasse.
+3. O Choro Amargo: O momento em que as máscaras caem, o orgulho quebra e as lágrimas correm livres na noite.
 
-COMPANHEIRO DE CAMINHO
-o que a maioria chama de "mentor" — mas sem a assimetria de poder. A diferença entre um guia e um companheiro de caminho é simples: um caminha na sua frente; o outro, ao seu lado. Companheiro de Caminho é quem escolheu andar junto — não para te corrigir, mas para não te deixar andar sozinho. Sem autoridade formal. Sem cobrança. Só presença consistente.
-"Como o ferro afia o ferro, assim uma pessoa afia uma outra." (Provérbios 27:17)
-
-ANFITRIÃO
-o que a maioria chama de "líder de célula" — mas sem o peso do cargo. O dom mais subestimado da Igreja primitiva não era pregar. Era abrir a porta. Anfitrião não é quem sabe mais. É quem cria o espaço onde os outros podem ser quem realmente são. A casa aberta, a cadeira a mais, o café pronto — isso já é ministério. Sempre foi.
-"Pratiquem a hospitalidade uns para com os outros, sem murmurar." (1 Pedro 4:9)
-
-ENVIADO
-o que a maioria chama de "apóstolo" — mas sem a autoridade institucional. Você não foi ordenado para isso. Você foi encontrado por isso. Enviado é quem percebeu que onde está, algo pode começar — e não consegue ignorar esse peso. Não é nomeado por ninguém. Não tem título. Tem chamado. E chamado basta.
-"Como o Pai me enviou, eu também os envio." (João 20:21)`
+Mas ali começou o recomeço mais bonito das Escrituras. A queda não é o fim da história.`
       },
       {
-        title: 'Parte III: Como nos reunimos',
-        estimatedReadTime: 5,
-        content: `A Igreja primitiva não tinha templo. Tinha mesas, casas e consistência. Isso sempre foi suficiente.
+        title: 'Capítulo 3: Deus é Especialista em Recomeços',
+        estimatedReadTime: 4,
+        content: `"Deus nunca pediu que você fosse frio para ser firme."
 
-A MESA
-o que a maioria chama de "célula" — mas com uma imagem completamente diferente. Pense na última conversa que mudou algo em você. Provavelmente não foi num culto. Foi numa mesa. A Mesa é o coração do Despertar. 6 a 12 pessoas, numa casa, a cada duas semanas. Sem púlpito. Sem microfone. Sem liturgia. Só conversa honesta, Palavra e a presença de quem decidiu aparecer.
-"Todos os dias continuavam a se reunir no templo e nas casas, partindo o pão." (Atos 2:46)
+Sua intensidade não é um defeito a ser domado, mas um combustível a ser direcionado. Na praia, Jesus faz três perguntas curativas a Pedro: "Você me ama?" curando cada uma de suas três negações. E então dá a missão: "Apascenta as minhas ovelhas."
 
-O ENCONTRO
-o que a maioria chama de "culto" — mas sem o formato que cansa. Não é um culto. É o momento em que você descobre que não está sozinho na cidade. Uma vez por mês, todas as Mesas de uma cidade se encontram num espaço maior. Aberto para quem está chegando. Sem performance — só a alegria de ver que o movimento é real.
+O homem que falhou publicamente é o mesmo encarregado de cuidar do rebanho da graça.`
+      }
+    ]
+  },
+  {
+    id: 'joao_guardiao',
+    title: 'O Guardião — João',
+    subtitle: 'O Amor Que Decide Permanecer Quando Tudo Dói',
+    author: 'O Despertar · Livro 3 — João',
+    description: 'A história do discípulo que ficou ao pé da cruz quando todos fugiram, ensinando que o amor verdadeiro não é sentimento — é a decisão de permanecer.',
+    isPremium: true,
+    chapters: [
+      {
+        title: 'Capítulo 1: A Noite em Que Todos Fugiram',
+        estimatedReadTime: 4,
+        content: `Naquela madrugada, quando o medo se tornou mais alto do que a fé, os discípulos desapareceram um a um. Pedro negou. Judas traiu. Os outros correram em pânico.
 
-A RODA
-o que a maioria chama de "culto familiar" — mas com a mesa no centro. A fé que vai para a próxima geração não passa pela instituição. Passa pela mesa de casa. A Roda é o momento mensal das famílias — uma refeição, uma leitura, oração pelos filhos. Sem palco, sem programa. Todo mundo em círculo, no mesmo nível.
-"Instruí o menino no caminho em que deve andar; e até quando envelhecer não se desviará dele." (Provérbios 22:6)`
+Mas João ficou. Ele estava lá, ao pé da cruz, suportando a dor e o silêncio, quando ninguém mais tinha a coragem de estar.
+
+"O mundo está cheio de pessoas que pregam. Está faminto de pessoas que ficam."`
       },
       {
-        title: 'Parte IV: Práticas de transbordo',
+        title: 'Capítulo 2: O Amor Que Não É Sentimento',
         estimatedReadTime: 4,
-        content: `Práticas simples. Sem vocabulário complicado. Sem ritual que precisa de explicação.
+        content: `João aprendeu com Jesus que o maior mandamento é amar. Mas esse amor não é romântico, não é emocional e não depende do nosso humor momentâneo.
 
-A FAÍSCA
-o que a maioria chama de "testemunho" — mas sem o formato ensaiado. Você já ouviu uma história que acendeu algo que estava apagado? Isso é uma Faísca. O momento em que alguém compartilha uma percepção, uma dúvida resolvida. Não é pregação. É o instante em que uma história pessoal ilumina algo nos outros.
-"A palavra de Deus é viva e eficaz, mais cortante do que qualquer espada de dois gumes." (Hebreus 4:12)
+É o amor que decide não ir embora mesmo quando tudo dói e quando partir para bem longe seria a escolha mais fácil e confortável.
 
-O PASSO
-o que a maioria chama de "decisão" — mas sem o altar público. As decisões mais descritivas da vida raramente acontecem em público. O Passo não tem microfone nem altar. Acontece numa conversa depois da Mesa, num silêncio que durou tempo demais. Particular, honesto e sem barulho.
+Amor não é apenas sentimento. É ação, é presença silenciosa.`
+      },
+      {
+        title: 'Capítulo 3: Ser Abrigo em Meio à Tempestade',
+        estimatedReadTime: 4,
+        content: `João não precisou fazer grandes discursos ao pé da cruz ou operar milagres espetaculares naquela noite escura. Mas sua presença física ali serviu de abrigo — para Maria e para o próprio Jesus.
 
-MULTIPLICAR
-o que a maioria chama de "crescimento" — mas com uma lógica completamente diferente. O objetivo nunca é ter mais gente na mesma mesa. É ter mais mesas. Quando uma Mesa chega a 15 pessoas, ela se divide de forma natural para que um novo Anfitrião abra uma nova porta. Multiplicar é generosidade.
-"Porque todo aquele que tem, receberá mais." (Mateus 25:29)
+Permanecer no silêncio, estendendo a mão para sustentar os outros com quietude, é o maior ato de discipulado real.`
+      }
+    ]
+  },
+  {
+    id: 'mateus_restaurado',
+    title: 'O Restaurado — Mateus',
+    subtitle: 'A Graça Para Quem Acha Que Já Foi Longe Demais',
+    author: 'O Despertar · Livro 4 — Mateus',
+    description: 'Para quem carrega uma culpa esmagadora e acredita que a porta se fechou. Descubra como o cobrador de impostos se tornou emissário da compaixão.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: O Homem Mais Odiado da Cidade',
+        estimatedReadTime: 4,
+        content: `Mateus era um traidor de sua pátria, cobrando impostos a serviço de Roma e enriquecendo à custa dos mais necessitados. Ele era desprezado e excluído por qualquer círculo religioso ou social decente.
 
-Se algum desses termos soou familiar — se você se reconheceu em algum deles — então você já é parte disso. Procure uma Mesa perto de você. Ou abra a sua porta para que uma Mesa comece.`
+Ninguém sentaria à mesa com ele. Mas tudo mudou quando Jesus cruzou seu caminho. Jesus não esperou Mateus se higienizar para sentar-se à mesa dele.`
+      },
+      {
+        title: 'Capítulo 2: A Graça Não Espera Você Melhorar',
+        estimatedReadTime: 4,
+        content: `O mundo diz: "Primeiro se arrume, prove seu valor e mude. Só então será aceito."
+A graça diz: "Você é aceito agora, exatamente como está. A transformação virá depois, como fruto natural desse amor recebido."
+
+A mesa da graça já está posta para quem ainda está cansado e errando no caminho.`
+      },
+      {
+        title: 'Capítulo 3: Sua Mesa Está Posta',
+        estimatedReadTime: 4,
+        content: `Mateus não limpou sua vida primeiro. Ele simplesmente se levantou de sua coletoria e seguiu a Cristo. A restauração e as reparações vieram ao longo da jornada.
+
+Se Deus pôde usar Mateus para escrever um Evangelho, Ele certamente pode usar você hoje, do jeito que você está.`
+      }
+    ]
+  },
+  {
+    id: 'natanael_honesto',
+    title: 'Natanael — O Honesto',
+    subtitle: 'A Coragem de Ser Absolutamente Autêntico',
+    author: 'O Despertar · Livro 5 — Natanael',
+    description: 'Para quem cansou de carregar poses e performances religiosas. Um manual sobre a liberdade que brota quando finalmente paramos de fingir.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: Quem Era Natanael?',
+        estimatedReadTime: 4,
+        content: `Natanael era sincero ao ponto de parecer desconfortável. Ao ouvir sobre o Messias, respondeu de bate-pronto: "Pode vir alguma coisa boa de Nazaré?"
+
+Não foi um comentário bonito, mas foi genuíno. E foi exatamente essa honestidade sem rodeios que chamou a atenção de Jesus. Jesus não procura perfeição comportamental, Ele anseia por corações transparentes.`
+      },
+      {
+        title: 'Capítulo 2: Deus Não Se Impressiona Com Performances',
+        estimatedReadTime: 4,
+        content: `Fomos ensinados a posar: a sorrir quando a alma desaba e a dizer que está tudo bem quando não está. Mas Deus não precisa da sua versão de domingo, polida e decorada. Ele quer você por inteiro.
+
+"Quando você para de fingir, abre espaço para que a graça de Deus te encontre."`
+      },
+      {
+        title: 'Capítulo 3: O Que Jesus Realmente Procura',
+        estimatedReadTime: 4,
+        content: `Jesus disse à mulher de Samaria: "Deus procura pessoas que o adorem em espírito e em verdade."
+
+Seja honesto com Deus. Leve a Ele suas dúvidas, frustrações e raivas. Tire as máscaras e experimente a autêntica liberdade de quem é amado pelo que é.`
+      }
+    ]
+  },
+  {
+    id: 'tome_investigador',
+    title: 'O Investigador — Tomé',
+    subtitle: 'Para Quem Precisa Ver e Tocar Antes de Crer',
+    author: 'O Despertar · Livro 6 — Tomé',
+    description: 'Uma apologia à dúvida honesta e engajada, mostrando que a verdade do Evangelho não pede que você desligue seu cérebro.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: Um Nome Marcado Pela Dor',
+        estimatedReadTime: 4,
+        content: `Tomé ficou injustamente marcado na história como "o incrédulo" por causa de uma única frase dita em um momento de profunda dor e luto: "Se eu não vir e não tocar, não acreditarei."
+
+No entanto, sua dúvida não era deboche ou zombaria — era a mais pura sede de honestidade. Uma fé que nunca foi testada ou questionada é uma fé frágil.`
+      },
+      {
+        title: 'Capítulo 2: A Maior Confissão do Evangelho',
+        estimatedReadTime: 4,
+        content: `As pessoas se lembram da dúvida de Tomé, mas se esquecem de que dele veio a maior declaração de adoração de todo o Evangelho: "Senhor meu, e Deus meu!"
+
+Jesus não repreendeu suas perguntas. Ele estendeu as mãos feridas e ofereceu as evidências para que Tomé investigasse. A verdade não tem medo de perguntas sinceras.`
+      },
+      {
+        title: 'Capítulo 3: O Cristianismo Não Pede Cegueira',
+        estimatedReadTime: 4,
+        content: `A caminhada com Deus não é alienação ou desligamento intelectual. É um convite à reflexão íntima.
+
+Permita-se perguntar, investigar e crer com raízes profundas, rejeitando fés rasas de segunda mão baseadas apenas no relato dos outros.`
+      }
+    ]
+  },
+  {
+    id: 'tiago_fiel',
+    title: 'O Fiel — Tiago de Alfeu',
+    subtitle: 'A Fidelidade Discreta de Quem Quase Ninguém Vê',
+    author: 'O Despertar · Livro 7 — Tiago Alfeu',
+    description: 'Para todos os heróis anônimos que servem nos bastidores do Reino, cuja fidelidade discreta sustenta as bases de toda mesa.',
+    isPremium: true,
+    chapters: [
+      {
+        title: 'Capítulo 1: O Discípulo Invisível',
+        estimatedReadTime: 4,
+        content: `Tiago, filho de Alfeu, é o discípulo que quase ninguém conhece. Ele não escreveu epístolas famosas, não pregou grandes sermões para multidões e nunca esteve nos holofotes.
+
+Mas ele estava lá. Em cada lista dos doze, em cada momento decisivo. Às vezes, o maior testemunho que alguém pode dar é simplesmente permanecer e continuar.`
+      },
+      {
+        title: 'Capítulo 2: Os Que Chegam Cedo',
+        estimatedReadTime: 4,
+        content: `Antes que qualquer culto comece, há alguém que chegou mais cedo para acender as luzes, arrumar as cadeiras e preparar o café.
+
+Essas pessoas raramente são mencionadas nos relatórios triunfais do ativismo religioso, mas sem elas a mesa não existe e a graça não se corporifica. Elas são a base constante.`
+      },
+      {
+        title: 'Capítulo 3: O Reino Não É Feito por Estrelas',
+        estimatedReadTime: 4,
+        content: `"Não é sobre ser o melhor. É sobre não parar."
+
+Deus não mede o valor de sua vida pelo tamanho da sua plateia ou pela sua visibilidade pública. Ele vê as orações no quarto secreto, o serviço sem aplauso e a constância diária. Os fiéis anônimos são os verdadeiros sustentadores do movimento.`
+      }
+    ]
+  },
+  {
+    id: 'tadeu_intercessor',
+    title: 'O Intercessor — Tadeu',
+    subtitle: 'A Força Invisível Que Nasce de Joelhos',
+    author: 'O Despertar · Livro 8 — Tadeu',
+    description: 'A jornada de quem sustenta os movimentos na madrugada, descobrindo o valor inestimável da oração persistente e secreta.',
+    isPremium: false,
+    chapters: [
+      {
+        title: 'Capítulo 1: Uma Pergunta Reveladora',
+        estimatedReadTime: 4,
+        content: `Tadeu fez uma única pergunta registrada nos Evangelhos: "Senhor, por que haverás de te manifestar a nós e não ao mundo?"
+
+Essa indagação humilde revelou um coração ávido por intimidade profunda com Deus, alguém que recusava viver de aparências e rituais vazios.`
+      },
+      {
+        title: 'Capítulo 2: Enquanto o Mundo Aplaude o Palco',
+        estimatedReadTime: 4,
+        content: `Enquanto as lideranças sobem aos palcos sob os aplausos e holofotes, os intercessores velam de madrugada no silêncio do deserto.
+
+Seus joelhos calejados marcam o ritmo real de tudo o que acontece no plano espiritual. Todo movimento transformador de Deus sempre começa no lugar oculto.`
+      },
+      {
+        title: 'Capítulo 3: Orai Sem Cessar',
+        estimatedReadTime: 4,
+        content: `"Oramos sem cessar — não porque Deus seja surdo, mas porque o amor é incansável."
+
+A intercessão constante é carregar as dores do outro diante de Deus sem buscar nenhum crédito pessoal. O poder silencioso da oração está à sua espera.`
+      }
+    ]
+  },
+  {
+    id: 'simao_ativador',
+    title: 'O Ativador — Simão Zelote',
+    subtitle: 'Redirecionando a Indignação Para o Reino',
+    author: 'O Despertar · Livro 9 — Simão',
+    description: 'Para quem carrega uma sede inquieta por justiça e mudança, e quer canalizar essa chama fervente no discipulado em mesa.',
+    isPremium: true,
+    chapters: [
+      {
+        title: 'Capítulo 1: O Revolucionário Indignado',
+        estimatedReadTime: 4,
+        content: `Antes de encontrar o Messias, Simão era um ativista zelote armado, envolvido em planos políticos e inflamado de fúria contra a opressão romana.
+
+Quando encontrou Jesus, seu fogo não foi apagado ou reprimido, mas sim redirecionado. Sua indignação santa tornou-se força motriz para o Reino da graça.`
+      },
+      {
+        title: 'Capítulo 2: A Inquietação Como Dom Divino',
+        estimatedReadTime: 4,
+        content: `Se o caos e as incoerências do mundo te incomodam profundamente, saiba que essa inquietação não é uma falha de caráter. É um chamado sagrado.
+
+Deus não escolhe pessoas fáceis e tranquilas demais para mudar o rumo das coisas. Ele chama aqueles que estão incomodados para agir.`
+      },
+      {
+        title: 'Capítulo 3: Ação unida à Contemplação',
+        estimatedReadTime: 4,
+        content: `Simão nos ensina o equilíbrio necessário:
+- Ação sem contemplação é vazia, queima rápido e não deixa frutos.
+- Contemplação sem ação é inútil e morta.
+
+O ativador do Reino une oração profunda e atitude concreta, começando onde está, com uma cadeira e uma mesa aberta.`
+      }
+    ]
+  },
+  {
+    id: 'filipe_questionador',
+    title: 'O Questionador — Filipe',
+    subtitle: 'Para Quem Não Engole Respostas Fáceis',
+    author: 'O Despertar · Livro 10 — Filipe',
+    description: 'Para quem já se cobrou por questionar dogmas práticos e deseja descobrir a harmonia entre a razão investigativa e a fé viva.',
+    isPremium: true,
+    chapters: [
+      {
+        title: 'Capítulo 1: Um Homem Lógico e Curioso',
+        estimatedReadTime: 4,
+        content: `Filipe era um homem extremamente racional, dado a cálculos de suficiência e movido por indagações insistentes.
+
+Ele calculou os custos para alimentar as multidões e pediu para Jesus ver o Pai. E em momento algum foi rejeitado ou diminuído em sua busca teológica por causa disso.`
+      },
+      {
+        title: 'Capítulo 2: A Dúvida versus a Indiferença',
+        estimatedReadTime: 4,
+        content: `"O oposto da fé não é a dúvida legítima. O oposto da fé é a indiferença fria."
+
+A dúvida honesta nasce do desejo sincero de conhecer a Deus e de não se contentar com chavões vazios decorados. Ela age como motor para um relacionamento cada vez mais profundo e despido de vaidades.`
+      },
+      {
+        title: 'Capítulo 3: Ir Além das Próprias Limitações',
+        estimatedReadTime: 4,
+        content: `Embora fosse lógico e por vezes hesitante, Filipe cruzou fronteiras culturais ao pregar em Samaria e explicar as Escrituras ao oficial etíope.
+
+O chamado de Deus não requer heróis perfeitos, apenas companheiros dispostos a esticar o braço a quem procura.`
+      }
+    ]
+  },
+  {
+    id: 'paulo_semeador',
+    title: 'O Semeador — Paulo',
+    subtitle: 'O Poder de Plantar em Terras Difíceis',
+    author: 'O Despertar · Livro 11 — Paulo',
+    description: 'A formidável jornada de quem começou sozinho no campo hostil, ensinando o poder libertador da liderança servidora.',
+    isPremium: true,
+    chapters: [
+      {
+        title: 'Capítulo 1: De Perseguidor a Plantador',
+        estimatedReadTime: 4,
+        content: `Paulo começou do lado oposto: caçava cristãos com furor implacável e apoiava execuções sob o pretexto de zelo religioso.
+
+Até que, no caminho de Damasco, uma luz o derrubou ao chão. Sua história prova que nenhum ser humano, por pior que pareça, está fora do alcance de um recomeço.`
+      },
+      {
+        title: 'Capítulo 2: O Princípio da Primeira Semente',
+        estimatedReadTime: 4,
+        content: `Todo grande movimento restaurador começa com um gesto pequeno e despretensioso: lançar uma semente de amor ao solo.
+
+"Não espere as multidões apoiarem. Comece sozinho, se for necessário." Liderança servidora não aguarda circunstâncias favoráveis, ela as cria compartilhando o pão.`
+      },
+      {
+        title: 'Capítulo 3: Uma Cadeira para Iniciar a Mesa',
+        estimatedReadTime: 4,
+        content: `Paulo viajou milhares de quilômetros, abrindo mesas em territórios hostis, sinagogas trancadas e calabouços úmidos.
+
+Mas todas as suas cem comunidades começaram da mesma forma simples: com uma única cadeira vazia e um convite sincero para sentar e partilhar a verdade.`
+      }
+    ]
+  },
+  {
+    id: 'andre_conector',
+    title: 'O Conector — André',
+    subtitle: 'Não Precisa Ser Líder Para Mudar o Mundo',
+    author: 'O Despertar · Livro 12 — André',
+    description: 'A discreta história do homem que trouxe Pedro a Jesus e descobriu que o Evangelho se propaga de pessoa para pessoa, numa mesa comum.',
+    isPremium: true,
+    chapters: [
+      {
+        title: 'Capítulo 1: O Irmão do Famoso',
+        estimatedReadTime: 4,
+        content: `André era irmão de Simão Pedro, a grande estrela da igreja em Pentecostes. Ele nunca subiu a grandes palcos, mas foi quem encontrou Jesus primeiro e correu para dizer ao irmão: "Vem ver."
+
+Antes dos holofotes, houve alguém que se importou o suficiente para guiar o outro com dedicação.`
+      },
+      {
+        title: 'Capítulo 2: O Evangelho Não Requer Plataformas',
+        estimatedReadTime: 4,
+        content: `"Você não precisa de um grande palco para transformar o mundo. Você só precisa de uma mesa comum."
+
+O Evangelho não cresce de estrutura em estrutura ou de megafones para plateias passivas. Ele flui de pessoa para pessoa, no acolhimento diário.`
+      },
+      {
+        title: 'Capítulo 3: Criando Pontes Entre os Outros',
+        estimatedReadTime: 4,
+        content: `André era exímio em escutar atentamente e estender as mãos. Foi ele quem localizou o jovem com cinco pães e dois peixes na multidão com fome, e quem facilitou o acesso dos estrangeiros ao Mestre.
+
+Conectores de alma nos lembram que dar espaço e visibilidade aos outros é a própria essência da graça.`
       }
     ]
   }
