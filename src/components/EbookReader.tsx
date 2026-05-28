@@ -328,7 +328,7 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
         )
       )}
 
-      {/* Simulated Google Play Billing Dialog with precise details */}
+      {/* Simulated AbacatePay Billing Dialog with precise details */}
       <AnimatePresence>
         {showBillingDialog && selectedBook && (
           <motion.div
@@ -342,12 +342,12 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-3xl p-6 max-w-md w-full border border-stone-200 flex flex-col space-y-6"
+              className="bg-white rounded-3xl p-6 max-w-md w-full border border-[#D5F3A6]/30 shadow-2xl flex flex-col space-y-6"
             >
               <div className="flex justify-between items-start border-b border-stone-100 pb-3">
-                <div className="flex items-center space-x-2 text-amber-700">
-                  <ShoppingBag size={18} />
-                  <h4 className="font-serif font-semibold text-stone-800">Assinatura Google Play</h4>
+                <div className="flex items-center space-x-2 text-stone-800">
+                  <ShoppingBag size={18} className="text-[#C08261]" />
+                  <h4 className="font-serif font-semibold text-stone-800">Pagamento via AbacatePay</h4>
                 </div>
                 <button id="btn-close-billing" onClick={() => setShowBillingDialog(false)} className="text-stone-400 hover:text-stone-700">
                   <Minimize2 size={16} />
@@ -355,24 +355,23 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
               </div>
 
               <div className="space-y-4">
-                <div className="bg-[#FAF6F0] border border-[#eddcc4]/40 p-4 rounded-2xl flex flex-col align-left text-left">
-                  <h5 className="font-serif text-[#C08261] font-semibold text-base">{selectedBook.title}</h5>
+                <div className="bg-[#FAF6F0] border border-[#eddcc4]/45 p-4 rounded-2xl flex flex-col text-left">
+                  <span className="text-[9px] font-mono uppercase tracking-widest text-[#C08261] mb-1 font-bold">Lendo na Estrada</span>
+                  <h5 className="font-serif text-[#8C6239] font-semibold text-base">{selectedBook.title}</h5>
                   <p className="text-stone-500 text-xs mt-1">{selectedBook.subtitle}</p>
                   <div className="mt-4 border-t border-stone-200/50 pt-3 flex justify-between items-center">
                     <span className="text-xs text-stone-500 font-mono">Valor único:</span>
-                    <span className="text-base font-bold text-stone-800 font-mono">R$ 19,90</span>
+                    <span className="text-base font-bold text-stone-800 font-mono text-[#8C6239]">R$ 19,90</span>
                   </div>
                 </div>
 
-                <div className="bg-stone-50 border border-stone-200/50 p-4 rounded-xl space-y-2 text-justify">
+                <div className="bg-emerald-50/50 border border-emerald-150 p-4 rounded-xl space-y-2 text-justify">
                   <div className="flex items-center space-x-1.5 text-xs font-semibold text-stone-700">
-                    <AlertCircle size={14} className="text-[#C08261]" />
-                    <span>Lógica de Integração Real Billing SDKV7</span>
+                    <Sparkles size={14} className="text-[#8C6239]" />
+                    <span>Entrega Direta no AbacatePay</span>
                   </div>
-                  <p className="text-[10px] text-stone-500 leading-relaxed font-mono">
-                    Hilt injects the <strong className="text-stone-700">BillingClient</strong>. On confirmation, the app builds
-                    an <strong className="text-stone-700">ProductDetailsParams</strong> and triggers <strong className="text-stone-700">launchBillingFlow()</strong>. 
-                    Tokens are verified on Supabase backends.
+                  <p className="text-[10px] text-stone-600 leading-relaxed font-sans">
+                    Como planejado na nossa cultura horizontal, o <strong>AbacatePay</strong> processa este pagamento em segundos (via Pix ou cartão) e libera o acesso instantaneamente para você continuar sua caminhada.
                   </p>
                 </div>
               </div>
@@ -381,9 +380,9 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
                 <button
                   id="btn-confirm-billing-checkout"
                   onClick={handleSimulatedPurchase}
-                  className="w-full py-3 bg-[#C08261] hover:bg-[#b07353] text-white font-semibold rounded-2xl text-xs shadow-md shadow-orange-700/10 transition"
+                  className="w-full py-3 bg-[#6B8A30] hover:bg-[#587326] text-white font-semibold rounded-2xl text-xs shadow-md transition"
                 >
-                  Confirmar Compra Simulada (R$ 19,90)
+                  Confirmar via AbacatePay (Simulação)
                 </button>
                 <button
                   id="btn-cancel-billing-checkout"
