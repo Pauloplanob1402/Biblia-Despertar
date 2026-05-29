@@ -42,8 +42,8 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
 
   const getThemeClass = () => {
     switch (readerTheme) {
-      case 'white': return 'bg-white text-stone-850';
-      case 'ivory': return 'bg-[#FAF6F0] text-stone-850 border border-[#eddcc4]/40';
+      case 'white': return 'bg-white text-stone-850 border border-stone-200';
+      case 'ivory': return 'bg-[#FAF6F0] text-stone-850 border border-[#eddcc4]/45';
       case 'dark': return 'bg-[#1C1A18] text-stone-200';
     }
   };
@@ -58,10 +58,10 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
       {!isReadingMode ? (
         <div className="space-y-6 animate-fadeIn">
           <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-bold">Livros da Jornada</span>
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-bold">12 Inspiradores do Despertar</span>
             <h3 className="font-serif text-3xl font-light text-stone-800">Cultura de Graça</h3>
-            <p className="text-stone-500 text-sm">
-              Conheça os 12 inspiradores do movimento O Despertar. Todas as pessoas são diferentes e todas são fundamentais e importantes para o Reino. Leituras livres de performances e máscaras.
+            <p className="text-stone-500 text-sm leading-relaxed">
+              Todas as pessoas são diferentes, e todas são fundamentais e importantes para o Reino. Conheça estas 12 histórias e inspire sua caminhada com profundidade, livre de performances ou máscaras.
             </p>
           </div>
 

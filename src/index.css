@@ -5,6 +5,12 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom premium gold & terracotta colors */
+  --color-[#C08261]: #C08261;
+  --color-[#b07353]: #b07353;
+  --color-gold-500: #DCAE6C;
+  --color-gold-600: #C5924E;
 }
 
 body {
@@ -19,12 +25,12 @@ body {
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.02);
+  background: rgba(0,0,0,0.4);
 }
 ::-webkit-scrollbar-thumb {
-  background: #D8D2CB;
+  background: #33302D;
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C8BFB5;
+  background: #DCAE6C;
 }

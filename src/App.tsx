@@ -23,6 +23,7 @@ import ManifestoSection from './components/ManifestoSection';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
+import { MULTIPLICACAO } from './data/multiplication';
 import { DESPERTAR_PROFILES } from './data/profiles';
 import { UserProgress, Devotional, SpiritualIdentity } from './types';
 import { auth, db } from './lib/firebase';
@@ -30,8 +31,9 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro'>('home');
   const [mesasSubTab, setMesasSubTab] = useState<'mesas' | 'pilgrims'>('mesas');
+  const [activeDevotionalTab, setActiveDevotionalTab] = useState<'comunhao' | 'multiplicacao'>('comunhao');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
@@ -40,6 +42,26 @@ export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [chatContact, setChatContact] = useState<{ uid: string; name: string; emoji?: string } | null>(null);
+
+  // Growth loop & Norman Feedback states
+  const [committedToastMsg, setCommittedToastMsg] = useState<string | null>(null);
+
+  const handleCopyToClipboard = (text: string) => {
+    try {
+      navigator.clipboard.writeText(text);
+      setCommittedToastMsg("Enviado com amor! Texto copiado para colar no WhatsApp. 🕊️");
+      setTimeout(() => setCommittedToastMsg(null), 3000);
+    } catch (e) {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      setCommittedToastMsg("Enviado com amor! Texto copiado para colar no WhatsApp. 🕊️");
+      setTimeout(() => setCommittedToastMsg(null), 3000);
+    }
+  };
 
   // User profile persistent state engine
   const [progress, setProgress] = useState<UserProgress>({
@@ -223,6 +245,33 @@ export default function App() {
     });
   };
 
+  // Handle devotional completion mark
+  const handleCompleteDevotional = (devotionalId: string) => {
+    setProgress((prev) => {
+      if (prev.completedChapters.includes(devotionalId)) return prev;
+      return {
+        ...prev,
+        completedChapters: [...prev.completedChapters, devotionalId],
+        streak: prev.streak + (prev.lastActive !== new Date().toISOString().split('T')[0] ? 1 : 0),
+        lastActive: new Date().toISOString().split('T')[0]
+      };
+    });
+  };
+
+  // Simulates fully completed communion for developers to test progression flow instantly
+  const handleSimulateAllComunhao = () => {
+    setProgress((prev) => {
+      const allDevocionaisIds = DEVOCIONAIS.map(d => d.id);
+      const updatedChapters = Array.from(new Set([...prev.completedChapters, ...allDevocionaisIds]));
+      return {
+        ...prev,
+        completedChapters: updatedChapters
+      };
+    });
+    setCommittedToastMsg("Comunhão Íntima concluída para testes do Despertador! 🕊️");
+    setTimeout(() => setCommittedToastMsg(null), 3500);
+  };
+
   // Handle identity discovery
   const handleSelectIdentity = (identityId: string, answers: { [key: string]: string }) => {
     setProgress((prev) => ({
@@ -233,7 +282,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-stone-900 flex flex-col md:flex-row antialiased selection:bg-[#C08261]/20">
+    <div className="min-h-screen bg-stone-50 text-stone-900 flex flex-col md:flex-row antialiased selection:bg-[#C08261]/20">
       
       {/* MOBILE STICKY HEADER */}
       <header className="md:hidden w-full bg-white border-b border-stone-200/55 flex items-center justify-between p-4 sticky top-0 z-30 shrink-0">
@@ -342,8 +391,21 @@ export default function App() {
                   }`}
                 >
                   <span className="flex items-center space-x-2.5">
+                    <Sparkles size={14} />
+                    <span>Início & Diário</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-respiro"
+                  onClick={() => { setActiveSection('respiro'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'respiro' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
                     <Heart size={14} />
-                    <span>Instante de Respiro</span>
+                    <span>Respiro do Secreto</span>
                   </span>
                 </button>
 
@@ -369,7 +431,7 @@ export default function App() {
                 >
                   <span className="flex items-center space-x-2.5">
                     <Feather size={14} />
-                    <span>30 Dias no Secreto</span>
+                    <span>40 Dias Despertando</span>
                   </span>
                 </button>
 
@@ -517,8 +579,22 @@ export default function App() {
             }`}
           >
             <span className="flex items-center space-x-2.5">
+              <Sparkles size={14} />
+              <span>Início & Diário</span>
+            </span>
+            <ChevronRight size={12} className="opacity-0 group-hover:opacity-100" />
+          </button>
+
+          <button
+            id="nav-respiro"
+            onClick={() => { setActiveSection('respiro'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'respiro' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
               <Heart size={14} />
-              <span>Instante de Respiro</span>
+              <span>Respiro do Secreto</span>
             </span>
             <ChevronRight size={12} className="opacity-0 group-hover:opacity-100" />
           </button>
@@ -545,7 +621,7 @@ export default function App() {
           >
             <span className="flex items-center space-x-2.5">
               <Feather size={14} />
-              <span>30 Dias no Secreto</span>
+              <span>40 Dias Despertando</span>
             </span>
           </button>
 
@@ -641,17 +717,53 @@ export default function App() {
               className="space-y-8 text-left"
             >
               {/* Emotional Custom Welcome Header and Streak */}
-              <div id="emotional-banner" className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-stone-100 to-amber-50/10 p-6 rounded-3xl border border-stone-200/40 shadow-sm">
-                <div className="space-y-1.5 max-w-2xl">
-                  <h2 className="font-serif text-3xl font-light text-stone-850 tracking-tight">{greeting.title}</h2>
-                  <p className="text-stone-500 text-xs leading-relaxed">{greeting.desc}</p>
+              <div id="emotional-banner" className="relative group overflow-hidden bg-gradient-to-br from-[#1E1C1A] via-[#121110] to-[#0A0A09] p-8 md:p-10 rounded-3xl border border-[#DCAE6C]/20 shadow-xl space-y-6">
+                {/* Golden Sunburst background effect */}
+                <div className="absolute top-0 right-0 w-[250px] h-[250px] bg-gradient-to-b from-[#DCAE6C]/10 to-transparent pointer-events-none rounded-full blur-3xl -mr-16 -mt-16 opacity-80" />
+                
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10 w-full">
+                  <div className="space-y-3.5 max-w-2xl text-left">
+                    <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] uppercase font-mono tracking-widest text-[#DCAE6C] bg-[#DCAE6C]/10 border border-[#DCAE6C]/20">
+                      <Sparkles size={11} className="text-[#DCAE6C]" />
+                      <span>A Bíblia do Despertar</span>
+                    </span>
+                    <h2 className="font-serif text-3xl md:text-4xl font-light text-stone-200 tracking-tight leading-normal">
+                      <span className="text-stone-200/35">A Palavra que </span><span className="text-[#DCAE6C] font-semibold">acorda</span><span className="text-stone-200/35">.</span><br />
+                      <span className="text-[#DCAE6C]/35">A Verdade que </span><span className="text-[#DCAE6C] font-semibold">transforma</span><span className="text-stone-200/35">.</span><br />
+                      <span className="text-stone-200/35">A Vida que </span><span className="text-[#DCAE6C] font-semibold">floresce</span><span className="text-stone-200/35">.</span>
+                    </h2>
+                    <p className="text-stone-400 text-xs md:text-sm leading-relaxed font-sans max-w-lg mt-2">
+                      Você já imaginou ter uma Bíblia criada para ajudar uma nova geração a despertar para aquilo que Deus sonhou? Desenvolva uma caminhada diária com Deus, compreenda as Escrituras e viva uma fé autêntica.
+                    </p>
+                  </div>
+
+                  {/* Micro-interactive Streak card */}
+                  <div className="flex items-center space-x-3.5 bg-[#1F1D1B] py-3.5 px-6 rounded-2xl shadow-lg border border-[#DCAE6C]/15 backdrop-blur-xs shrink-0 self-start md:self-auto">
+                    <Flame size={22} fill="#DCAE6C" className="text-[#DCAE6C] animate-pulse" />
+                    <div className="text-left font-mono">
+                      <span className="text-xl font-bold text-[#DCAE6C]">{progress.streak} dias</span>
+                      <p className="text-[9px] text-stone-450 uppercase tracking-widest font-semibold mt-0.5">Sintonia Diária</p>
+                    </div>
+                  </div>
                 </div>
-                {/* Micro-interactive Streak card */}
-                <div className="flex items-center space-x-2.5 bg-white py-3 px-5 rounded-2xl shadow-sm border border-stone-200/50">
-                  <Flame size={18} fill="#C08261" className="text-[#C08261] animate-bounce" />
-                  <div className="text-left font-mono">
-                    <span className="text-[16px] font-bold text-stone-800">{progress.streak}</span>
-                    <p className="text-[9px] text-stone-400 uppercase tracking-wider font-semibold">Ritual Diário</p>
+
+                {/* Scannable Grid featuring the brand benefits */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5 border-t border-[#DCAE6C]/10 relative z-10 text-left">
+                  <div className="space-y-1">
+                    <span className="text-[11px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider block">✔ Leitura Ativa</span>
+                    <p className="text-[11px] text-stone-400 leading-normal">Aproximação diária e simples com o Logos divino</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-[11px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider block">✔ Planos Práticos</span>
+                    <p className="text-[11px] text-stone-400 leading-normal">Desafios projetados para cada fase da sua fé</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-[11px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider block">✔ Devocionais Livres</span>
+                    <p className="text-[11px] text-stone-400 leading-normal">Meditações focadas na graça, livres de cobranças</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-[11px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider block">✔ 12 Inspiradores</span>
+                    <p className="text-[11px] text-stone-400 leading-normal">Encontre seu jeito único e importante para o Reino</p>
                   </div>
                 </div>
               </div>
@@ -721,11 +833,11 @@ export default function App() {
                   <div className="bg-white border border-stone-200/50 p-6 rounded-3xl shadow-sm space-y-4">
                     <div className="flex justify-between items-center border-b border-stone-100 pb-3">
                       <span className="text-[10px] font-mono uppercase text-stone-400 tracking-wider">Leitura Recomendada de Hoje</span>
-                      <span className="px-2 py-0.5 bg-[#C08261]/10 text-[#C08261] text-[9px] font-semibold font-mono rounded-full leading-none">Sossego</span>
+                      <span className="px-2 py-0.5 bg-[#C08261]/10 text-[#C08261] text-[9px] font-semibold font-mono rounded-full leading-none">{DEVOCIONAIS[0].category}</span>
                     </div>
 
                     <div className="space-y-1.5">
-                      <h3 className="font-serif text-xl font-medium text-stone-800">A pressa é uma forma de ateísmo prático</h3>
+                      <h3 className="font-serif text-xl font-medium text-stone-800">{DEVOCIONAIS[0].title}</h3>
                       <p className="text-stone-500 text-xs font-mono">{DEVOCIONAIS[0].scripture}</p>
                     </div>
 
@@ -779,154 +891,443 @@ export default function App() {
           )}
 
           {/* ACTIVE PORT: DEVOCIONAIS LIST */}
-          {activeSection === 'devotionals' && !selectedDevotional && (
-            <motion.div
-              key="devotionals"
-              initial={{ opacity: 0, x: 15 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -15 }}
-              className="space-y-8 text-left"
-            >
-              <div className="text-center max-w-xl mx-auto space-y-1.5 border-b border-stone-100 pb-5 mb-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-bold">Conversas de Secreto</span>
-                <h3 className="font-serif text-3xl font-light text-stone-800">30 Dias no Secreto</h3>
-                <p className="text-stone-500 text-xs">Aprenda a andar de sandálias leves, longe de pesos religiosos e julgamentos.</p>
-              </div>
+          {activeSection === 'devotionals' && !selectedDevotional && (() => {
+            const currentList = activeDevotionalTab === 'comunhao' ? DEVOCIONAIS : MULTIPLICACAO;
+            
+            // Check if Comunhão has been fully completed (all 40 days of DEVOCIONAIS)
+            const totalComunhaoDays = DEVOCIONAIS.length; // 40
+            const completedComunhaoDays = DEVOCIONAIS.filter(dev => progress.completedChapters.includes(dev.id)).length;
+            const isComunhaoFullyComplete = completedComunhaoDays >= totalComunhaoDays;
 
-              {/* Grid of 30 devotionals */}
-              <div id="devotionals-library-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {DEVOCIONAIS.map((dev, index) => (
-                  <div
-                    id={`devotional-card-${dev.id}`}
-                    key={dev.id}
-                    onClick={() => setSelectedDevotional(dev)}
-                    className="bg-white border border-stone-200/50 p-5 rounded-2xl shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between h-[190px]"
+            const completedCount = currentList.filter(dev => progress.completedChapters.includes(dev.id)).length;
+            const completionPercent = Math.round((completedCount / currentList.length) * 100);
+            
+            // Find today's recommended day (first incomplete)
+            const recommendedDev = currentList.find(dev => !progress.completedChapters.includes(dev.id)) || currentList[0];
+            const recommendedIndex = currentList.findIndex(dev => dev.id === recommendedDev.id);
+
+            return (
+              <motion.div
+                key="devotionals"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                className="space-y-8 text-left max-w-5xl mx-auto"
+              >
+                {/* Header Banner with Premium Styling */}
+                <div className="text-center py-6 max-w-3xl mx-auto space-y-3">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-bold">Caminho de Despertar</span>
+                  <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-800 tracking-tight leading-tight">
+                    Consagração Diária e Preparação para o Chamado
+                  </h3>
+                  <p className="text-stone-500 text-xs font-mono max-w-md mx-auto">
+                    Cultive a presença invisível através do silêncio devocional e multiplique o chamado.
+                  </p>
+                </div>
+
+                {/* Highly intuitive segmented choice control (Krug's Ease of Decision & Norman Affordance) */}
+                <div id="devotionals-segmented-control" className="flex justify-center p-1 bg-stone-150/60 rounded-2xl max-w-md mx-auto border border-stone-200/50">
+                  <button
+                    id="tab-devotional-comunhao"
+                    onClick={() => setActiveDevotionalTab('comunhao')}
+                    className={`flex-1 flex flex-col items-center py-2 px-3 rounded-xl transition-all ${
+                      activeDevotionalTab === 'comunhao'
+                        ? 'bg-white text-[#C08261] shadow-sm font-semibold'
+                        : 'text-stone-500 hover:text-stone-800'
+                    }`}
                   >
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center text-[9px] font-mono text-stone-400">
-                        <span>Dia {index + 1}</span>
-                        <span className="px-2 py-0.5 bg-stone-100 text-stone-500 rounded-full font-semibold">{dev.category}</span>
+                    <span className="text-xs font-serif leading-none">40 Dias Despertando</span>
+                    <span className="text-[9px] font-mono uppercase opacity-75 mt-0.5 tracking-wider">Comunhão Íntima</span>
+                  </button>
+                  <button
+                    id="tab-devotional-multiplicacao"
+                    onClick={() => setActiveDevotionalTab('multiplicacao')}
+                    className={`flex-1 flex flex-col items-center py-2 px-3 rounded-xl transition-all ${
+                      activeDevotionalTab === 'multiplicacao'
+                        ? 'bg-white text-[#C08261] shadow-sm font-semibold'
+                        : 'text-stone-500 hover:text-stone-800'
+                    }`}
+                  >
+                    <span className="text-xs font-serif leading-none flex items-center gap-1">
+                      <span>Imersão do Despertador</span>
+                      {!isComunhaoFullyComplete && <span className="text-[10px]">🔒</span>}
+                    </span>
+                    <span className="text-[9px] font-mono uppercase opacity-75 mt-0.5 tracking-wider">A Multiplicação</span>
+                  </button>
+                </div>
+
+                {/* IF THE MULTIPLICACAO TAB IS SELECTED BUT COMUNHAO IS NOT FULLY COMPLETED, SHOW SACRED LOCK PANEL */}
+                {activeDevotionalTab === 'multiplicacao' && !isComunhaoFullyComplete ? (
+                  <motion.div
+                    key="sacred-lock-panel"
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="max-w-2xl mx-auto rounded-3xl bg-gradient-to-br from-[#1c1917] via-[#121110] to-[#0c0b0a] border border-[#C08261]/20 p-8 md:p-12 shadow-2xl relative overflow-hidden text-center space-y-8"
+                  >
+                    {/* Glowing gold circular halo */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-radial-gradient from-[#C08261]/15 to-transparent pointer-events-none rounded-full blur-3xl opacity-60" />
+                    
+                    <div className="space-y-4 relative z-10 flex flex-col items-center">
+                      <div className="w-16 h-16 rounded-full bg-[#C08261]/10 flex items-center justify-center border border-[#C08261]/35 mb-2 shadow-inner text-[#C08261]">
+                        <span className="text-3xl">🎚️</span>
                       </div>
-                      <h4 className="font-serif text-base font-medium text-stone-800 line-clamp-2 leading-snug">{dev.title}</h4>
-                      <p className="text-[11px] text-[#C08261] font-mono italic truncate">{dev.scripture}</p>
+                      
+                      <span className="text-[9.5px] font-mono uppercase tracking-widest text-[#C08261] bg-[#C08261]/10 px-3 py-1 rounded-full border border-[#C08261]/25 font-bold">
+                        A Provação Secreta das Almas
+                      </span>
+                      
+                      <h4 className="font-serif text-2xl md:text-3xl text-stone-100 tracking-tight font-light leading-snug">
+                        Os 40 dias no <span className="text-[#C08261] font-semibold">Deserto do Despertador</span> só se abrem após o término da Comunhão Íntima
+                      </h4>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] pt-3 border-t border-stone-100 mt-2">
-                      <span className="text-stone-400 font-mono">Contemplativo</span>
-                      <span className="text-[#C08261] font-semibold hover:underline">Iniciar Leitura →</span>
+                    <div className="border-t border-stone-800/65 pt-6 space-y-4 max-w-lg mx-auto relative z-10 text-stone-400 text-xs md:text-sm leading-relaxed text-left font-serif font-light">
+                      <p className="indent-4">
+                        Assim como Jesus foi guiado pelo Espírito ao deserto, enfrentando, jejuando e orando por <strong>40 dias e 40 noites</strong> (Mateus 4:1-11, Marcos 1:12-15) em profunda provação, purificação e preparo íntimo com o Pai, o seu chamado como Despertador — um ganhador e multiplicador de almas — exige a consolidação prévia do seu fogo secreto.
+                      </p>
+                      <p className="indent-4">
+                        Nenhum homem pode dar o que não possui. A multiplicação só floresce a partir do transbordo de uma mesa de intimidade. Complete primeiro os 40 dias da sua consagração pessoal antes de receber as ferramentas da obra pública de resgate.
+                      </p>
+                      
+                      <div className="bg-stone-900/50 rounded-2xl p-4.5 border border-stone-800 flex items-start gap-3.5 mt-3">
+                        <span className="text-xl">🕊️</span>
+                        <div className="space-y-1 flex-1 font-sans">
+                          <span className="text-[10px] font-mono text-stone-500 uppercase tracking-wide block font-semibold">Atendimento ao Seu Progresso</span>
+                          <span className="text-xs text-stone-300 font-medium">Você concluiu {completedComunhaoDays} de 40 encontros diários.</span>
+                          <div className="w-full bg-stone-850 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                            <div className="bg-[#C08261] h-full" style={{ width: `${(completedComunhaoDays / 40) * 100}%` }} />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
+
+                    {/* DEV / TESTER SHIELDS BYPASS (Norman Feedback and transparency) */}
+                    <div className="pt-4 relative z-10 flex flex-col sm:flex-row justify-center items-center gap-3">
+                      <button
+                        id="btn-return-to-comunhao"
+                        onClick={() => setActiveDevotionalTab('comunhao')}
+                        className="px-6 py-2.5 bg-[#C08261] hover:bg-[#A06C51] text-white text-xs font-semibold rounded-2xl shadow-sm transition"
+                      >
+                        Voltar para a Comunhão Íntima
+                      </button>
+                      <button
+                        id="btn-simulate-completion"
+                        onClick={handleSimulateAllComunhao}
+                        className="px-4 py-2 bg-stone-900 hover:bg-black text-stone-400 hover:text-stone-200 text-[10.5px] font-mono rounded-xl border border-stone-800 transition shadow-inner"
+                      >
+                        ⚡ Simular 40 dias (Bypass)
+                      </button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <>
+                    {/* Progress Indicators & Zeigarnik Goal Gradient Meter */}
+                    <div id="devocionais-progress-panel" className="bg-white border border-stone-205/60 p-5 rounded-3xl shadow-xs max-w-2xl mx-auto space-y-3.5">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-serif font-medium text-stone-700">Progresso na Jornada de Ativação</span>
+                        <span className="font-mono text-[11px] text-[#C08261] font-semibold bg-[#C08261]/10 px-2.5 py-0.5 rounded-full">
+                          {completedCount} de {currentList.length} dias ({completionPercent}%)
+                        </span>
+                      </div>
+                      <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
+                        <motion.div 
+                          key={activeDevotionalTab}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${completionPercent}%` }}
+                          transition={{ duration: 0.6, ease: 'easeOut' }}
+                          className="bg-gradient-to-r from-[#C08261] to-[#e0a281] h-full rounded-full"
+                        />
+                      </div>
+                      <p className="text-[11px] text-stone-450 italic text-center font-serif leading-relaxed">
+                        "O fechamento de cada círculo de silêncio consolida a sua maturidade secreta." — Zeigarnik Focus
+                      </p>
+                    </div>
+
+                    {/* Today's Dynamic Recommended Devotional Nudge Card (Nudge & StoryBrand Architecture) */}
+                    {recommendedDev && (
+                      <motion.div 
+                        id="devotional-recommended-nudge"
+                        initial={{ scale: 0.98, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="p-6 bg-[#C08261]/5 border border-[#C08261]/20 rounded-3xl max-w-2xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden"
+                      >
+                        <div className="absolute -top-12 -right-12 opacity-[0.03] text-[#C08261] pointer-events-none">
+                          <Flame size={120} />
+                        </div>
+                        
+                        <div className="space-y-1.5 flex-1 z-10">
+                          <div className="flex items-center space-x-2">
+                            <span className="px-2.5 py-0.5 bg-[#C08261]/15 text-[#C08261] text-[9px] font-mono uppercase font-bold rounded-lg tracking-wider">
+                              Recomendado de Hoje
+                            </span>
+                            <span className="text-[11px] font-mono text-stone-500">• Dia {recommendedIndex + 1}</span>
+                          </div>
+                          <h4 className="font-serif text-[18px] font-semibold text-stone-850 tracking-tight leading-tight">
+                            {recommendedDev.title}
+                          </h4>
+                          <p className="text-xs text-stone-500 line-clamp-2 md:max-w-md font-serif leading-normal italic">
+                            {recommendedDev.scripture}
+                          </p>
+                        </div>
+
+                        <button
+                          id="btn-nudge-active-devocional"
+                          onClick={() => setSelectedDevotional(recommendedDev)}
+                          className="w-full md:w-auto px-5 py-3 bg-[#C08261] hover:bg-[#A06C51] text-white text-xs font-semibold rounded-2xl flex items-center justify-center space-x-1.5 shadow-sm transition-all hover:scale-[1.02] transform shrink-0 active:scale-95"
+                        >
+                          <span>Entrar no Secreto</span>
+                          <ChevronRight size={14} />
+                        </button>
+                      </motion.div>
+                    )}
+
+                    {/* Hick's Law: Phase Filter / Groups to avoid decision paralysis */}
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center border-b border-stone-100 pb-2">
+                        <span className="text-xs uppercase font-mono tracking-widest text-stone-400 font-semibold">Círculos de Encontro</span>
+                        <span className="text-[10px] text-stone-400 font-mono italic">Toque para desvelar a leitura</span>
+                      </div>
+
+                      <div id="devotionals-library-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {currentList.map((dev, idx) => {
+                          const isCompleted = progress.completedChapters.includes(dev.id);
+                          return (
+                            <div
+                              id={`devotional-card-${dev.id}`}
+                              key={dev.id}
+                              onClick={() => setSelectedDevotional(dev)}
+                              className={`bg-white border rounded-2xl p-5 shadow-xs hover:shadow-md transition duration-200 cursor-pointer flex flex-col justify-between h-[180px] hover:scale-[1.01] transform ${
+                                isCompleted 
+                                  ? 'border-[#C08261]/30 bg-[#C08261]/2 shadow-inner-sm' 
+                                  : 'border-stone-200/50 hover:border-stone-300'
+                              }`}
+                            >
+                              <div className="space-y-2">
+                                <div className="flex justify-between items-center text-[9px] font-mono text-stone-400">
+                                  <span className="font-semibold text-stone-500">Dia {idx + 1}</span>
+                                  {isCompleted ? (
+                                    <span className="flex items-center space-x-1 px-2 py-0.5 bg-[#C08261]/15 text-[#C08261] text-[9.5px] font-semibold rounded-full font-mono">
+                                      <Check size={8} strokeWidth={3} />
+                                      <span>PRESENTE</span>
+                                    </span>
+                                  ) : (
+                                    <span className="px-2 py-0.5 bg-stone-100 text-stone-550 rounded-full font-semibold">{dev.category}</span>
+                                  )}
+                                </div>
+                                <h4 className="font-serif text-sm font-medium text-stone-850 line-clamp-2 leading-snug">{dev.title}</h4>
+                                <p className="text-[10.5px] text-[#C08261] font-mono italic truncate">{dev.scripture}</p>
+                              </div>
+
+                              <div className="flex items-center justify-between text-[10.5px] pt-3 border-t border-stone-100/60 mt-1">
+                                <span className="text-stone-400 font-mono">
+                                  {activeDevotionalTab === 'comunhao' ? 'Contemplação' : 'Multiplicação'}
+                                </span>
+                                <span className="text-[#C08261] font-semibold flex items-center space-x-0.5 hover:underline">
+                                  <span>Sintonizar</span>
+                                  <ChevronRight size={12} />
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </motion.div>
+            );
+          })()}
 
           {/* ACTIVE PORT: SINGLE DEVOTIONAL EXPANDED VIEW (IMMERSIVE SEED READER) */}
-          {selectedDevotional && (
-            <motion.div
-              key="single-devotional"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              className="max-w-2xl mx-auto space-y-8 text-left"
-            >
-              {/* Escape bar */}
-              <button
-                id="btn-exit-single-devotional"
-                onClick={() => setSelectedDevotional(null)}
-                className="flex items-center space-x-1 py-1.5 px-3 hover:bg-stone-150 rounded-xl text-xs text-stone-600 transition"
+          {selectedDevotional && (() => {
+            const isComunhao = DEVOCIONAIS.some(d => d.id === selectedDevotional.id);
+            const currentGroup = isComunhao ? DEVOCIONAIS : MULTIPLICACAO;
+            const currentIndex = currentGroup.findIndex(d => d.id === selectedDevotional.id);
+            const nextDevotional = currentIndex !== -1 && currentIndex < currentGroup.length - 1 ? currentGroup[currentIndex + 1] : null;
+            const isCompleted = progress.completedChapters.includes(selectedDevotional.id);
+
+            return (
+              <motion.div
+                key="single-devotional"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                className="max-w-2xl mx-auto space-y-6 text-left pb-16"
               >
-                <ArrowLeft size={14} />
-                <span>Voltar</span>
-              </button>
+                {/* Escape bar */}
+                <button
+                  id="btn-exit-single-devotional"
+                  onClick={() => setSelectedDevotional(null)}
+                  className="flex items-center space-x-1.5 py-1.5 px-3.5 hover:bg-stone-150 rounded-xl text-xs text-stone-605 transition"
+                >
+                  <ArrowLeft size={13} />
+                  <span>Voltar aos Encontros</span>
+                </button>
 
-              {/* Devotional body card */}
-              <div id="devotional-view-card" className="bg-white rounded-3xl p-8 md:p-12 border border-stone-200/40 shadow-md space-y-6 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-8 opacity-[0.02] text-stone-900 pointer-events-none">
-                  <Feather size={200} />
-                </div>
-
-                <div className="border-b border-stone-100 pb-5 space-y-2">
-                  <span className="px-3 py-1 bg-[#C08261]/10 text-[#C08261] text-xs font-semibold font-mono rounded-full tracking-wider uppercase">
-                    Reflexão • {selectedDevotional.category}
-                  </span>
-                  <h2 className="text-3xl font-serif font-light text-stone-850 leading-snug">{selectedDevotional.title}</h2>
-                  <p className="text-sm text-stone-550 font-mono italic font-semibold">{selectedDevotional.scripture}</p>
-                </div>
-
-                {/* Main Meditative Prose */}
-                <p className="font-serif text-stone-800 text-base md:text-lg leading-relaxed text-justify space-y-4 whitespace-pre-line">
-                  {selectedDevotional.text}
-                </p>
-
-                {/* Moment of quiet breathing block */}
-                <div id="devotional-breathing-box" className="p-6 bg-gradient-to-r from-stone-50 to-stone-100 border border-stone-150 rounded-2xl space-y-3">
-                  <div className="flex items-center space-x-2 text-sm font-semibold text-stone-700">
-                    <Clock size={14} className="text-[#C08261] animate-spin" />
-                    <span className="font-mono uppercase tracking-wider text-xs">Pausa para respiração</span>
-                  </div>
-                  <p className="text-sm md:text-base text-stone-750 italic font-serif leading-relaxed">
-                    {selectedDevotional.pauseInstruction}
-                  </p>
-                </div>
-
-                {/* Prayer / Oração do Secreto */}
-                <div className="space-y-2">
-                  <span className="text-xs uppercase tracking-wider font-mono text-stone-550 font-semibold block">Oração do Secreto</span>
-                  <blockquote className="p-5 bg-amber-50/20 border-l-2 border-[#C08261] text-sm md:text-base font-serif italic text-stone-850 leading-relaxed rounded-r-xl">
-                    "{selectedDevotional.prayer}"
-                  </blockquote>
-                </div>
-
-                {/* Grace in practice */}
-                <div className="space-y-2">
-                  <span className="text-xs uppercase tracking-wider font-mono text-stone-550 font-semibold block">A Graça em prática no seu dia</span>
-                  <p className="text-sm md:text-base text-stone-750 leading-relaxed pl-1">
-                    • {selectedDevotional.graceInPractice}
-                  </p>
-                </div>
-
-                {/* Reflective input box */}
-                <div className="border-t border-stone-100 pt-6 space-y-4">
-                  <div className="space-y-1">
-                    <span className="text-xs uppercase tracking-wider font-mono text-[#8C6239] font-semibold block">Pergunta Reflexiva</span>
-                    <p className="text-sm md:text-base italic text-stone-850 font-serif leading-relaxed pl-1">"{selectedDevotional.reflectiveQuestion}"</p>
+                {/* Devotional body card */}
+                <div id="devotional-view-card" className="bg-white rounded-3xl p-6 md:p-10 border border-stone-200/40 shadow-sm space-y-6 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-8 opacity-[0.02] text-stone-900 pointer-events-none">
+                    <Feather size={200} />
                   </div>
 
-                  <div className="flex space-x-2">
-                    <input
-                      id="input-devotional-journal-note"
-                      type="text"
-                      placeholder="Responda em silêncio o que queima em sua mente..."
-                      className="bg-stone-50 border border-stone-250 rounded-xl px-4 py-3 text-sm flex-1 focus:outline-none focus:ring-1 focus:ring-[#C08261] text-stone-800"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          const val = (e.currentTarget as HTMLInputElement).value;
-                          if (val.trim()) {
-                            handleAddReflection(selectedDevotional.title, val);
-                            (e.currentTarget as HTMLInputElement).value = '';
+                  <div className="border-b border-stone-100 pb-5 space-y-2.5">
+                    <span className="px-3 py-1 bg-[#C08261]/10 text-[#C08261] text-[10px] font-semibold font-mono rounded-lg tracking-wider uppercase">
+                      {isComunhao ? '40 Dias Despertando' : 'Imersão do Despertador'} • Dia {currentIndex + 1}
+                    </span>
+                    <h2 className="text-2xl md:text-3xl font-serif font-light text-stone-900 leading-tight">{selectedDevotional.title}</h2>
+                    <p className="text-xs md:text-sm text-stone-500 font-mono italic font-semibold">{selectedDevotional.scripture}</p>
+                  </div>
+
+                  {/* Main Meditative Prose */}
+                  <p className="font-serif text-stone-850 text-[15px] md:text-[17px] leading-relaxed text-justify space-y-4 whitespace-pre-line">
+                    {selectedDevotional.text}
+                  </p>
+
+                  {/* Moment of quiet breathing block */}
+                  <div id="devotional-breathing-box" className="p-5 bg-gradient-to-r from-stone-50 to-stone-100/60 border border-stone-155 rounded-2xl space-y-2.5">
+                    <div className="flex items-center space-x-2 text-xs font-semibold text-[#C08261]">
+                      <Clock size={13} className="animate-spin" />
+                      <span className="font-mono uppercase tracking-wider">Desafio Pessoal no Silêncio</span>
+                    </div>
+                    <p className="text-sm text-stone-750 italic font-serif leading-relaxed">
+                      {selectedDevotional.pauseInstruction}
+                    </p>
+                  </div>
+
+                  {/* Prayer / Oração do Secreto */}
+                  <div className="space-y-2">
+                    <span className="text-[10px] uppercase tracking-wider font-mono text-stone-400 font-semibold block">Oração no Secreto</span>
+                    <blockquote className="p-4 bg-amber-50/15 border-l-2 border-[#C08261] text-sm md:text-[15px] font-serif italic text-stone-850 leading-relaxed rounded-r-xl">
+                      "{selectedDevotional.prayer}"
+                    </blockquote>
+                  </div>
+
+                  {/* Grace in practice */}
+                  <div className="space-y-2 bg-[#C08261]/2 border border-[#C08261]/10 rounded-2xl p-4">
+                    <span className="text-[10px] uppercase tracking-wider font-mono text-[#C08261] font-bold block">Desafio de Multiplicação</span>
+                    <p className="text-sm text-stone-800 leading-relaxed font-serif pl-1">
+                      {selectedDevotional.graceInPractice}
+                    </p>
+                  </div>
+
+                  {/* Reflective input box - Nir Eyal Investment Hook */}
+                  <div className="border-t border-stone-100 pt-6 space-y-4">
+                    <div className="space-y-1">
+                      <span className="text-[10px] uppercase tracking-wider font-mono text-[#8C6239] font-bold block">Pergunta Reflexiva</span>
+                      <p className="text-sm md:text-[15px] italic text-stone-800 font-serif leading-relaxed pl-1">"{selectedDevotional.reflectiveQuestion}"</p>
+                    </div>
+
+                    <div className="flex space-x-2">
+                      <input
+                        id="input-devotional-journal-note"
+                        type="text"
+                        placeholder="Escreva algo no seu Caderno de Secreto..."
+                        className="bg-stone-50/60 border border-stone-200 rounded-xl px-4 py-2.5 text-xs md:text-sm flex-1 focus:outline-none focus:ring-1 focus:ring-[#C08261] text-stone-800"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            const val = (e.currentTarget as HTMLInputElement).value;
+                            if (val.trim()) {
+                              handleAddReflection(`${selectedDevotional.category} Dev - Dia ${currentIndex + 1}`, val);
+                              (e.currentTarget as HTMLInputElement).value = '';
+                            }
                           }
-                        }
-                      }}
-                    />
+                        }}
+                      />
+                      <button
+                        id="btn-save-journal-note"
+                        onClick={() => {
+                          const input = document.getElementById('input-devotional-journal-note') as HTMLInputElement;
+                          if (input && input.value.trim()) {
+                            handleAddReflection(`${selectedDevotional.category} Dev - Dia ${currentIndex + 1}`, input.value);
+                            input.value = '';
+                          }
+                        }}
+                        className="px-4 py-2.5 bg-stone-900 border border-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl transition flex items-center justify-center shadow-xs cursor-pointer"
+                      >
+                        <Check size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* ACTIONS ZONE: Commitment toggle and Viral WhatsApp copy (Adam Grant & Jonah Berger Growth Mechanism) */}
+                  <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-stone-100">
                     <button
-                      id="btn-save-journal-note"
-                      onClick={(e) => {
-                        const input = document.getElementById('input-devotional-journal-note') as HTMLInputElement;
-                        if (input && input.value.trim()) {
-                          handleAddReflection(selectedDevotional.title, input.value);
-                          input.value = '';
+                      id="btn-seal-devotional"
+                      onClick={() => {
+                        handleCompleteDevotional(selectedDevotional.id);
+                        if (!isCompleted) {
+                          setCommittedToastMsg("Compromisso selado no Secreto! 🔥 +1 de Streak!");
+                        } else {
+                          // Allow undo
+                          setProgress(prev => ({
+                            ...prev,
+                            completedChapters: prev.completedChapters.filter(id => id !== selectedDevotional.id)
+                          }));
+                          setCommittedToastMsg("Compromisso desfeito com sucesso.");
                         }
+                        setTimeout(() => setCommittedToastMsg(null), 3000);
                       }}
-                      className="px-5 py-3 bg-stone-900 border border-stone-900 hover:bg-black text-white text-sm font-semibold rounded-xl transition flex items-center justify-center shadow-xs"
+                      className={`flex-1 py-3.5 px-5 rounded-xl font-serif text-xs font-semibold flex items-center justify-center space-x-2 transition transform active:scale-95 cursor-pointer ${
+                        isCompleted
+                          ? 'bg-stone-100 text-stone-500 hover:bg-stone-150'
+                          : 'bg-[#C08261] text-white hover:bg-[#A06C51] shadow-sm hover:scale-[1.01]'
+                      }`}
                     >
-                      <Check size={14} />
+                      <Check size={14} strokeWidth={isCompleted ? 3 : 2} />
+                      <span>
+                        {isCompleted
+                          ? 'Completado (Toque para desfazer)'
+                          : 'Dizer Sim e Marcar Diário'}
+                      </span>
+                    </button>
+
+                    <button
+                      id="btn-share-devotional"
+                      onClick={() => {
+                        const appUrl = window.location.href.split('?')[0];
+                        const shareText = `🕊️ *SOMOS O DESPERTAR* 🕊️\n*40 dias despertando outros: Dia ${currentIndex + 1}*\n\n"Passei pelo Altar do Secreto de hoje e lembrei de você. Posso compartilhar o que Deus tem me mostrado?"\n\n📌 *Estudo Central:* _"${selectedDevotional.title}"_\n📖 *Versículo:* ${selectedDevotional.scripture}\n\n🎯 *Meu Desafio de Hoje:* ${selectedDevotional.graceInPractice}\n\nSintonize você também esta efervescência de fé:\n${appUrl}`;
+                        handleCopyToClipboard(shareText);
+                      }}
+                      className="py-3.5 px-4 bg-white border border-stone-250 hover:bg-stone-50 text-stone-700 hover:text-[#C08261] rounded-xl text-xs font-medium flex items-center justify-center space-x-2 transition transform active:scale-95 shadow-xs cursor-pointer"
+                    >
+                      <Feather size={13} className="text-[#C08261]" />
+                      <span>Semear Chamado (WhatsApp)</span>
                     </button>
                   </div>
+
+                  {/* continuous escorregador next day flow (Joseph Sugarman - low cognitive drag) */}
+                  {nextDevotional && (
+                    <motion.button
+                      id="btn-next-devotional-transition"
+                      whileHover={{ scale: 1.005 }}
+                      onClick={() => {
+                        setSelectedDevotional(nextDevotional);
+                        const topElement = document.getElementById('btn-exit-single-devotional');
+                        if (topElement) topElement.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="w-full mt-4 py-3.5 px-5 border border-stone-150 rounded-xl bg-stone-50 hover:bg-stone-100/85 transition text-left flex justify-between items-center group cursor-pointer"
+                    >
+                      <span className="font-mono uppercase text-[9px] tracking-widest text-stone-400 group-hover:text-stone-600 block">
+                        PRÓXIMO DIA ({currentIndex + 2}/40)
+                      </span>
+                      <span className="flex items-center space-x-1 font-serif text-stone-850 text-xs font-medium group-hover:text-[#C08261]">
+                        <span>Sintonize "{nextDevotional.title}"</span>
+                        <ChevronRight size={13} className="transform group-hover:translate-x-0.5 transition-transform" />
+                      </span>
+                    </motion.button>
+                  )}
                 </div>
-              </div>
-            </motion.div>
-          )}
+
+                {/* Floating Commitment Popup Toast */}
+                {committedToastMsg && (
+                  <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-stone-900 text-white text-xs px-4 py-3 rounded-full shadow-2xl z-50 flex items-center space-x-2 animate-bounce">
+                    <Sparkles size={12} className="text-amber-400 animate-spin" />
+                    <span className="font-mono">{committedToastMsg}</span>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })()}
 
           {/* ACTIVE PORT: INDENTIDADES ESPIRITUAIS 12 (GALLERY & QUIZ) */}
           {activeSection === 'profiles' && !selectedDevotional && (
@@ -967,6 +1368,19 @@ export default function App() {
                   initialTab={mesasSubTab}
                 />
               )}
+            </motion.div>
+          )}
+
+          {/* ACTIVE PORT: DEEPLY GUIDED RESPIRO DO SECRETO SANCTUARY */}
+          {activeSection === 'respiro' && !selectedDevotional && (
+            <motion.div
+              key="respiro"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              className="space-y-2"
+            >
+              <BreathingGuide mode="sanctuary" />
             </motion.div>
           )}
 
