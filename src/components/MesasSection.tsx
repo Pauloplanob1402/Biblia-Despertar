@@ -232,10 +232,19 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-5xl mx-auto text-center">
       
+      {/* Normalized Section Header Banner */}
+      <div className="space-y-3">
+        <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">Mesa e Partilha</span>
+        <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-855 tracking-tight leading-tight">Mesas e Relacionamentos</h3>
+        <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-2xl mx-auto mt-2">
+          Pessoas reais sentando à mesa para partilhar o pão de forma demorada, reacendendo a fé em cada olhar de escuta mútua e encontrando pertença espiritual.
+        </p>
+      </div>
+
       {/* Sub-tab selection indicator */}
-      <div className="flex border-b border-stone-200 gap-1 select-none">
+      <div className="flex border-b border-stone-200 gap-1 justify-center select-none">
         <button
           onClick={() => setActiveSubTab('mesas')}
           className={`px-5 py-3 text-xs font-mono font-bold uppercase transition duration-200 border-b-2 tracking-wider ${
@@ -269,10 +278,10 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
           >
             {/* Search and Filters Header */}
             <div className="flex flex-col md:flex-row items-center justify-between border-b border-stone-100 pb-5 gap-4">
-              <div className="flex flex-col self-start text-left">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-bold">Comunhão Presencial & Digital</span>
-                <h3 className="font-serif text-2xl font-light text-stone-850 mt-1">Pontes de Pertencimento</h3>
-                <p className="text-stone-500 text-xs">Partilhe o pão, ouça histórias sinceras e encontre o seu lugar seguro na caminhada.</p>
+              <div className="flex flex-col self-start text-left space-y-1">
+                <span className="text-xs font-mono uppercase tracking-widest text-[#C08261] font-bold">Comunhão Presencial & Digital</span>
+                <h3 className="font-serif text-3xl md:text-4xl font-light text-stone-850 tracking-tight">Pontes de Pertencimento</h3>
+                <p className="text-stone-500 text-sm font-sans leading-relaxed">Partilhe o pão, ouça histórias sinceras e encontre o seu lugar seguro na caminhada de fé.</p>
               </div>
 
               <button
@@ -419,9 +428,10 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
             className="space-y-6 text-left"
           >
             {/* Header description */}
-            <div className="border-b border-stone-100 pb-5">
-              <h3 className="font-serif text-2xl font-light text-stone-850">Conexões Fraternas</h3>
-              <p className="text-stone-500 text-xs mt-1">Converse com outros fiéis, ampare corações cansados e compartilhe suas orações e descobertas em tempo real.</p>
+            <div className="border-b border-stone-100 pb-5 space-y-1">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#C08261] font-bold">🕊️ Peregrinos do Despertar</span>
+              <h3 className="font-serif text-3xl md:text-4xl font-light text-stone-850 tracking-tight">Conexões Fraternas</h3>
+              <p className="text-stone-500 text-sm font-sans leading-relaxed">Converse com outros fiéis, ampare corações cansados e compartilhe suas orações e descobertas em tempo real.</p>
             </div>
 
             {/* Offline state guard */}

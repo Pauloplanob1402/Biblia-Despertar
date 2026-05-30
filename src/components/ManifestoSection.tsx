@@ -50,40 +50,40 @@ export default function ManifestoSection({
           🕊️
         </div>
         
-        <div className="space-y-3.5 z-10 relative">
-          <span className="text-[10px] uppercase font-mono tracking-widest text-[#8C6239] font-bold">
+        <div className="space-y-3 z-10 relative">
+          <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">
             Um jeito simples de caminhar
           </span>
-          <h2 className="font-serif text-3xl md:text-5xl font-extralight text-stone-850 tracking-tight leading-tight">
+          <h2 className="font-serif text-3xl md:text-5xl font-light text-stone-850 tracking-tight leading-tight">
             Você não precisa chegar pronto para sentar à mesa.
           </h2>
-          <p className="text-stone-400 font-serif italic text-xs md:text-sm">
+          <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-2xl mx-auto mt-2">
             O Despertar é um lugar onde pessoas reais reaprendem a caminhar com Deus juntas.
           </p>
         </div>
 
         {/* Storytelling Slider */}
-        <div className="font-serif text-stone-700 space-y-6 leading-relaxed max-w-2xl mx-auto text-sm md:text-base border-l border-stone-200/60 pl-6 md:pl-10 text-justify italic">
-          <p className="not-italic font-medium text-stone-900 text-base md:text-lg text-center">
+        <div className="font-serif text-stone-800 space-y-6 leading-relaxed max-w-2xl mx-auto text-base md:text-lg text-justify border-l-4 border-[#C08261] pl-6 md:pl-8">
+          <p className="font-medium text-stone-900 text-lg md:text-xl">
             No início, não havia palcos, templos grandiosos ou cobranças pesadas. <br />
             Havia apenas um convite simples. <br />
             E pessoas que apareciam exatamente como eram.
           </p>
           
-          <p className="not-italic text-stone-850 text-center">
+          <p className="text-stone-850 italic">
             Talvez a conversa mais importante da sua vida não aconteça num palco. <br />
-            <span className="font-serif italic font-semibold text-[#8C6239]">Talvez aconteça ao redor de uma mesa.</span>
+            <span className="font-serif italic font-semibold text-[#C08261]">Talvez aconteça ao redor de uma mesa.</span>
           </p>
 
-          <p className="text-stone-600 font-sans text-xs md:text-sm leading-relaxed non-italic text-center">
+          <p className="text-stone-600 text-sm md:text-base leading-relaxed font-sans">
             Pessoas sentando à mesa de forma demorada, partilhando o pão com simplicidade. <br />
             Reacendendo a fé umas nas outras em cada olhar de escuta mútua. <br />
             Criando espaços onde a graça consegue finalmente respirar em paz novamente.
           </p>
 
-          <p className="font-medium text-stone-900 not-italic text-center py-2 md:py-4 border-y border-stone-100 max-w-lg mx-auto">
+          <p className="font-medium text-stone-900 text-base md:text-lg py-2.5 border-y border-stone-100 max-w-lg">
             Talvez seu próximo passo espiritual não seja encontrar um lugar. <br />
-            <span className="text-[#C08261] font-serif italic">Talvez seja apenas criar um espaço acolhedor.</span>
+            <span className="text-[#C08261] font-serif italic block mt-1">Talvez seja apenas criar um espaço acolhedor.</span>
           </p>
         </div>
       </div>
@@ -226,15 +226,15 @@ export default function ManifestoSection({
 
       {/* SECTION 3: THE COGNITIVE REVELATION (Mateus 18:20) */}
       <div className="bg-[#C08261]/5 border border-[#C08261]/20 rounded-3xl p-8 relative md:p-10 text-center space-y-6">
-        <blockquote className="font-serif text-stone-800 text-sm md:text-base leading-relaxed italic max-w-2xl mx-auto text-center font-medium">
+        <div className="border-l-4 border-[#C08261] pl-5 italic text-stone-800 font-serif text-lg md:text-xl lg:text-2xl leading-relaxed my-4 text-justify max-w-2xl mx-auto">
           "O amor sempre andou assim. De casa em casa, de mesa em mesa. Sem palcos, sem cobranças de desempenho ou rituais complicados. Apenas pessoas acolhendo pessoas ao redor do pão e do café quente."
-        </blockquote>
+        </div>
 
         <div className="flex flex-col items-center space-y-1">
-          <cite className="font-serif text-[#8C6239] text-base font-medium not-italic">
+          <cite className="font-serif text-[#C08261] text-lg md:text-xl font-medium not-italic block mt-4">
             “Onde estiverem dois ou três reunidos em meu nome, ali eu estou.”
           </cite>
-          <span className="font-mono text-xs uppercase tracking-widest text-stone-500 font-bold">
+          <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-stone-550 font-bold block mt-1">
             Mateus 18:20
           </span>
         </div>

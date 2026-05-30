@@ -750,11 +750,11 @@ export default function App() {
                 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10 w-full">
                   <div className="space-y-3.5 max-w-2xl text-left">
-                    <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] uppercase font-mono tracking-widest text-[#DCAE6C] bg-[#DCAE6C]/10 border border-[#DCAE6C]/20">
+                    <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs uppercase font-mono tracking-widest text-[#DCAE6C] bg-[#DCAE6C]/10 border border-[#DCAE6C]/20 font-bold">
                       <Sparkles size={11} className="text-[#DCAE6C]" />
                       <span>A Bíblia do Despertar</span>
                     </span>
-                    <h2 className="font-serif text-3xl md:text-4xl font-light text-stone-200 tracking-tight leading-normal">
+                    <h2 className="font-serif text-3xl md:text-5xl font-light text-stone-200 tracking-tight leading-tight">
                       <span className="text-stone-200/35">A Palavra que </span><span className="text-[#DCAE6C] font-semibold">acorda</span><span className="text-stone-200/35">.</span><br />
                       <span className="text-[#DCAE6C]/35">A Verdade que </span><span className="text-[#DCAE6C] font-semibold">transforma</span><span className="text-stone-200/35">.</span><br />
                       <span className="text-stone-200/35">A Vida que </span><span className="text-[#DCAE6C] font-semibold">floresce</span><span className="text-stone-200/35">.</span>
@@ -847,13 +847,12 @@ export default function App() {
                 {/* RIGHT COLUMN: Devocional do dia & Verso */}
                 <div className="space-y-8">
                   {/* Verso do Dia layout */}
-                  <div className="bg-white border border-stone-200/50 p-6 rounded-3xl shadow-sm text-center relative overflow-hidden flex flex-col items-center">
-                    <span className="text-[9px] uppercase font-mono tracking-widest text-[#8C6239] block mb-3 font-semibold">Salmo do Dia</span>
-                    <Heart size={14} className="text-[#C08261]/60 mb-2" />
-                    <blockquote className="font-serif text-[17px] md:text-[19px] italic leading-relaxed text-stone-850 px-4">
+                  <div className="bg-white border border-stone-200/50 p-6 rounded-3xl shadow-sm text-left relative overflow-hidden flex flex-col">
+                    <span className="text-xs font-mono uppercase tracking-widest text-[#C08261] block mb-3 font-bold text-center">Salmo do Dia</span>
+                    <div className="border-l-4 border-[#C08261] pl-5 italic text-stone-850 font-serif text-lg md:text-xl lg:text-2xl leading-relaxed my-4 text-justify">
                       "O SENHOR é o meu pastor, nada me faltará. Deitar-me faz em verdes pastos, guia-me mansamente a águas tranquilas."
-                    </blockquote>
-                    <cite className="font-mono text-[10px] text-stone-400 uppercase tracking-widest block mt-3 font-semibold">Salmos 23:1-2 • ACF</cite>
+                    </div>
+                    <cite className="font-mono text-xs text-stone-400 uppercase tracking-widest block text-right font-semibold mt-1">— Salmos 23:1-2 • ACF</cite>
                   </div>
 
                   {/* Curated Daily Devotional snippet with real texts */}
@@ -905,8 +904,16 @@ export default function App() {
               initial={{ opacity: 0, x: 15 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -15 }}
-              className="space-y-6"
+              className="space-y-6 text-center"
             >
+              <div className="space-y-3 max-w-4xl mx-auto py-2">
+                <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">Leitura Sagrada</span>
+                <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 tracking-tight leading-tight">Escrituras do Despertar</h3>
+                <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-2xl mx-auto mt-2">
+                  Sintonize sua atenção com as revelações e inspirações guardadas no Logos Divino, mergulhando no silêncio da Palavra.
+                </p>
+              </div>
+
               <BibleReader
                 onAddFavorite={handleAddFavoriteVerse}
                 onRemoveFavorite={handleRemoveFavoriteVerse}
@@ -943,11 +950,11 @@ export default function App() {
               >
                 {/* Header Banner with Premium Styling */}
                 <div className="text-center py-6 max-w-3xl mx-auto space-y-3">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-bold">Caminho de Despertar</span>
-                  <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-800 tracking-tight leading-tight">
+                  <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">Caminho de Despertar</span>
+                  <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 tracking-tight leading-tight">
                     Consagração Diária e Preparação para o Chamado
                   </h3>
-                  <p className="text-stone-500 text-xs font-mono max-w-md mx-auto">
+                  <p className="text-stone-500 text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-sans mt-2">
                     Cultive a presença invisível através do silêncio devocional e multiplique o chamado.
                   </p>
                 </div>
@@ -1206,33 +1213,33 @@ export default function App() {
                   </div>
 
                   {/* Main Meditative Prose */}
-                  <p className="font-serif text-stone-850 text-[15px] md:text-[17px] leading-relaxed text-justify space-y-4 whitespace-pre-line">
+                  <div className="font-serif text-stone-850 text-base md:text-lg lg:text-xl leading-relaxed text-justify space-y-4 whitespace-pre-line">
                     {selectedDevotional.text}
-                  </p>
+                  </div>
 
                   {/* Moment of quiet breathing block */}
                   <div id="devotional-breathing-box" className="p-5 bg-gradient-to-r from-stone-50 to-stone-100/60 border border-stone-155 rounded-2xl space-y-2.5">
-                    <div className="flex items-center space-x-2 text-xs font-semibold text-[#C08261]">
+                    <div className="flex items-center space-x-2 text-xs font-bold text-[#C08261]">
                       <Clock size={13} className="animate-spin" />
-                      <span className="font-mono uppercase tracking-wider">Desafio Pessoal no Silêncio</span>
+                      <span className="font-mono uppercase tracking-widest">Desafio Pessoal no Silêncio</span>
                     </div>
-                    <p className="text-sm text-stone-750 italic font-serif leading-relaxed">
+                    <p className="text-sm md:text-base text-stone-800 italic font-serif leading-relaxed">
                       {selectedDevotional.pauseInstruction}
                     </p>
                   </div>
 
                   {/* Prayer / Oração do Secreto */}
                   <div className="space-y-2">
-                    <span className="text-[10px] uppercase tracking-wider font-mono text-stone-400 font-semibold block">Oração no Secreto</span>
-                    <blockquote className="p-4 bg-amber-50/15 border-l-2 border-[#C08261] text-sm md:text-[15px] font-serif italic text-stone-850 leading-relaxed rounded-r-xl">
+                    <span className="text-xs font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1">Oração no Secreto</span>
+                    <div className="border-l-4 border-[#C08261] pl-5 italic text-stone-850 font-serif text-base md:text-lg lg:text-xl leading-relaxed my-4 text-justify">
                       "{selectedDevotional.prayer}"
-                    </blockquote>
+                    </div>
                   </div>
 
                   {/* Grace in practice */}
                   <div className="space-y-2 bg-[#C08261]/2 border border-[#C08261]/10 rounded-2xl p-4">
-                    <span className="text-[10px] uppercase tracking-wider font-mono text-[#C08261] font-bold block">Desafio de Multiplicação</span>
-                    <p className="text-sm text-stone-800 leading-relaxed font-serif pl-1">
+                    <span className="text-xs font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1">Desafio de Multiplicação</span>
+                    <p className="text-sm md:text-base text-stone-850 leading-relaxed font-serif pl-1">
                       {selectedDevotional.graceInPractice}
                     </p>
                   </div>
@@ -1455,10 +1462,10 @@ export default function App() {
               exit={{ opacity: 0, x: -15 }}
               className="space-y-8 text-left"
             >
-              <div className="border-b border-stone-105 pb-5">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-bold">Minha caminhada de Fé</span>
-                <h3 className="font-serif text-3xl font-light text-stone-850 mt-0.5">Minha Caminhada</h3>
-                <p className="text-stone-500 text-xs">Acompanhe seus tempos de quietude, notas e versículos favoritos.</p>
+              <div className="border-b border-stone-105 pb-5 space-y-3 text-center md:text-left">
+                <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block">Minha caminhada de Fé</span>
+                <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 tracking-tight leading-tight mt-0.5">Minha Caminhada</h3>
+                <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-2xl mt-2">Acompanhe seus tempos de quietude, notas e versículos favoritos.</p>
               </div>
 
               {/* Stat rows */}

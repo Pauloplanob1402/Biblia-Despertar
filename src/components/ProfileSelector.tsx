@@ -221,7 +221,17 @@ export default function ProfileSelector({ currentIdentityId, onSelectIdentity }:
   const selectedViewedProfile = DESPERTAR_PROFILES.find(p => p.id === viewedProfileId) || DESPERTAR_PROFILES[0];
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-fade-in text-center max-w-4xl mx-auto">
+      
+      {/* Normalized Section Header Banner */}
+      <div className="space-y-3">
+        <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">Os Doze do Mestre</span>
+        <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 tracking-tight leading-tight">Temperamentos e Identidade</h3>
+        <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-2xl mx-auto mt-2">
+          Descubra qual destas 12 histórias de fé e temperamentos espirituais se parece mais com o seu coração, auxiliando sua comunhão mansa na mesa e no secreto.
+        </p>
+      </div>
+
       {/* Tab bar */}
       <div className="flex bg-stone-100 rounded-2xl p-1.5 max-w-sm mx-auto shadow-inner">
         <button

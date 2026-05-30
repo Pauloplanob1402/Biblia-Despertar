@@ -57,10 +57,10 @@ export default function EbookReader({ completedChapters, onCompleteChapter }: Eb
       {/* Catalog Home View */}
       {!isReadingMode ? (
         <div className="space-y-6 animate-fadeIn">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-bold">12 Inspiradores do Despertar</span>
-            <h3 className="font-serif text-3xl font-light text-stone-800">Cultura de Graça</h3>
-            <p className="text-stone-500 text-sm leading-relaxed">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">12 Inspiradores do Despertar</span>
+            <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 tracking-tight leading-tight">Cultura de Graça</h3>
+            <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-2xl mx-auto mt-2">
               Todas as pessoas são diferentes, e todas são fundamentais e importantes para o Reino. Conheça estas 12 histórias e inspire sua caminhada com profundidade, livre de performances ou máscaras.
             </p>
           </div>

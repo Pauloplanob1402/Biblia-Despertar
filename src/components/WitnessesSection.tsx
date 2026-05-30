@@ -53,13 +53,13 @@ export default function WitnessesSection({ onAddReflection, onShowSuccessToast }
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,#C08261/10,transparent_55%)] pointer-events-none" />
         
-        <div className="space-y-5 max-w-3xl relative z-10">
+        <div className="space-y-3 max-w-3xl relative z-10">
           <span className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs uppercase font-mono tracking-widest text-[#C08261] bg-[#C08261]/12 border border-[#C08261]/25 font-bold">
             <Award size={13} className="text-[#C08261]" />
             <span>Nuvem de Testemunhas</span>
           </span>
           
-          <h3 className="font-serif text-4xl md:text-6xl font-light text-stone-100 tracking-tight leading-tight">
+          <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-100 tracking-tight leading-tight">
             Nuvem de <span className="text-[#C08261] font-semibold">Testemunhas</span>
           </h3>
           
