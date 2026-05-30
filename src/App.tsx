@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Compass, Book, Coffee, User, Bookmark, Feather, 
   Flame, Sparkles, Clock, Heart, Calendar, ArrowLeft, 
-  AlertCircle, ChevronRight, Terminal, FileText, Check, Code, MessageSquare 
+  AlertCircle, ChevronRight, Terminal, FileText, Check, Code, MessageSquare, Award 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -20,6 +20,7 @@ import MesasSection from './components/MesasSection';
 import AuthModal from './components/AuthModal';
 import ChatDM from './components/ChatDM';
 import ManifestoSection from './components/ManifestoSection';
+import WitnessesSection from './components/WitnessesSection';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
@@ -31,7 +32,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas'>('home');
   const [mesasSubTab, setMesasSubTab] = useState<'mesas' | 'pilgrims'>('mesas');
   const [activeDevotionalTab, setActiveDevotionalTab] = useState<'comunhao' | 'multiplicacao'>('comunhao');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
@@ -448,6 +449,19 @@ export default function App() {
                   </span>
                 </button>
 
+                <button
+                  id="mobile-nav-testemunhas"
+                  onClick={() => { setActiveSection('testemunhas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'testemunhas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Award size={14} />
+                    <span>Nuvem de Testemunhas</span>
+                  </span>
+                </button>
+
                 <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 pt-5 mb-2 text-left">Mesa & Comunhão</span>
 
                 <button
@@ -635,6 +649,19 @@ export default function App() {
             <span className="flex items-center space-x-2.5">
               <Compass size={14} />
               <span>Caminhos do Coração</span>
+            </span>
+          </button>
+
+          <button
+            id="nav-testemunhas"
+            onClick={() => { setActiveSection('testemunhas'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'testemunhas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <Award size={14} />
+              <span>Nuvem de Testemunhas</span>
             </span>
           </button>
 
@@ -1396,6 +1423,25 @@ export default function App() {
               <EbookReader
                 completedChapters={progress.completedChapters}
                 onCompleteChapter={handleCompleteChapter}
+              />
+            </motion.div>
+          )}
+
+          {/* ACTIVE PORT: NUVEM DE TESTEMUNHAS HISTORICAL GALLERY */}
+          {activeSection === 'testemunhas' && !selectedDevotional && (
+            <motion.div
+              key="testemunhas"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="space-y-2"
+            >
+              <WitnessesSection
+                onAddReflection={handleAddReflection}
+                onShowSuccessToast={(msg) => {
+                  setCommittedToastMsg(msg);
+                  setTimeout(() => setCommittedToastMsg(null), 3500);
+                }}
               />
             </motion.div>
           )}
