@@ -63,7 +63,7 @@ export default function WitnessesSection({ onAddReflection, onShowSuccessToast }
             Nuvem de <span className="text-[#C08261] font-semibold">Testemunhas</span>
           </h3>
           
-          <div className="border-l-2 border-[#C08261] pl-4 italic text-stone-350 font-serif text-sm md:text-base leading-relaxed my-4 space-y-1">
+          <div className="border-l-2 border-[#C08261] pl-4 italic text-stone-100 font-serif text-sm md:text-base leading-relaxed my-4 space-y-1">
             <p className="font-light">
               "Portanto, também nós, visto que estamos rodeados por tão grande nuvem de testemunhas, livremo-nos de todo peso e do pecado que nos rodeia e corramos com perseverança a corrida que nos está proposta."
             </p>
@@ -112,7 +112,7 @@ export default function WitnessesSection({ onAddReflection, onShowSuccessToast }
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-serif transition shrink-0 border cursor-pointer ${
                   selectedCategory === cat.id
                     ? 'bg-[#C08261] text-white border-[#C08261] font-semibold shadow-xs'
-                    : 'bg-stone-50 text-stone-605 border-stone-200/50 hover:bg-stone-100 hover:text-stone-800'
+                    : 'bg-stone-50 text-stone-600 border-stone-200/50 hover:bg-stone-100 hover:text-stone-800'
                 }`}
               >
                 {cat.name}
@@ -224,7 +224,7 @@ export default function WitnessesSection({ onAddReflection, onShowSuccessToast }
                     >
                       <div className="bg-[#C08261]/5 p-4 rounded-2xl border border-[#C08261]/12 space-y-1.5 select-none">
                         <span className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-bold block">Consagração em Silêncio</span>
-                        <p className="text-xs font-serif text-stone-605 italic leading-relaxed">
+                        <p className="text-xs font-serif text-stone-600 italic leading-relaxed">
                           Considere a fé inabalável deste irmão. O que neles despertava tamanho amor pelas almas? Reflita no seu silêncio por um instante.
                         </p>
                       </div>
@@ -262,7 +262,7 @@ export default function WitnessesSection({ onAddReflection, onShowSuccessToast }
                       <div className="flex justify-between items-center pt-2">
                         <button
                           onClick={() => setExpandedWitnessId(null)}
-                          className="text-stone-400 hover:text-stone-605 text-xs font-serif hover:underline"
+                          className="text-stone-400 hover:text-stone-600 text-xs font-serif hover:underline"
                         >
                           Encolher Detalhes
                         </button>
@@ -282,7 +282,7 @@ export default function WitnessesSection({ onAddReflection, onShowSuccessToast }
       )}
 
       {/* Encouragement message box at bottom */}
-      <div className="bg-amber-50/15 border border-stone-205 p-6 rounded-3xl text-center space-y-2 max-w-2xl mx-auto italic select-none">
+      <div className="bg-amber-50/15 border border-stone-200 p-6 rounded-3xl text-center space-y-2 max-w-2xl mx-auto italic select-none">
         <p className="font-serif text-[#C08261] text-sm leading-relaxed font-semibold">
           "A jornada de fé não é uma corrida de cem metros rasos, mas uma maratona de perseverança e busca diária pela presença de Deus. Que você também responda ao Seu chamado com o mesmo fervor."
         </p>

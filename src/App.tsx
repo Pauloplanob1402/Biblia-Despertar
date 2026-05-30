@@ -1049,7 +1049,7 @@ export default function App() {
                 ) : (
                   <>
                     {/* Progress Indicators & Zeigarnik Goal Gradient Meter */}
-                    <div id="devocionais-progress-panel" className="bg-white border border-stone-205/60 p-5 rounded-3xl shadow-xs max-w-2xl mx-auto space-y-3.5">
+                    <div id="devocionais-progress-panel" className="bg-white border border-stone-200/60 p-5 rounded-3xl shadow-xs max-w-2xl mx-auto space-y-3.5">
                       <div className="flex justify-between items-center text-xs">
                         <span className="font-serif font-medium text-stone-700">Progresso na Jornada de Ativação</span>
                         <span className="font-mono text-[11px] text-[#C08261] font-semibold bg-[#C08261]/10 px-2.5 py-0.5 rounded-full">
@@ -1065,7 +1065,7 @@ export default function App() {
                           className="bg-gradient-to-r from-[#C08261] to-[#e0a281] h-full rounded-full"
                         />
                       </div>
-                      <p className="text-[11px] text-stone-450 italic text-center font-serif leading-relaxed">
+                      <p className="text-[11px] text-stone-500 italic text-center font-serif leading-relaxed">
                         "O fechamento de cada círculo de silêncio consolida a sua maturidade secreta." — Zeigarnik Focus
                       </p>
                     </div>
