@@ -860,8 +860,8 @@ export default function BreathingGuide({ mode = 'widget', onCycleComplete }: Bre
                     {soundType === 'brown' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                   </div>
                   <div>
-                    <h5 className="text-[12.5px] font-serif leading-none">Ruído Marrom (Cachoeira)</h5>
-                    <p className="text-[10px] text-stone-400 font-mono leading-normal mt-0.5">Frequências graves e densas que eliminam ruídos externos.</p>
+                    <h5 className="text-[12.5px] font-serif leading-none">Brisa de Quietude (Sopro Amplo)</h5>
+                    <p className="text-[10px] text-stone-400 font-mono leading-normal mt-0.5">Frequências calmas e profundas de vento suave que dissipam distrações.</p>
                   </div>
                 </button>
 
