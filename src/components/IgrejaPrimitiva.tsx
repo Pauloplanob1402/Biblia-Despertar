@@ -1889,6 +1889,15 @@ export default function IgrejaPrimitiva({
                             showTemporaryToast("Que bênção! Seu compromisso de oração foi registrado no Altar.");
                             return;
                           }
+                          const finalProductId = selectedBookTier === "book_devocionais" 
+                            ? "prod_xLUBhQ5EJQCKZ5zdm1acwtGS" 
+                            : "prod_gqXPEtwDMnF3ht6urCuhpPaG";
+                          const abacatePayUrl = `https://pay.abacatepay.com/${finalProductId}`;
+                          try {
+                            window.open(abacatePayUrl, "_blank", "noopener,noreferrer");
+                          } catch (err) {
+                            console.warn("Popup blocked, fallback checkout button will handle it", err);
+                          }
                           setAbacatStep("qr");
                         }}
                         className={`w-full py-3.5 text-stone-900 font-extrabold uppercase tracking-wider rounded-xl transition shadow-lg cursor-pointer flex items-center justify-center space-x-2 font-bold ${
@@ -1912,12 +1921,12 @@ export default function IgrejaPrimitiva({
                     </div>
                   )}
 
-                  {abacatStep === "qr" && (
-                    <div className="space-y-4 flex flex-col items-center justify-center text-center">
+                   {abacatStep === "qr" && (
+                    <div className="space-y-5 flex flex-col items-center justify-center text-center">
                       <div className="w-full flex justify-between items-center pb-2 border-b border-stone-800 text-left">
                         <span className="text-[10px] uppercase font-mono text-[#DCAE6C] font-extrabold tracking-widest flex items-center gap-1.5 font-bold">
-                          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping shrink-0" />{" "}
-                          Monitorando Checkout AbacatPay
+                          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shrink-0" />{" "}
+                          Checkout Oficial AbacatePay
                         </span>
                         <button
                           onClick={() => setAbacatStep("form")}
@@ -1927,230 +1936,149 @@ export default function IgrejaPrimitiva({
                         </button>
                       </div>
 
-                      <p className="text-stone-300 text-xs md:text-xs text-left max-w-lg leading-relaxed font-sans">
-                        Excelente,{" "}
-                        <strong className="text-white">
-                          {donatorName || name || "Patrocinador"}
-                        </strong>
-                        ! Seu token de checkout foi gerado no ecossistema de
-                        pagamentos <strong className="text-stone-100">AbacatPay</strong>.
-                        Realize o pagamento de{" "}
-                        <strong className="text-[#DCAE6C] font-mono">
-                          R${" "}
-                          {selectedBookTier === "digital"
-                            ? "29,90"
-                            : selectedBookTier === "physical"
-                            ? "69,90"
-                            : selectedBookTier === "kit"
-                            ? "149,90"
-                            : parseFloat(customBookValue).toFixed(2)}
-                        </strong>{" "}
-                        utilizando o QR Code ou a chave Copia-e-Cola abaixo:
-                      </p>
-
-                      <div className="w-full bg-stone-900 p-2.5 rounded-xl border border-stone-800 flex items-center justify-center gap-2">
-                        <div className="w-3.5 h-3.5 border-2 border-stone-600 border-t-[#DCAE6C] rounded-full animate-spin shrink-0" />
-                        <span className="text-[10px] font-mono text-stone-400">
-                          Aguardando confirmação automática de PIX pela API do
-                          AbacatPay...
-                        </span>
-                      </div>
-
-                      <div className="bg-white p-3 rounded-2xl border border-stone-800 shadow-xl select-none">
-                        <svg
-                          className="w-36 h-36 md:w-40 md:h-40 text-stone-900"
-                          viewBox="0 0 100 100"
-                        >
-                          <rect width="100" height="100" fill="white" />
-                          <rect x="5" y="5" width="25" height="25" fill="#1C1917" />
-                          <rect x="8" y="8" width="19" height="19" fill="white" />
-                          <rect
-                            x="12"
-                            y="12"
-                            width="11"
-                            height="11"
-                            fill="#1C1917"
-                          />
-
-                          <rect
-                            x="70"
-                            y="5"
-                            width="25"
-                            height="25"
-                            fill="#1C1917"
-                          />
-                          <rect
-                            x="73"
-                            y="73"
-                            width="22"
-                            height="22"
-                            fill="#1C1917"
-                          />
-                          <rect x="73" y="8" width="19" height="19" fill="white" />
-                          <rect
-                            x="77"
-                            y="12"
-                            width="11"
-                            height="11"
-                            fill="#1C1917"
-                          />
-
-                          <rect
-                            x="5"
-                            y="70"
-                            width="25"
-                            height="25"
-                            fill="#1C1917"
-                          />
-                          <rect x="8" y="73" width="19" height="19" fill="white" />
-                          <rect
-                            x="12"
-                            y="77"
-                            width="11"
-                            height="11"
-                            fill="#1C1917"
-                          />
-
-                          <path
-                            d="M 35,5 H 45 V 15 H 35 Z M 50,5 H 65 V 10 H 50 Z M 35,20 H 45 V 30 H 35 Z"
-                            fill="#1C1917"
-                          />
-                          <path
-                            d="M 35,40 H 55 V 45 H 35 Z M 45,50 H 60 V 55 H 45 Z M 15,35 H 25 V 45 H 15 Z"
-                            fill="#1C1917"
-                          />
-                          <path
-                            d="M 60,35 H 70 V 45 H 60 Z M 75,45 H 85 V 65 H 75 Z  M 65,70 H 70 V 90 H 65 Z"
-                            fill="#1C1917"
-                          />
-                          <path
-                            d="M 40,70 H 50 V 95 H 40 Z M 55,75 H 60 V 85 H 55 Z M 80,35 H 90 V 40 H 80 Z"
-                            fill="#1C1917"
-                          />
-
-                          <rect
-                            x="42"
-                            y="42"
-                            width="16"
-                            height="16"
-                            fill="#C08261"
-                            rx="4"
-                          />
-                          <text
-                            x="50"
-                            y="52"
-                            fill="white"
-                            fontSize="10"
-                            fontWeight="bold"
-                            textAnchor="middle"
-                          >
-                            🕊️
-                          </text>
-                        </svg>
-                      </div>
-
-                      <div className="space-y-1.5 w-full">
-                        <span className="text-[9.5px] font-mono text-stone-500 uppercase block font-bold">
-                          Chave Copia-e-Cola AbacatPay
-                        </span>
-                        <div className="p-2.5 bg-stone-950 text-stone-300 font-mono text-[9px] rounded-xl border border-stone-800 break-all select-all flex items-center justify-between">
-                          <span className="truncate max-w-[250px]">
-                            {mockPixKey}
+                      <div className="p-4 bg-stone-900/40 rounded-2xl border border-stone-800 text-left space-y-2 max-w-lg w-full">
+                        <div className="flex items-center space-x-2 text-[#DCAE6C] font-serif text-sm font-bold">
+                          <span>📦 Pacote Selecionado:</span>
+                          <span className="text-white">
+                            {selectedBookTier === "book_despertar"
+                              ? 'E-book "O Despertar" (PDF + EPub)'
+                              : selectedBookTier === "book_devocionais"
+                              ? 'E-book "Devocionais Diários"'
+                              : selectedBookTier === "custom"
+                              ? `Apoio Voluntário Customizado`
+                              : "Patrocínio Especial"}
                           </span>
-                          <button
-                            type="button"
-                            onClick={() => handleCopyToClipboard(mockPixKey)}
-                            className="bg-stone-900 px-2 py-1 rounded border border-[#181716] text-[#DCAE6C] font-semibold"
-                          >
-                            Copiar
-                          </button>
+                        </div>
+                        <div className="text-xs text-stone-400 leading-relaxed font-sans">
+                          Comprador: <strong className="text-stone-200">{donatorName || name || "Patrocinador"}</strong> ({email || "E-mail não informado"})
+                        </div>
+                        <div className="text-xs text-stone-400 leading-relaxed font-sans pt-1">
+                          Valor total: <span className="text-[#DCAE6C] font-bold font-mono">R$ {
+                            selectedBookTier === "book_despertar"
+                              ? "29,90"
+                              : selectedBookTier === "book_devocionais"
+                              ? "24,90"
+                              : selectedBookTier === "custom"
+                              ? parseFloat(customBookValue).toFixed(2)
+                              : "29,90"
+                          }</span>
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const activeName = donatorName || name || "Patrocinador";
-                          const rewardCredits =
-                            selectedBookTier === "book_despertar"
-                              ? 12
-                              : selectedBookTier === "book_devocionais"
-                              ? 10
-                              : selectedBookTier === "physical"
-                              ? 30
-                              : selectedBookTier === "kit"
-                              ? 60
-                              : selectedBookTier === "prayer"
-                              ? 5
-                              : Math.floor((parseFloat(customBookValue) || 10) * 0.45);
-                          setUserCredits((p) => p + rewardCredits);
-                          setConfirmedDonation(true);
-                          setAbacatStep("success");
+                      <div className="w-full space-y-3">
+                        <p className="text-stone-300 text-xs md:text-sm leading-relaxed font-sans text-left">
+                          O link seguro para realizar o pagamento Pix com entrega automática do e-book foi disponibilizado pelo gateway <strong className="text-stone-100">AbacatePay</strong>.
+                        </p>
+                        
+                        <a
+                          href={`https://pay.abacatepay.com/${
+                            selectedBookTier === "book_devocionais"
+                              ? "prod_xLUBhQ5EJQCKZ5zdm1acwtGS"
+                              : "prod_gqXPEtwDMnF3ht6urCuhpPaG"
+                          }`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-4.5 bg-gradient-to-r from-[#C28463] to-[#DCAE6C] hover:from-[#b07353] text-stone-950 font-black uppercase tracking-wider rounded-xl transition shadow-xl cursor-pointer flex items-center justify-center space-x-2 w-full animate-pulse hover:animate-none font-bold text-center"
+                        >
+                          <span>Ir para Página de Pagamento AbacatePay 💳</span>
+                          <span className="text-stone-950 font-sans font-bold">→</span>
+                        </a>
 
-                          setFundadores((prev) => [
-                            {
-                              name: activeName,
-                              location: city
-                                ? `${city}, ${stateCode}`
-                                : "Brasil",
-                              service:
-                                purchaseMode === "gift" && (selectedBookTier === "book_despertar" || selectedBookTier === "book_devocionais")
-                                  ? `Semeador 🎁 (Presenteou ${giftName})`
-                                  : selectedBookTier === "book_despertar"
-                                  ? "Patrocinador do Despertar 📕"
-                                  : selectedBookTier === "book_devocionais"
-                                  ? "Semeador Devocional 🙏"
-                                  : selectedBookTier === "physical"
-                                  ? "Patrocinador Físico 📘"
-                                  : selectedBookTier === "kit"
-                                  ? "Co-Fundador de Altar ✨"
-                                  : "Patrocinador Generoso 💖",
-                              type: "offer",
-                              avatarEmoji: purchaseMode === "gift" ? "🎁" : "👑",
-                              isDonator: true,
-                            },
-                            ...prev,
-                          ]);
+                        <p className="text-[11px] text-stone-400 leading-normal text-left pt-2 font-sans">
+                          💡 <strong>Por que o AbacatePay?</strong> Ele é o nosso parceiro de pagamentos seguro nacional. Nele, você faz o pagamento via PIX em ambiente 100% criptografado e certificado pela LGPD e, **dentro do próprio AbacatePay**, você já recebe e faz download do seu e-book imediatamente no seu celular ou computador!
+                        </p>
+                      </div>
 
-                          if (purchaseMode === "gift" && giftName) {
-                            const giftPostId = (muralItems.length + 1).toString();
-                            const giftMuralItem: MuralItem = {
-                              id: giftPostId,
-                              category: "oferta",
-                              author: activeName,
-                              avatarEmoji: "🎁",
-                              location: city ? `${city}, ${stateCode}` : "Brasil",
-                              title: "Presente de Altar Semeado",
-                              description: `Semeou o E-book "${selectedBookTier === 'book_despertar' ? 'O Despertar' : 'Devocionais Diários'}" de presente direto para o coração de ${giftName} (${giftEmail || 'E-mail cadastrado'}). Que este amor contagie mais lives!`,
-                              timestamp: "Agora mesmo",
-                              actionsTaken: [],
-                              userInteracted: false,
-                              counter: 1,
-                            };
-                            setMuralItems((prev) => [giftMuralItem, ...prev]);
-                          }
+                      <div className="pt-5 border-t border-stone-850 w-full space-y-3">
+                        <div className="text-stone-400 text-[10px] font-mono uppercase tracking-wider font-bold">
+                          Já realizou a sua contribuição oficial?
+                        </div>
+                        
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const activeName = donatorName || name || "Patrocinador";
+                            const rewardCredits =
+                              selectedBookTier === "book_despertar"
+                                ? 12
+                                : selectedBookTier === "book_devocionais"
+                                ? 10
+                                : selectedBookTier === "physical"
+                                ? 30
+                                : selectedBookTier === "kit"
+                                ? 60
+                                : selectedBookTier === "prayer"
+                                ? 5
+                                : Math.floor((parseFloat(customBookValue) || 10) * 0.45);
+                            setUserCredits((p) => p + rewardCredits);
+                            setConfirmedDonation(true);
+                            setAbacatStep("success");
 
-                          if (onSaveProgress) {
-                            onSaveProgress({
-                              hasBookSponsor: selectedBookTier !== "prayer",
-                              verifyDonator: selectedBookTier !== "prayer",
-                              sponsorBookTier: selectedBookTier,
-                              awardedCredits: rewardCredits,
-                              giftingRecipient: purchaseMode === "gift" ? giftName : "",
-                            });
-                          }
+                            setFundadores((prev) => [
+                              {
+                                name: activeName,
+                                location: city
+                                  ? `${city}, ${stateCode}`
+                                  : "Brasil",
+                                service:
+                                  purchaseMode === "gift" && (selectedBookTier === "book_despertar" || selectedBookTier === "book_devocionais")
+                                    ? `Semeador 🎁 (Presenteou ${giftName})`
+                                    : selectedBookTier === "book_despertar"
+                                    ? "Patrocinador do Despertar 📕"
+                                    : selectedBookTier === "book_devocionais"
+                                    ? "Semeador Devocional 🙏"
+                                    : selectedBookTier === "physical"
+                                    ? "Patrocinador Físico 📘"
+                                    : selectedBookTier === "kit"
+                                    ? "Co-Fundador de Altar ✨"
+                                    : "Patrocinador Generoso 💖",
+                                type: "offer",
+                                avatarEmoji: purchaseMode === "gift" ? "🎁" : "👑",
+                                isDonator: true,
+                              },
+                              ...prev,
+                            ]);
 
-                          showTemporaryToast(
-                            purchaseMode === "gift"
-                              ? `Sua doação foi confirmada! O E-book de presente foi enviado com sucesso para ${giftName}! +${rewardCredits} créditos.`
-                              : `Obrigado pelo seu patrocínio via AbacatPay! +${rewardCredits} créditos de Mordomia gerados com amor!`
-                          );
-                        }}
-                        className="w-full py-4.5 bg-emerald-600 hover:bg-emerald-500 text-stone-900 font-black uppercase tracking-wider rounded-xl transition shadow-lg cursor-pointer flex items-center justify-center space-x-1.5 font-bold"
-                      >
-                        <CheckCircle size={15} />
-                        <span>Simular Confirmação AbacatPay</span>
-                      </button>
+                            if (purchaseMode === "gift" && giftName) {
+                              const giftPostId = (muralItems.length + 1).toString();
+                              const giftMuralItem: MuralItem = {
+                                id: giftPostId,
+                                category: "oferta",
+                                author: activeName,
+                                avatarEmoji: "🎁",
+                                location: city ? `${city}, ${stateCode}` : "Brasil",
+                                title: "Presente de Altar Semeado",
+                                description: `Semeou o E-book "${selectedBookTier === 'book_despertar' ? 'O Despertar' : 'Devocionais Diários'}" de presente direto para o coração de ${giftName} (${giftEmail || 'E-mail cadastrado'}). Que este amor contagie mais lives!`,
+                                timestamp: "Agora mesmo",
+                                actionsTaken: [],
+                                userInteracted: false,
+                                counter: 1,
+                              };
+                              setMuralItems((prev) => [giftMuralItem, ...prev]);
+                            }
+
+                            if (onSaveProgress) {
+                              onSaveProgress({
+                                hasBookSponsor: selectedBookTier !== "prayer",
+                                verifyDonator: selectedBookTier !== "prayer",
+                                sponsorBookTier: selectedBookTier,
+                                awardedCredits: rewardCredits,
+                                giftingRecipient: purchaseMode === "gift" ? giftName : "",
+                              });
+                            }
+
+                            showTemporaryToast(
+                              purchaseMode === "gift"
+                                ? `Sua doação foi confirmada! O E-book de presente foi enviado com sucesso para ${giftName}! +${rewardCredits} créditos.`
+                                : `Obrigado pelo seu patrocínio via AbacatePay! +${rewardCredits} créditos de Mordomia gerados com amor!`
+                            );
+                          }}
+                          className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-black uppercase tracking-wider rounded-xl transition shadow-lg cursor-pointer flex items-center justify-center space-x-2 font-bold"
+                        >
+                          <CheckCircle size={15} />
+                          <span>Já Paguei • Liberar Meus Créditos de Mordomia 👑</span>
+                        </button>
+                      </div>
                     </div>
                   )}
 
