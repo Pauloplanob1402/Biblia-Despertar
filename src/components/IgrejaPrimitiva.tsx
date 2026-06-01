@@ -112,6 +112,26 @@ export default function IgrejaPrimitiva({
   const [sponsorAddress, setSponsorAddress] = useState("");
   const [customBookValue, setCustomBookValue] = useState("50");
 
+  // Customizable AbacatePay links stored in localStorage
+  const [linkDespertar, setLinkDespertar] = useState<string>(
+    () => {
+      const stored = localStorage.getItem("abacat_link_despertar");
+      if (stored && !stored.includes("pay.abacatepay.com") && stored !== "https://app.abacatepay.com/pay/bill_MKtu34DrYhKGKbS1cFDp6Xw") {
+        return stored;
+      }
+      return "https://app.abacatepay.com/pay/prod_gqXPEtwDMnF3ht6urCuhpPaG";
+    }
+  );
+  const [linkDevocionais, setLinkDevocionais] = useState<string>(
+    () => {
+      const stored = localStorage.getItem("abacat_link_devocionais");
+      if (stored && !stored.includes("pay.abacatepay.com")) {
+        return stored;
+      }
+      return "https://app.abacatepay.com/pay/prod_gqXPEtwDMnF3ht6urCuhpPaG"; // fallback
+    }
+  );
+
   // User Credits State (As proposed, starts with 12 initial credits)
   const [userCredits, setUserCredits] = useState<number>(12);
 
@@ -1401,10 +1421,10 @@ export default function IgrejaPrimitiva({
                           </div>
                           <div className="text-right shrink-0 self-center">
                             <span className="font-mono text-xs text-stone-450 block line-through">
-                              R$ 39,90
+                              R$ 29,90
                             </span>
                             <span className="font-mono text-sm font-black text-[#DCAE6C]">
-                              R$ 29,90
+                              R$ 19,90
                             </span>
                           </div>
                         </div>
@@ -1889,10 +1909,7 @@ export default function IgrejaPrimitiva({
                             showTemporaryToast("Que bênção! Seu compromisso de oração foi registrado no Altar.");
                             return;
                           }
-                          const finalProductId = selectedBookTier === "book_devocionais" 
-                            ? "prod_xLUBhQ5EJQCKZ5zdm1acwtGS" 
-                            : "prod_gqXPEtwDMnF3ht6urCuhpPaG";
-                          const abacatePayUrl = `https://pay.abacatepay.com/${finalProductId}`;
+                           const abacatePayUrl = selectedBookTier === "book_devocionais" ? linkDevocionais : linkDespertar;
                           try {
                             window.open(abacatePayUrl, "_blank", "noopener,noreferrer");
                           } catch (err) {
@@ -1955,12 +1972,12 @@ export default function IgrejaPrimitiva({
                         <div className="text-xs text-stone-400 leading-relaxed font-sans pt-1">
                           Valor total: <span className="text-[#DCAE6C] font-bold font-mono">R$ {
                             selectedBookTier === "book_despertar"
-                              ? "29,90"
+                              ? "19,90"
                               : selectedBookTier === "book_devocionais"
                               ? "24,90"
                               : selectedBookTier === "custom"
                               ? parseFloat(customBookValue).toFixed(2)
-                              : "29,90"
+                              : "19,90"
                           }</span>
                         </div>
                       </div>
@@ -1971,11 +1988,7 @@ export default function IgrejaPrimitiva({
                         </p>
                         
                         <a
-                          href={`https://pay.abacatepay.com/${
-                            selectedBookTier === "book_devocionais"
-                              ? "prod_xLUBhQ5EJQCKZ5zdm1acwtGS"
-                              : "prod_gqXPEtwDMnF3ht6urCuhpPaG"
-                          }`}
+                          href={selectedBookTier === "book_devocionais" ? linkDevocionais : linkDespertar}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="w-full py-4.5 bg-gradient-to-r from-[#C28463] to-[#DCAE6C] hover:from-[#b07353] text-stone-950 font-black uppercase tracking-wider rounded-xl transition shadow-xl cursor-pointer flex items-center justify-center space-x-2 w-full animate-pulse hover:animate-none font-bold text-center"
@@ -1983,6 +1996,48 @@ export default function IgrejaPrimitiva({
                           <span>Ir para Página de Pagamento AbacatePay 💳</span>
                           <span className="text-stone-950 font-sans font-bold">→</span>
                         </a>
+
+                        {/* AbacatePay Link Configurator */}
+                        <div className="mt-4 p-4 bg-stone-900/60 rounded-2xl border border-dashed border-[#C28463]/30 text-left space-y-2">
+                          <span className="text-[#DCAE6C] font-serif text-xs font-bold block">
+                            ⚙️ Configurar Seus Links Reais do AbacatePay:
+                          </span>
+                          <p className="text-stone-400 text-[11px] leading-relaxed">
+                            No painel do AbacatePay, vá em <strong>Sua Loja → Produtos</strong>, clique no produto e copie o <strong>Link de Pagamento</strong> (que começa com <code>app.abacatepay.com/pay/prod_...</code> ou <code>app.abacatepay.com/pay/bill_...</code>). Cole-os abaixo para atualizar o aplicativo em tempo real:
+                          </p>
+                          <div className="space-y-2 pt-1 font-sans">
+                            <div>
+                              <label className="text-stone-450 text-[10px] uppercase font-mono block mb-1">
+                                Link de Pagamento "O Despertar" (R$ 19,90)
+                              </label>
+                              <input
+                                type="text"
+                                value={linkDespertar}
+                                onChange={(e) => {
+                                  setLinkDespertar(e.target.value);
+                                  localStorage.setItem("abacat_link_despertar", e.target.value);
+                                }}
+                                placeholder="https://app.abacatepay.com/pay/bill_..."
+                                className="w-full bg-stone-950 border border-stone-800 rounded-lg px-2.5 py-1.5 text-xs text-stone-250 font-mono focus:outline-none focus:border-[#C28463]"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-stone-450 text-[10px] uppercase font-mono block mb-1">
+                                Link de Pagamento "Devocionais Diários" (R$ 24,90)
+                              </label>
+                              <input
+                                type="text"
+                                value={linkDevocionais}
+                                onChange={(e) => {
+                                  setLinkDevocionais(e.target.value);
+                                  localStorage.setItem("abacat_link_devocionais", e.target.value);
+                                }}
+                                placeholder="https://app.abacatepay.com/pay/bill_..."
+                                className="w-full bg-stone-950 border border-stone-800 rounded-lg px-2.5 py-1.5 text-xs text-stone-250 font-mono focus:outline-none focus:border-[#C28463]"
+                              />
+                            </div>
+                          </div>
+                        </div>
 
                         <p className="text-[11px] text-stone-400 leading-normal text-left pt-2 font-sans">
                           💡 <strong>Por que o AbacatePay?</strong> Ele é o nosso parceiro de pagamentos seguro nacional. Nele, você faz o pagamento via PIX em ambiente 100% criptografado e certificado pela LGPD e, **dentro do próprio AbacatePay**, você já recebe e faz download do seu e-book imediatamente no seu celular ou computador!

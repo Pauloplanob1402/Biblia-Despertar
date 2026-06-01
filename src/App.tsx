@@ -961,32 +961,32 @@ export default function App() {
                   </div>
 
                   {/* Micro-interactive Streak card */}
-                  <div className="flex items-center space-x-3.5 bg-[#1F1D1B] py-3.5 px-6 rounded-2xl shadow-lg border border-[#DCAE6C]/15 backdrop-blur-xs shrink-0 self-start md:self-auto">
-                    <Flame size={22} fill="#DCAE6C" className="text-[#DCAE6C] animate-pulse" />
+                  <div className="flex items-center space-x-4 bg-[#1F1D1B] py-4 px-6 rounded-2xl shadow-lg border border-[#DCAE6C]/15 backdrop-blur-xs shrink-0 self-start md:self-auto">
+                    <Flame size={24} fill="#DCAE6C" className="text-[#DCAE6C] animate-pulse" />
                     <div className="text-left font-mono">
-                      <span className="text-xl font-bold text-[#DCAE6C]">{progress.streak} dias</span>
-                      <p className="text-[9px] text-stone-450 uppercase tracking-widest font-semibold mt-0.5">Sintonia Diária</p>
+                      <span className="text-2xl font-black text-[#DCAE6C]">{progress.streak} dias</span>
+                      <p className="text-xs text-stone-400 uppercase tracking-widest font-bold mt-1">Sintonia Diária</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Scannable Grid featuring the brand benefits */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5 border-t border-[#DCAE6C]/10 relative z-10 text-left">
-                  <div className="space-y-1">
-                    <span className="text-[11px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider block">✔ Leitura Ativa</span>
-                    <p className="text-[11px] text-stone-400 leading-normal">Aproximação diária e simples com o Logos divino</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 border-t border-[#DCAE6C]/15 relative z-10 text-left">
+                  <div className="space-y-1.5">
+                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Leitura Ativa</span>
+                    <p className="text-xs md:text-sm text-stone-300 leading-relaxed">Aproximação diária e simples com o Logos divino</p>
                   </div>
-                  <div className="space-y-1">
-                    <span className="text-[11px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider block">✔ Planos Práticos</span>
-                    <p className="text-[11px] text-stone-400 leading-normal">Desafios projetados para cada fase da sua fé</p>
+                  <div className="space-y-1.5">
+                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Planos Práticos</span>
+                    <p className="text-xs md:text-sm text-stone-300 leading-relaxed">Desafios projetados para cada fase da sua fé</p>
                   </div>
-                  <div className="space-y-1">
-                    <span className="text-[11px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider block">✔ Devocionais Livres</span>
-                    <p className="text-[11px] text-stone-400 leading-normal">Meditações focadas na graça, livres de cobranças</p>
+                  <div className="space-y-1.5">
+                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Devocionais Livres</span>
+                    <p className="text-xs md:text-sm text-stone-300 leading-relaxed">Meditações focadas na graça, livres de cobranças</p>
                   </div>
-                  <div className="space-y-1">
-                    <span className="text-[11px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider block">✔ 12 Inspiradores</span>
-                    <p className="text-[11px] text-stone-400 leading-normal">Encontre seu jeito único e importante para o Reino</p>
+                  <div className="space-y-1.5">
+                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ 12 Inspiradores</span>
+                    <p className="text-xs md:text-sm text-stone-300 leading-relaxed">Encontre seu jeito único e importante para o Reino</p>
                   </div>
                 </div>
               </div>
@@ -995,46 +995,46 @@ export default function App() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 {/* 1. COMPROMISSOS DE QUIETUDE CARD */}
-                <div id="card-compromissos-dia" className="bg-white border border-[#C08261]/20 rounded-3xl p-5 shadow-sm space-y-4 md:col-span-2 text-left relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-[#C08261]/3 pointer-events-none rounded-bl-full" />
-                  <div className="flex justify-between items-center pb-2 border-b border-stone-100">
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-bold">Compromissos de Hoje</span>
-                      <h4 className="font-serif text-base font-bold text-stone-850 flex items-center gap-1.5">
+                <div id="card-compromissos-dia" className="bg-white border border-[#C08261]/25 rounded-3xl p-6 md:p-8 shadow-sm space-y-5 md:col-span-2 text-left relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#C08261]/3 pointer-events-none rounded-bl-full" />
+                  <div className="flex justify-between items-center pb-3 border-b border-stone-100">
+                    <div className="space-y-1">
+                      <span className="text-xs md:text-sm font-mono uppercase tracking-wider text-[#C08261] font-bold">Compromissos de Hoje</span>
+                      <h4 className="font-serif text-lg md:text-2xl font-black text-stone-850 flex items-center gap-1.5">
                         Altar de Quietude Diária 🌿
                       </h4>
                     </div>
-                    <span id="tracker-completed-challenges-count" className="text-xs bg-stone-100 text-stone-605 font-mono px-2.5 py-1 rounded-full font-bold">
+                    <span id="tracker-completed-challenges-count" className="text-xs md:text-sm bg-stone-100 text-stone-700 font-mono px-3.5 py-1.5 rounded-full font-bold">
                       {(progress.completedChallenges || []).length}/3 Concluídos
                     </span>
                   </div>
 
-                  <p className="text-stone-500 text-xs leading-relaxed max-w-xl">
+                  <p className="text-stone-605 text-sm md:text-base leading-relaxed max-w-2xl font-medium">
                     Desenvolva constância sem o fardo da obrigação. Cultive pequenas interações de graça e marque o que conseguiu realizar em espírito.
                   </p>
 
-                  <div className="space-y-3 pt-1">
+                  <div className="space-y-4 pt-2">
                     {/* Item 1: Respiração */}
                     <div 
                       id="challenge-item-breathe"
                       onClick={() => handleToggleChallenge('breathe')}
-                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border transition cursor-pointer select-none gap-2 ${
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition cursor-pointer select-none gap-3 ${
                         (progress.completedChallenges || []).includes('breathe') 
-                          ? 'bg-emerald-50/50 border-emerald-200/50' 
-                          : 'bg-stone-50/50 border-stone-150 hover:bg-stone-50'
+                          ? 'bg-emerald-50/60 border-emerald-300' 
+                          : 'bg-stone-50/50 border-stone-200 hover:bg-stone-100/50'
                       }`}
                     >
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all shrink-0 ${
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all shrink-0 ${
                           (progress.completedChallenges || []).includes('breathe') 
                             ? 'bg-emerald-500 border-transparent text-white' 
-                            : 'border-stone-300'
+                            : 'border-stone-400 bg-white'
                         }`}>
-                          {(progress.completedChallenges || []).includes('breathe') && <Check size={12} strokeWidth={3} />}
+                          {(progress.completedChallenges || []).includes('breathe') && <Check size={14} strokeWidth={3} />}
                         </div>
                         <div>
-                          <span className="text-xs font-serif font-bold text-stone-800">🌬️ Respiração no Secreto</span>
-                          <span className="text-[10px] text-stone-400 font-sans block">Pratique a quietude de 4 segundos imersiva (+2 sementes)</span>
+                          <span className="text-sm md:text-base font-serif font-black text-stone-850 block">🌬️ Respiração no Secreto</span>
+                          <span className="text-xs md:text-sm text-stone-500 font-sans block mt-0.5">Pratique a quietude de 4 segundos imersiva (+2 sementes)</span>
                         </div>
                       </div>
                       <button 
@@ -1042,7 +1042,7 @@ export default function App() {
                           e.stopPropagation();
                           setActiveSection('respiro');
                         }}
-                        className="text-[10px] font-semibold text-[#C08261] hover:underline self-start sm:self-auto"
+                        className="text-xs md:text-sm font-bold bg-[#C08261]/10 text-[#C08261] px-3 py-1.5 rounded-xl hover:bg-[#C08261]/20 transition self-start sm:self-auto cursor-pointer"
                       >
                         Praticar ➔
                       </button>
@@ -1052,23 +1052,23 @@ export default function App() {
                     <div 
                       id="challenge-item-read"
                       onClick={() => handleToggleChallenge('read')}
-                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border transition cursor-pointer select-none gap-2 ${
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition cursor-pointer select-none gap-3 ${
                         (progress.completedChallenges || []).includes('read') 
-                          ? 'bg-emerald-50/50 border-emerald-200/50' 
-                          : 'bg-stone-50/50 border-stone-150 hover:bg-stone-50'
+                          ? 'bg-emerald-50/60 border-emerald-300' 
+                          : 'bg-stone-50/50 border-stone-200 hover:bg-stone-100/50'
                       }`}
                     >
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all shrink-0 ${
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all shrink-0 ${
                           (progress.completedChallenges || []).includes('read') 
                             ? 'bg-emerald-500 border-transparent text-white' 
-                            : 'border-stone-300'
+                            : 'border-stone-400 bg-white'
                         }`}>
-                          {(progress.completedChallenges || []).includes('read') && <Check size={12} strokeWidth={3} />}
+                          {(progress.completedChallenges || []).includes('read') && <Check size={14} strokeWidth={3} />}
                         </div>
                         <div>
-                          <span className="text-xs font-serif font-bold text-stone-800">📖 Comer do Logos Divino</span>
-                          <span className="text-[10px] text-stone-400 font-sans block">Cultive sabedoria lendo a Bíblia ou os Ebooks (+2 sementes)</span>
+                          <span className="text-sm md:text-base font-serif font-black text-stone-850 block">📖 Comer do Logos Divino</span>
+                          <span className="text-xs md:text-sm text-stone-500 font-sans block mt-0.5">Cultive sabedoria lendo a Bíblia ou os Ebooks (+2 sementes)</span>
                         </div>
                       </div>
                       <button 
@@ -1076,7 +1076,7 @@ export default function App() {
                           e.stopPropagation();
                           setActiveSection('bible');
                         }}
-                        className="text-[10px] font-semibold text-[#C08261] hover:underline self-start sm:self-auto"
+                        className="text-xs md:text-sm font-bold bg-[#C08261]/10 text-[#C08261] px-3 py-1.5 rounded-xl hover:bg-[#C08261]/20 transition self-start sm:self-auto cursor-pointer"
                       >
                         Ler Bíblia ➔
                       </button>
@@ -1086,23 +1086,23 @@ export default function App() {
                     <div 
                       id="challenge-item-reflection"
                       onClick={() => handleToggleChallenge('reflection')}
-                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border transition cursor-pointer select-none gap-2 ${
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition cursor-pointer select-none gap-3 ${
                         (progress.completedChallenges || []).includes('reflection') 
-                          ? 'bg-emerald-50/50 border-emerald-200/50' 
-                          : 'bg-stone-50/50 border-stone-150 hover:bg-stone-50'
+                          ? 'bg-emerald-50/60 border-emerald-300' 
+                          : 'bg-stone-50/50 border-stone-200 hover:bg-stone-100/50'
                       }`}
                     >
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all shrink-0 ${
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all shrink-0 ${
                           (progress.completedChallenges || []).includes('reflection') 
                             ? 'bg-emerald-500 border-transparent text-white' 
-                            : 'border-stone-300'
+                            : 'border-stone-400 bg-white'
                         }`}>
-                          {(progress.completedChallenges || []).includes('reflection') && <Check size={12} strokeWidth={3} />}
+                          {(progress.completedChallenges || []).includes('reflection') && <Check size={14} strokeWidth={3} />}
                         </div>
                         <div>
-                          <span className="text-xs font-serif font-bold text-stone-800">🖋️ Sussurro no Altar</span>
-                          <span className="text-[10px] text-stone-400 font-sans block">Escreva uma oração ou reflexão sincera de conexão (+2 sementes)</span>
+                          <span className="text-sm md:text-base font-serif font-black text-stone-850 block">🖋️ Sussurro no Altar</span>
+                          <span className="text-xs md:text-sm text-stone-500 font-sans block mt-0.5">Escreva uma oração ou reflexão sincera de conexão (+2 sementes)</span>
                         </div>
                       </div>
                       <button 
@@ -1111,7 +1111,7 @@ export default function App() {
                           const altarSection = document.getElementById('altar-scripture-ref');
                           if (altarSection) altarSection.scrollIntoView({ behavior: 'smooth' });
                         }}
-                        className="text-[10px] font-semibold text-[#C08261] hover:underline self-start sm:self-auto"
+                        className="text-xs md:text-sm font-bold bg-[#C08261]/10 text-[#C08261] px-3 py-1.5 rounded-xl hover:bg-[#C08261]/20 transition self-start sm:self-auto cursor-pointer"
                       >
                         Escrever ➔
                       </button>
@@ -1123,12 +1123,12 @@ export default function App() {
                     <motion.div 
                       initial={{ scale: 0.95, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className="p-3.5 bg-amber-50/80 border border-[#DCAE6C]/30 rounded-2xl flex items-center space-x-3 text-left shadow-xs mt-2"
+                      className="p-4 bg-amber-50/90 border border-[#DCAE6C]/40 rounded-2xl flex items-center space-x-3.5 text-left shadow-xs mt-3"
                     >
-                      <div className="w-8 h-8 rounded-full bg-[#DCAE6C]/10 flex items-center justify-center text-base">🌟</div>
+                      <div className="w-10 h-10 rounded-full bg-[#DCAE6C]/15 flex items-center justify-center text-lg shrink-0">🌟</div>
                       <div className="space-y-0.5">
-                        <p className="text-xs font-serif font-bold text-stone-850">Comunhão Perfeita Consolidada!</p>
-                        <p className="text-[10px] text-stone-600">Você concluiu todos os seus marcos de hoje e conquistou +4 sementes bônus! Seu altar brilha.</p>
+                        <p className="text-sm md:text-base font-serif font-bold text-stone-850">Comunhão Perfeita Consolidada!</p>
+                        <p className="text-xs md:text-sm text-stone-650 leading-relaxed font-medium">Você concluiu todos os seus marcos de hoje e conquistou +4 sementes bônus! Seu altar brilha.</p>
                       </div>
                     </motion.div>
                   )}
@@ -1137,49 +1137,49 @@ export default function App() {
                 {/* 2. CONSTÂNCIA CARD / STREAK STATS */}
                 <div id="card-constancia-habitos" className="bg-[#FAF8F5]/90 border border-stone-200/55 rounded-3xl p-5 shadow-sm flex flex-col justify-between text-left h-full">
                   <div className="space-y-4">
-                    <div className="pb-2 border-b border-stone-200/50 space-y-0.5">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-bold">Marcos de Comunhão</span>
-                      <h4 className="font-serif text-base font-bold text-stone-800">Constância Diária 🔥</h4>
+                    <div className="pb-2 border-b border-stone-200/50 space-y-1">
+                      <span className="text-xs md:text-sm font-mono uppercase tracking-wider text-[#C08261] font-bold">Marcos de Comunhão</span>
+                      <h4 className="font-serif text-lg md:text-2xl font-black text-stone-850">Constância Diária 🔥</h4>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-white p-3 rounded-2xl border border-stone-150 text-center">
-                        <Flame size={18} fill="#C08261" className="text-[#C08261] mx-auto mb-1 animate-pulse" />
-                        <span id="streak-indicator-val" className="text-sm font-bold text-stone-850 font-serif block">{progress.streak} dias</span>
-                        <span className="text-[9px] text-stone-400 uppercase font-mono tracking-wider block">Sequência</span>
+                      <div className="bg-white p-4 rounded-2xl border border-stone-150 text-center">
+                        <Flame size={22} fill="#C08261" className="text-[#C08261] mx-auto mb-1 animate-pulse" />
+                        <span id="streak-indicator-val" className="text-base md:text-lg font-black text-stone-850 font-serif block">{progress.streak} dias</span>
+                        <span className="text-xs text-stone-550 uppercase font-mono tracking-wider block mt-0.5 font-semibold">Sequência</span>
                       </div>
-                      <div className="bg-white p-3 rounded-2xl border border-stone-150 text-center">
-                        <Award size={18} className="text-[#C08261] mx-auto mb-1" />
-                        <span id="max-streak-indicator-val" className="text-sm font-bold text-stone-850 font-serif block">{progress.maxStreak || Math.max(3, progress.streak)} dias</span>
-                        <span className="text-[9px] text-stone-400 uppercase font-mono tracking-wider block">Recorde</span>
+                      <div className="bg-white p-4 rounded-2xl border border-stone-150 text-center">
+                        <Award size={22} className="text-[#C08261] mx-auto mb-1" />
+                        <span id="max-streak-indicator-val" className="text-base md:text-lg font-black text-stone-850 font-serif block">{progress.maxStreak || Math.max(3, progress.streak)} dias</span>
+                        <span className="text-xs text-stone-550 uppercase font-mono tracking-wider block mt-0.5 font-semibold">Recorde</span>
                       </div>
                     </div>
 
                     {/* Cycle counter statistics block for Phase 2 Retention */}
-                    <div className="bg-white p-3.5 rounded-2xl border border-stone-150 space-y-2">
-                      <span className="text-[9.5px] uppercase font-mono tracking-widest font-bold text-[#C08261] block">Ciclos de Quietude</span>
-                      <div className="flex justify-between items-center text-[11px]">
-                        <span className="text-stone-550 font-sans">Sessões Respiratórias:</span>
-                        <span id="cycles-count-val" className="font-serif font-bold text-stone-800">{progress.breathingCyclesCount || 0}</span>
+                    <div className="bg-white p-4.5 rounded-2xl border border-stone-150 space-y-3.5">
+                      <span className="text-xs md:text-sm uppercase font-mono tracking-widest font-black text-[#C08261] block">Ciclos de Quietude</span>
+                      <div className="flex justify-between items-center text-xs md:text-sm">
+                        <span className="text-stone-605 font-sans font-medium">Sessões Respiratórias:</span>
+                        <span id="cycles-count-val" className="font-serif font-black text-stone-850 text-sm md:text-base">{progress.breathingCyclesCount || 0}</span>
                       </div>
-                      <div className="flex justify-between items-center pt-1 border-t border-stone-100 text-[11px]">
-                        <span className="text-stone-550 font-sans">Dias Perfeitos de Aliança:</span>
-                        <span id="perfect-days-count-val" className="font-serif font-bold text-stone-800">{progress.perfectDaysCount || 0}</span>
+                      <div className="flex justify-between items-center pt-2 border-t border-stone-100 text-xs md:text-sm">
+                        <span className="text-stone-605 font-sans font-medium">Dias Perfeitos de Aliança:</span>
+                        <span id="perfect-days-count-val" className="font-serif font-black text-stone-850 text-sm md:text-base">{progress.perfectDaysCount || 0}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* 7-DAY VISUAL TRACKER CHECKS */}
-                  <div className="pt-3 mt-3 border-t border-stone-200/50 space-y-1.5">
-                    <span className="text-[9.5px] uppercase font-mono text-stone-400 font-bold block">Histórico de Aliança Semanal</span>
-                    <div className="flex justify-between items-center">
+                  <div className="pt-4 mt-3 border-t border-stone-200/50 space-y-2">
+                    <span className="text-xs uppercase font-mono text-stone-500 font-bold block">Histórico de Aliança Semanal</span>
+                    <div className="flex justify-between items-center px-1">
                       {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((day, idx) => {
                         const isToday = idx === 4;
                         const isDone = isToday && (progress.completedChallenges || []).length > 0;
                         return (
-                          <div key={idx} className="flex flex-col items-center space-y-1">
-                            <span className="text-[9px] font-mono font-bold text-stone-605">{day}</span>
-                            <div className={`w-5.5 h-5.5 rounded-full flex items-center justify-center text-[9px] font-bold ${
+                          <div key={idx} className="flex flex-col items-center space-y-1.5">
+                            <span className="text-xs font-mono font-bold text-stone-605">{day}</span>
+                            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${
                               isDone 
                                 ? 'bg-[#C08261] text-white' 
                                 : isToday 
@@ -1199,27 +1199,27 @@ export default function App() {
 
               {/* RETOMAR DE ONDE PAROU CARD */}
               {(progress.lastReadBibleInfo || progress.lastReadEbookInfo) && (
-                <div id="card-retomar-caminhada" className="bg-[#FAF8F5]/60 border border-[#C08261]/25 rounded-3xl p-5 text-left space-y-3.5">
-                  <div className="flex items-center space-x-1.5 ">
-                    <span className="w-2 h-2 bg-[#C08261] rounded-full animate-ping" />
-                    <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#C08261]">Retomar Caminhada</span>
+                <div id="card-retomar-caminhada" className="bg-[#FAF8F5]/60 border border-[#C08261]/25 rounded-3xl p-6 text-left space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <span className="w-2.5 h-2.5 bg-[#C08261] rounded-full animate-ping shrink-0" />
+                    <span className="text-xs md:text-sm font-mono uppercase tracking-widest font-extrabold text-[#C08261]">Retomar Caminhada</span>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Bible Card */}
                     {progress.lastReadBibleInfo && (
-                      <div id="resume-bible-box" className="bg-white border border-stone-200 rounded-2xl p-4 flex justify-between items-center hover:shadow-md transition duration-300">
-                        <div className="space-y-1 pr-2">
-                          <span className="text-[9px] font-mono uppercase font-bold text-stone-400">Palavra de Alívio</span>
-                          <h5 id="resume-bible-ref-title" className="font-serif font-bold text-stone-850 text-sm">
+                      <div id="resume-bible-box" className="bg-white border border-stone-200 rounded-2xl p-5 flex justify-between items-center hover:shadow-md transition duration-300 gap-3">
+                        <div className="space-y-1.5 pr-2">
+                          <span className="text-[10px] md:text-xs font-mono uppercase font-bold text-[#C08261]">Palavra de Alívio</span>
+                          <h5 id="resume-bible-ref-title" className="font-serif font-black text-stone-850 text-sm md:text-base">
                             {progress.lastReadBibleInfo.bookName} • Capítulo {progress.lastReadBibleInfo.chapter}
                           </h5>
-                          <p className="text-[10px] text-stone-500 font-sans">Continue saboreando o Logos divino de onde você parou.</p>
+                          <p className="text-xs text-stone-500 font-sans leading-relaxed">Continue saboreando o Logos divino de onde você parou.</p>
                         </div>
                         <button
                           id="btn-resume-bible"
                           onClick={() => setActiveSection('bible')}
-                          className="px-3.5 py-1.5 bg-[#C08261] hover:bg-[#b07353] text-white text-[11px] font-bold font-serif rounded-xl transition cursor-pointer whitespace-nowrap shadow-xs shrink-0"
+                          className="px-4 py-2 bg-[#C08261] hover:bg-[#b07353] text-white text-xs md:text-sm font-bold font-serif rounded-xl transition cursor-pointer whitespace-nowrap shadow-xs shrink-0"
                         >
                           Retomar ➔
                         </button>
@@ -1228,18 +1228,18 @@ export default function App() {
 
                     {/* Ebook Card */}
                     {progress.lastReadEbookInfo && (
-                      <div id="resume-ebook-box" className="bg-white border border-stone-200 rounded-2xl p-4 flex justify-between items-center hover:shadow-md transition duration-300 w-full overflow-hidden">
-                        <div className="space-y-1 pr-2 max-w-[70%]">
-                          <span className="text-[9px] font-mono uppercase font-bold text-stone-400">Livro de Inspiração</span>
-                          <h5 id="resume-ebook-title" className="font-serif font-bold text-stone-850 text-sm truncate">
+                      <div id="resume-ebook-box" className="bg-white border border-stone-200 rounded-2xl p-5 flex justify-between items-center hover:shadow-md transition duration-300 w-full overflow-hidden gap-3">
+                        <div className="space-y-1.5 pr-2 max-w-[70%]">
+                          <span className="text-[10px] md:text-xs font-mono uppercase font-bold text-stone-400">Livro de Inspiração</span>
+                          <h5 id="resume-ebook-title" className="font-serif font-black text-stone-850 text-sm md:text-base truncate">
                             {progress.lastReadEbookInfo.ebookTitle}
                           </h5>
-                          <p id="resume-ebook-chapter-sub" className="text-[10px] text-stone-500 font-sans truncate">Capítulo {progress.lastReadEbookInfo.chapterIndex + 1}: {progress.lastReadEbookInfo.chapterTitle}</p>
+                          <p id="resume-ebook-chapter-sub" className="text-xs md:text-sm text-stone-500 font-sans truncate font-medium">Capítulo {progress.lastReadEbookInfo.chapterIndex + 1}: {progress.lastReadEbookInfo.chapterTitle}</p>
                         </div>
                         <button
                           id="btn-resume-ebook"
                           onClick={() => setActiveSection('ebooks')}
-                          className="px-3.5 py-1.5 bg-stone-900 hover:bg-black text-white text-[11px] font-bold font-serif rounded-xl transition cursor-pointer whitespace-nowrap shadow-xs shrink-0"
+                          className="px-4 py-2 bg-stone-900 hover:bg-black text-white text-xs md:text-sm font-bold font-serif rounded-xl transition cursor-pointer whitespace-nowrap shadow-xs shrink-0"
                         >
                           Continuar ➔
                         </button>
@@ -1250,22 +1250,22 @@ export default function App() {
               )}
 
               {/* CAMINHO PRIMITIVO PROMOTION BANNER */}
-              <div className="bg-[#FAF8F5] border-2 border-dashed border-[#C08261]/40 p-6 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-left shadow-xs">
-                <div className="space-y-2 md:max-w-2xl">
-                  <span className="text-[10px] uppercase font-mono tracking-wider font-extrabold text-[#C08261] flex items-center gap-1.5 bg-[#C08261]/10 px-2.5 py-1 rounded-full w-fit">
-                    <span className="w-1.5 h-1.5 bg-[#C08261] rounded-full animate-ping" />
+              <div className="bg-[#FAF8F5] border-2 border-dashed border-[#C08261]/40 p-6 md:p-8 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-left shadow-xs">
+                <div className="space-y-3 md:max-w-3xl">
+                  <span className="text-xs md:text-sm uppercase font-mono tracking-wider font-extrabold text-[#C08261] flex items-center gap-1.5 bg-[#C08261]/10 px-3 py-1.5 rounded-full w-fit">
+                    <span className="w-2 h-2 bg-[#C08261] rounded-full animate-ping" />
                     Movimento de Co-Fundadores
                   </span>
-                  <h4 className="font-serif text-lg md:text-xl font-bold text-stone-850">
+                  <h4 className="font-serif text-xl md:text-2xl font-black text-stone-850">
                     "A igreja primitiva não tinha aplicativo. Mas funcionava assim."
                   </h4>
-                  <p className="text-stone-605 text-xs md:text-sm leading-relaxed">
+                  <p className="text-stone-605 text-sm md:text-base leading-relaxed">
                     Sintonize-se com a economia da graça e serviço descentralizados das primeiras comunidades. Apoie financeiramente a infraestrutura da Bíblia do Despertar e reserve seu lugar de pioneiro.
                   </p>
                 </div>
                 <button
                   onClick={() => setActiveSection('primitiva')}
-                  className="py-3 px-6 bg-stone-900 text-white rounded-2xl text-xs font-bold hover:bg-black transition active:scale-95 shrink-0 shadow-md cursor-pointer whitespace-nowrap"
+                  className="py-3.5 px-7 bg-stone-900 text-white rounded-2.5xl text-xs md:text-sm font-bold hover:bg-black transition active:scale-95 shrink-0 shadow-md cursor-pointer whitespace-nowrap"
                 >
                   Conhecer Movimento & Apoiar 🕊️
                 </button>
