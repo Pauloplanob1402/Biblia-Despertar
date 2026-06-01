@@ -1254,17 +1254,17 @@ export default function IgrejaPrimitiva({
                     </span>
                   </span>
                   <span className="font-mono text-[#DCAE6C] text-xs font-bold">
-                    <strong>91% Concluído</strong> (R$ 4.550 / R$ 5.000)
+                    <strong>25% Concluído</strong> (R$ 1.247 / R$ 5.000)
                   </span>
                 </div>
                 <div className="w-full bg-stone-900 rounded-full h-2 overflow-hidden border border-stone-800">
                   <div
                     className="bg-gradient-to-r from-[#C28463] to-[#DCAE6C] h-2 rounded-full"
-                    style={{ width: "91%" }}
+                    style={{ width: "25%" }}
                   />
                 </div>
                 <span className="text-[10px] font-mono text-stone-500 block">
-                  Faltam apenas R$ 450 para darmos entrada na personificação
+                  Faltam apenas R$ {5000 - 1247} para darmos entrada na personificação
                   legal da comunidade e licenças LGPD.
                 </span>
               </div>

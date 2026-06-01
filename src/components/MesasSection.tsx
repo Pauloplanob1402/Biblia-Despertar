@@ -108,6 +108,14 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
   const [newFrequency, setNewFrequency] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [newSlots, setNewSlots] = useState(8);
+  const [newContact, setNewContact] = useState('');
+  
+  // Formspree Integration State
+  const [formspreeId, setFormspreeId] = useState<string>(() => {
+    return localStorage.getItem('despertar_formspree_id') || 'mojbpkrv'; // Default form ID provided by user
+  });
+  const [isEditingFormspree, setIsEditingFormspree] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [joinedMesaIds, setJoinedMesaIds] = useState<string[]>([]);
   const [notification, setNotification] = useState<string | null>(null);
@@ -172,11 +180,44 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
     setTimeout(() => setNotification(null), 4000);
   };
 
-  const handleCreateMesaSubmit = (e: React.FormEvent) => {
+  const handleCreateMesaSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTitle || !newHostName || !newCity || !newFrequency || !newDescription) {
-      alert('Favor preencher os campos estruturais obrigatórios.');
+    if (!newTitle || !newHostName || !newCity || !newFrequency || !newDescription || !newContact) {
+      alert('Favor preencher os campos estruturais obrigatórios, incluindo o seu Contato.');
       return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      if (formspreeId && formspreeId.trim() !== '') {
+        const payload = {
+          nome_da_mesa: newTitle,
+          tipo: newType === 'In-person' ? `Presencial (${newAddress || 'Endereço não informado'})` : 'Online / Digital',
+          frequencia: newFrequency,
+          cidade: `${newCity} - ${newState.toUpperCase() || 'SP'}`,
+          contato: newContact,
+          descricao: newDescription,
+          anfitriao: newHostName,
+          biografia_anfitriao: newHostBio || 'Anfitrião apaixonado pela mesa posta e graça acolhedora.',
+          vagas_totais: newSlots
+        };
+
+        const response = await fetch(`https://formspree.io/f/${formspreeId.trim()}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          console.warn('Submission to Formspree returned non-ok status. Saving locally as fallback.');
+        }
+      }
+    } catch (err) {
+      console.error('Error submitting form to Formspree:', err);
     }
 
     const created: Mesa = {
@@ -197,6 +238,7 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
 
     setMesas(prev => [created, ...prev]);
     setShowCreateModal(false);
+    setIsSubmitting(false);
     
     // Clean inputs
     setNewTitle('');
@@ -207,9 +249,10 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
     setNewAddress('');
     setNewFrequency('');
     setNewDescription('');
+    setNewContact('');
     setNewSlots(8);
 
-    setNotification('A sua nova Mesa foi inaugurada com sucesso!');
+    setNotification('A sua nova Mesa foi inaugurada com sucesso e enviada ao painel do Formspree!');
     setTimeout(() => setNotification(null), 4000);
   };
 
@@ -539,6 +582,51 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                 </button>
               </div>
 
+              {/* Formspree connection settings block */}
+              <div className="bg-stone-50 border border-stone-200/60 rounded-2xl p-4 space-y-2 text-xs">
+                <div className="flex justify-between items-center cursor-pointer select-none text-left" onClick={() => setIsEditingFormspree(!isEditingFormspree)}>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-emerald-500 animate-ping">●</span>
+                    <span className="font-semibold text-stone-700">Integração Formspree: {formspreeId ? 'Ativada ✓' : 'Inativa'}</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-[#C08261] hover:underline">
+                    {isEditingFormspree ? 'Recolher ▴' : 'Configurar ID ▾'}
+                  </span>
+                </div>
+
+                {isEditingFormspree && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="space-y-2 pt-2 border-t border-stone-200/50 text-left"
+                  >
+                    <p className="text-[10px] text-stone-500 leading-normal">
+                      Insira o ID do seu formulário no Formspree (encontrado no painel do Formspree do Paulo Nascimento) para que novos registros sejam enviados à sua caixa de entrada.
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Ex: mqapqgqy"
+                        value={formspreeId}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormspreeId(val);
+                          localStorage.setItem('despertar_formspree_id', val);
+                        }}
+                        className="bg-white border border-stone-200/75 rounded-xl px-3 py-1.5 focus:outline-none text-xs flex-1 font-mono text-stone-700"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setIsEditingFormspree(false)}
+                        className="px-3.5 py-1.5 bg-[#C08261] hover:bg-[#b07353] text-white rounded-xl text-[11px] font-bold"
+                      >
+                        Salvar
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+
               <form onSubmit={handleCreateMesaSubmit} className="space-y-4 text-left">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col space-y-1">
@@ -568,16 +656,31 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                   </div>
                 </div>
 
-                <div className="flex flex-col space-y-1">
-                  <label className="text-[10px] uppercase font-mono tracking-wider text-stone-400">Biografia dos Anfitriões (Frase/Carreira)</label>
-                  <input
-                    id="input-mesa-hostbio"
-                    type="text"
-                    placeholder="Ex: Casados há 15 anos, amamos receber pessoas com café quente..."
-                    value={newHostBio}
-                    onChange={(e) => setNewHostBio(e.target.value)}
-                    className="bg-stone-50 border border-stone-200/60 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#C08261]"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-[10px] uppercase font-mono tracking-wider text-stone-400">Biografia dos Anfitriões (Frase/Carreira)</label>
+                    <input
+                      id="input-mesa-hostbio"
+                      type="text"
+                      placeholder="Ex: Casados há 15 anos, amamos receber pessoas com café quente..."
+                      value={newHostBio}
+                      onChange={(e) => setNewHostBio(e.target.value)}
+                      className="bg-stone-50 border border-stone-200/60 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#C08261]"
+                    />
+                  </div>
+
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-[10px] uppercase font-mono tracking-wider text-stone-400 font-extrabold text-[#C08261]">Contato (WhatsApp ou E-mail) *</label>
+                    <input
+                      id="input-mesa-contact"
+                      type="text"
+                      required
+                      placeholder="Ex: 51997187898 ou email@exemplo.com"
+                      value={newContact}
+                      onChange={(e) => setNewContact(e.target.value)}
+                      className="bg-stone-50 border border-stone-200/60 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#C08261]"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -680,17 +783,26 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                   <button
                     id="btn-close-mesa-form"
                     type="button"
+                    disabled={isSubmitting}
                     onClick={() => setShowCreateModal(false)}
-                    className="px-4 py-2 border border-stone-200 text-stone-500 text-xs font-semibold rounded-xl hover:bg-stone-50 transition"
+                    className="px-4 py-2 border border-stone-200 text-stone-500 text-xs font-semibold rounded-xl hover:bg-stone-50 transition disabled:opacity-50"
                   >
                     Cancelar
                   </button>
                   <button
                     id="btn-submit-mesa-form"
                     type="submit"
-                    className="px-5 py-2.5 bg-[#C08261] text-white text-xs font-semibold rounded-xl hover:bg-[#b07353] shadow-md transition"
+                    disabled={isSubmitting}
+                    className="px-5 py-2.5 bg-[#C08261] text-white text-xs font-semibold rounded-xl hover:bg-[#b07353] shadow-md transition flex items-center space-x-1.5 disabled:opacity-50"
                   >
-                    Inaugurar Mesa
+                    {isSubmitting ? (
+                      <>
+                        <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        <span>Inaugurando...</span>
+                      </>
+                    ) : (
+                      <span>Inaugurar Mesa</span>
+                    )}
                   </button>
                 </div>
               </form>

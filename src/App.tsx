@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Compass, Book, Coffee, User, Bookmark, Feather, 
   Flame, Sparkles, Clock, Heart, Calendar, ArrowLeft, 
-  AlertCircle, ChevronRight, Terminal, FileText, Check, Code, MessageSquare, Award 
+  AlertCircle, ChevronRight, Terminal, FileText, Check, Code, MessageSquare, Award, Smartphone
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -22,6 +22,7 @@ import ChatDM from './components/ChatDM';
 import ManifestoSection from './components/ManifestoSection';
 import WitnessesSection from './components/WitnessesSection';
 import IgrejaPrimitiva from './components/IgrejaPrimitiva';
+import AppsSection from './components/AppsSection';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
@@ -33,7 +34,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas' | 'primitiva'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas' | 'primitiva' | 'apps'>('home');
   const [mesasSubTab, setMesasSubTab] = useState<'mesas' | 'pilgrims'>('mesas');
   const [activeDevotionalTab, setActiveDevotionalTab] = useState<'comunhao' | 'multiplicacao'>('comunhao');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
@@ -668,6 +669,20 @@ export default function App() {
                     <span>Minha Caminhada</span>
                   </span>
                 </button>
+
+                <button
+                  id="mobile-nav-apps"
+                  onClick={() => { setActiveSection('apps'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition ${
+                    activeSection === 'apps' ? 'bg-[#C08261]/15 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Smartphone size={14} className="text-[#C08261]" />
+                    <span>Nossos Apps 📱</span>
+                  </span>
+                  <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold animate-pulse">Instalar</span>
+                </button>
               </nav>
 
               {/* Drawer streak indicators */}
@@ -884,6 +899,20 @@ export default function App() {
               <User size={14} />
               <span>Minha Caminhada</span>
             </span>
+          </button>
+
+          <button
+            id="nav-apps"
+            onClick={() => { setActiveSection('apps'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition ${
+              activeSection === 'apps' ? 'bg-[#C08261]/15 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <Smartphone size={14} className="text-[#C08261]" />
+              <span>Baixar o App 📱</span>
+            </span>
+            <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold animate-pulse">Instalar</span>
           </button>
         </nav>
 
@@ -2233,6 +2262,19 @@ export default function App() {
                   });
                 }}
               />
+            </motion.div>
+          )}
+
+          {/* ACTIVE PORT: APP SHOWCASE & DISCOVER PORTAL */}
+          {activeSection === 'apps' && !selectedDevotional && (
+            <motion.div
+              key="apps"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="space-y-4"
+            >
+              <AppsSection />
             </motion.div>
           )}
         </AnimatePresence>
