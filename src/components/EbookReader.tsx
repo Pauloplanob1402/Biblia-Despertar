@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DESPERTAR_EBOOKS } from '../data/ebooks';
 import { Ebook } from '../types';
 import { BookOpen, AlertCircle, Check, ChevronLeft, ChevronRight, Compass, Sparkles } from 'lucide-react';
@@ -12,12 +12,41 @@ import { motion, AnimatePresence } from 'motion/react';
 interface EbookReaderProps {
   completedChapters: string[];
   onCompleteChapter: (ebookId: string, chapterIdx: number) => void;
+  initialBookId?: string;
+  initialChapterIndex?: number;
+  onChapterRead?: (ebookId: string, ebookTitle: string, chapterIndex: number, chapterTitle: string) => void;
 }
 
-export default function EbookReader({ completedChapters, onCompleteChapter }: EbookReaderProps) {
+export default function EbookReader({ 
+  completedChapters, 
+  onCompleteChapter,
+  initialBookId,
+  initialChapterIndex,
+  onChapterRead
+}: EbookReaderProps) {
   const [selectedBook, setSelectedBook] = useState<Ebook | null>(null);
   const [activeChapterIndex, setActiveChapterIndex] = useState<number>(0);
   const [isReadingMode, setIsReadingMode] = useState<boolean>(false);
+
+  // Sync to initial values if provided (Retention / Pick up where you left off)
+  useEffect(() => {
+    if (initialBookId) {
+      const foundBook = DESPERTAR_EBOOKS.find(b => b.id === initialBookId);
+      if (foundBook) {
+        setSelectedBook(foundBook);
+        setActiveChapterIndex(initialChapterIndex || 0);
+        setIsReadingMode(true);
+      }
+    }
+  }, [initialBookId, initialChapterIndex]);
+
+  // Report chapter reading to parent
+  useEffect(() => {
+    if (selectedBook && isReadingMode && onChapterRead) {
+      const chapter = selectedBook.chapters[activeChapterIndex];
+      onChapterRead(selectedBook.id, selectedBook.title, activeChapterIndex, chapter?.title || "");
+    }
+  }, [selectedBook, activeChapterIndex, isReadingMode, onChapterRead]);
 
   // Reader cosmetic settings
   const [fontSize, setFontSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('md');

@@ -12,9 +12,10 @@ import {
 
 interface BreathingGuideProps {
   mode?: 'widget' | 'sanctuary';
+  onCycleComplete?: () => void;
 }
 
-export default function BreathingGuide({ mode = 'widget' }: BreathingGuideProps) {
+export default function BreathingGuide({ mode = 'widget', onCycleComplete }: BreathingGuideProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [phase, setPhase] = useState<'inspire' | 'segure' | 'expire' | 'medite'>('inspire');
   const [secondsLeft, setSecondsLeft] = useState(4);
@@ -432,6 +433,9 @@ export default function BreathingGuide({ mode = 'widget' }: BreathingGuideProps)
             } else {
               nextPhase = 'inspire';
               setCyclesCompleted(c => c + 1);
+              if (onCycleComplete) {
+                onCycleComplete();
+              }
             }
             setPhase(nextPhase);
             triggerPhaseVoice(nextPhase);
@@ -615,6 +619,28 @@ export default function BreathingGuide({ mode = 'widget' }: BreathingGuideProps)
             </>
           )}
         </button>
+        
+        {/* Paciômetro de Ciclos */}
+        {isPlaying && (
+          <div className="flex flex-col items-center space-y-1 justify-center pt-1 pb-2">
+            <span className="text-[9px] uppercase font-mono tracking-widest text-[#C08261]/80 font-bold">Resonância Mentis</span>
+            <div className="flex items-center space-x-1.5 mt-0.5">
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <div
+                  key={idx}
+                  className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                    cyclesCompleted > idx 
+                      ? 'bg-[#C08261] scale-110 shadow-[0_0_8px_rgba(192,130,97,0.6)]' 
+                      : cyclesCompleted === idx
+                      ? 'bg-[#C08261]/50 animate-pulse scale-105'
+                      : 'bg-stone-200'
+                  }`}
+                  title={`Instante ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {cyclesCompleted > 0 && (
           <span className="text-[10px] text-stone-400 font-mono tracking-tight flex items-center space-x-1">

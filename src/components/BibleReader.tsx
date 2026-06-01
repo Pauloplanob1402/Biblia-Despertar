@@ -14,6 +14,9 @@ interface BibleReaderProps {
   onAddReflection: (ref: string, text: string) => void;
   favorites: { ref: string; text: string }[];
   reflections: { id: string; verseRef: string; reflectionText: string; createdAt: string }[];
+  initialBookId?: string;
+  initialChapter?: number;
+  onChapterRead?: (bookId: string, bookName: string, chapter: number) => void;
 }
 
 interface RawTranslationBook {
@@ -103,10 +106,36 @@ export default function BibleReader({
   onRemoveFavorite,
   onAddReflection,
   favorites,
-  reflections
+  reflections,
+  initialBookId,
+  initialChapter,
+  onChapterRead
 }: BibleReaderProps) {
-  const [selectedBookId, setSelectedBookId] = useState('salmos');
-  const [selectedChapter, setSelectedChapter] = useState<number>(23);
+  const [selectedBookId, setSelectedBookId] = useState(initialBookId || 'salmos');
+  const [selectedChapter, setSelectedChapter] = useState<number>(initialChapter || 23);
+
+  // Sync to initial values if changed from parent (Continue Journey)
+  useEffect(() => {
+    if (initialBookId) {
+      setSelectedBookId(initialBookId);
+    }
+  }, [initialBookId]);
+
+  useEffect(() => {
+    if (initialChapter) {
+      setSelectedChapter(initialChapter);
+    }
+  }, [initialChapter]);
+
+  const selectedBook = BIBLE_BOOKS.find(b => b.id === selectedBookId) || BIBLE_BOOKS[0];
+
+  // Report chapter reading to parent
+  useEffect(() => {
+    if (onChapterRead) {
+      onChapterRead(selectedBookId, selectedBook.name, selectedChapter);
+    }
+  }, [selectedBookId, selectedChapter, selectedBook.name, onChapterRead]);
+
   const [selectedVerseKey, setSelectedVerseKey] = useState<string | null>(null); // e.g. "salmos_23_3"
   const [highlightedVerses, setHighlightedVerses] = useState<{ [key: string]: string }>({}); // refKey -> colorClass
   const [reflectionText, setReflectionText] = useState('');
@@ -120,8 +149,6 @@ export default function BibleReader({
   const translationName = 'acf';
   const [loadedBibles, setLoadedBibles] = useState<{ [key: string]: RawTranslationBook[] }>({});
   const [syncStatus, setSyncStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
-  const selectedBook = BIBLE_BOOKS.find(b => b.id === selectedBookId) || BIBLE_BOOKS[0];
 
   // Dynamically load the selected raw Bible translation from reliable CDN mirrors
   useEffect(() => {
@@ -442,6 +469,37 @@ export default function BibleReader({
             <span className="w-2 h-2 rounded-full bg-stone-200" />
             <span className="w-2 h-2 rounded-full bg-[#C08261]/40" />
             <span className="w-2 h-2 rounded-full bg-[#C08261]" />
+          </div>
+        </div>
+
+        {/* ATALHOS DE ALÍVIO RÁPIDO */}
+        <div className="mb-6 bg-[#C08261]/5 border border-[#C08261]/15 p-4 rounded-2xl text-left">
+          <span className="text-[10px] font-mono uppercase text-[#C08261] font-bold tracking-widest block mb-2">
+            Atalhos de Cura & Alívio Rápido 🕊️
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { label: "Cansaço ⚡", book: "mateus", chapter: 11, ref: "Mateus 11" },
+              { label: "Ansiedade / Medo 🛡️", book: "salmos", chapter: 23, ref: "Salmo 23" },
+              { label: "Amor do Pai ❤️", book: "lucas", chapter: 15, ref: "Lucas 15" },
+              { label: "Consolo / Noite 🌌", book: "joao", chapter: 14, ref: "João 14" },
+              { label: "Insegurança 🤝", book: "romanos", chapter: 8, ref: "Romanos 8" }
+            ].map((shortcut) => (
+              <button
+                key={shortcut.ref}
+                onClick={() => {
+                  setSelectedBookId(shortcut.book);
+                  setSelectedChapter(shortcut.chapter);
+                }}
+                className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition-all cursor-pointer ${
+                  selectedBookId === shortcut.book && selectedChapter === shortcut.chapter
+                    ? 'bg-[#C08261] text-white border-transparent'
+                    : 'bg-white hover:bg-stone-50 text-stone-700 border-stone-200 shadow-xs'
+                }`}
+              >
+                {shortcut.label} <span className="text-[9.5px] opacity-65">({shortcut.ref})</span>
+              </button>
+            ))}
           </div>
         </div>
 

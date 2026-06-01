@@ -21,6 +21,7 @@ import AuthModal from './components/AuthModal';
 import ChatDM from './components/ChatDM';
 import ManifestoSection from './components/ManifestoSection';
 import WitnessesSection from './components/WitnessesSection';
+import IgrejaPrimitiva from './components/IgrejaPrimitiva';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
@@ -32,7 +33,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas' | 'primitiva'>('home');
   const [mesasSubTab, setMesasSubTab] = useState<'mesas' | 'pilgrims'>('mesas');
   const [activeDevotionalTab, setActiveDevotionalTab] = useState<'comunhao' | 'multiplicacao'>('comunhao');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
@@ -46,6 +47,8 @@ export default function App() {
 
   // Growth loop & Norman Feedback states
   const [committedToastMsg, setCommittedToastMsg] = useState<string | null>(null);
+  const [homeRef, setHomeRef] = useState("");
+  const [homeText, setHomeText] = useState("");
 
   const handleCopyToClipboard = (text: string) => {
     try {
@@ -226,12 +229,148 @@ export default function App() {
       reflectionText: text,
       createdAt: new Date().toISOString()
     };
-    setProgress((prev) => ({
+    setProgress((prev) => {
+      const completed = prev.completedChallenges || [];
+      const newCompleted = completed.includes('reflection') ? completed : [...completed, 'reflection'];
+      let newPerfectDays = prev.perfectDaysCount || 0;
+      
+      const todayStr = new Date().toISOString().split('T')[0];
+      const todayInCompleted = prev.lastActive === todayStr;
+      let newStreak = prev.streak;
+      if (!todayInCompleted) {
+        newStreak = prev.streak + 1;
+      }
+
+      if (newCompleted.length === 3 && !completed.includes('reflection')) {
+        newPerfectDays += 1;
+        setCommittedToastMsg("Perfeito! Você concluiu todos os compromissos de hoje e nutriu seu altar! 🌟🌿 (+1 dia de perfeita comunhão)");
+        setTimeout(() => setCommittedToastMsg(null), 5000);
+      } else {
+        setCommittedToastMsg(`Sussurro guardado com sucesso! +2 sementes de quietude cultivadas. ✨`);
+        setTimeout(() => setCommittedToastMsg(null), 3000);
+      }
+
+      return {
+        ...prev,
+        savedReflections: [newRef, ...prev.savedReflections],
+        completedChallenges: newCompleted,
+        perfectDaysCount: newPerfectDays,
+        streak: newStreak,
+        lastActive: todayStr,
+        maxStreak: Math.max(prev.maxStreak || 0, newStreak)
+      };
+    });
+  };
+
+  // Phase 2 Habits and Daily Challenges Tracker
+  const handleCompleteChallenge = (type: 'breathe' | 'read' | 'reflection') => {
+    setProgress(prev => {
+      const completed = prev.completedChallenges || [];
+      if (completed.includes(type)) return prev;
+      
+      const newCompleted = [...completed, type];
+      let newPerfectDays = prev.perfectDaysCount || 0;
+      
+      const todayStr = new Date().toISOString().split('T')[0];
+      const todayInCompleted = prev.lastActive === todayStr;
+      let newStreak = prev.streak;
+      if (!todayInCompleted) {
+        newStreak = prev.streak + 1;
+      }
+
+      if (newCompleted.length === 3) {
+        newPerfectDays += 1;
+        setCommittedToastMsg("Perfeito! Você concluiu todos os compromissos de hoje e nutriu seu altar! 🌟🌿 (+1 dia de perfeita comunhão)");
+        setTimeout(() => setCommittedToastMsg(null), 5000);
+      } else {
+        setCommittedToastMsg(`Passo concluído com fé! +2 sementes cultivadas. ✨`);
+        setTimeout(() => setCommittedToastMsg(null), 3000);
+      }
+      
+      return {
+        ...prev,
+        completedChallenges: newCompleted,
+        perfectDaysCount: newPerfectDays,
+        streak: newStreak,
+        lastActive: todayStr,
+        maxStreak: Math.max(prev.maxStreak || 0, newStreak)
+      };
+    });
+  };
+
+  const handleToggleChallenge = (type: 'breathe' | 'read' | 'reflection') => {
+    setProgress(prev => {
+      const completed = prev.completedChallenges || [];
+      const todayStr = new Date().toISOString().split('T')[0];
+      if (completed.includes(type)) {
+        // Toggle off
+        return {
+          ...prev,
+          completedChallenges: completed.filter(c => c !== type)
+        };
+      } else {
+        // Toggle on
+        const newCompleted = [...completed, type];
+        let newPerfectDays = prev.perfectDaysCount || 0;
+        const todayInCompleted = prev.lastActive === todayStr;
+        let newStreak = prev.streak;
+        if (!todayInCompleted) {
+          newStreak = prev.streak + 1;
+        }
+
+        if (newCompleted.length === 3) {
+          newPerfectDays += 1;
+          setCommittedToastMsg("Perfeito! Você concluiu todos os compromissos de hoje e nutriu seu altar! 🌟🌿");
+          setTimeout(() => setCommittedToastMsg(null), 4000);
+        } else {
+          setCommittedToastMsg(`Passo concluído com fé! ✨`);
+          setTimeout(() => setCommittedToastMsg(null), 2500);
+        }
+
+        return {
+          ...prev,
+          completedChallenges: newCompleted,
+          perfectDaysCount: newPerfectDays,
+          streak: newStreak,
+          lastActive: todayStr,
+          maxStreak: Math.max(prev.maxStreak || 0, newStreak)
+        };
+      }
+    });
+  };
+
+  const handleBreathingCycleCompleted = () => {
+    setProgress(prev => ({
       ...prev,
-      savedReflections: [newRef, ...prev.savedReflections],
-      streak: prev.streak + (prev.lastActive !== new Date().toISOString().split('T')[0] ? 1 : 0),
-      lastActive: new Date().toISOString().split('T')[0]
+      breathingCyclesCount: (prev.breathingCyclesCount || 0) + 1
     }));
+    handleCompleteChallenge('breathe');
+  };
+
+  const handleBibleChapterRead = (bookId: string, bookName: string, chapter: number) => {
+    setProgress(prev => {
+      if (prev.lastReadBibleInfo?.bookId === bookId && prev.lastReadBibleInfo?.chapter === chapter) {
+        return prev;
+      }
+      return {
+        ...prev,
+        lastReadBibleInfo: { bookId, bookName, chapter }
+      };
+    });
+    handleCompleteChallenge('read');
+  };
+
+  const handleEbookChapterRead = (ebookId: string, ebookTitle: string, chapterIndex: number, chapterTitle: string) => {
+    setProgress(prev => {
+      if (prev.lastReadEbookInfo?.ebookId === ebookId && prev.lastReadEbookInfo?.chapterIndex === chapterIndex) {
+        return prev;
+      }
+      return {
+        ...prev,
+        lastReadEbookInfo: { ebookId, ebookTitle, chapterIndex, chapterTitle }
+      };
+    });
+    handleCompleteChallenge('read');
   };
 
   // Handle ebook chapter completion
@@ -369,11 +508,11 @@ export default function App() {
               ) : (
                 <div className="p-5 border-b border-stone-100 bg-[#C08261]/5 text-left flex flex-col space-y-2.5">
                   <p className="text-[11px] text-stone-600 leading-normal font-sans">
-                    Modo visitante ativo. Para salvar suas reflexões e conversar com outros peregrinos, entre ou crie sua conta.
+                    Seu Diário de quietude está seguro de forma <strong>100% off-line</strong> neste navegador! 🏛️ Para sincronizar suas reflexões e conversar com a nuvem de peregrinos, crie uma conta gratuita:
                   </p>
                   <button
                     onClick={() => { setShowAuthModal(true); setIsMobileMenuOpen(false); }}
-                    className="w-full text-center py-2.5 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-black transition"
+                    className="w-full text-center py-2.5 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-black transition cursor-pointer"
                   >
                     Entrar / Criar Conta
                   </button>
@@ -395,6 +534,20 @@ export default function App() {
                     <Sparkles size={14} />
                     <span>Início & Diário</span>
                   </span>
+                </button>
+
+                <button
+                  id="mobile-nav-primitiva"
+                  onClick={() => { setActiveSection('primitiva'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold transition ${
+                    activeSection === 'primitiva' ? 'bg-[#C08261]/10 text-[#C08261] font-bold' : 'text-stone-700 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Flame size={14} className="text-[#C08261]" />
+                    <span>Igreja Primitiva ⛪</span>
+                  </span>
+                  <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Fundador</span>
                 </button>
 
                 <button
@@ -570,11 +723,11 @@ export default function App() {
         ) : (
           <div className="p-5 border-b border-stone-100 bg-[#C08261]/5 text-left flex flex-col space-y-2.5">
             <p className="text-[11px] text-stone-600 leading-normal font-sans">
-              Modo visitante ativo. Para salvar suas reflexões e conversar com outros peregrinos, entre ou crie sua conta.
+              Progresso seguro de forma <strong>100% vitalícia e off-line</strong> neste navegador! 🏛️ Crie sua credencial se desejar partilhar testemunhos e meditar em outros aparelhos.
             </p>
             <button
               onClick={() => setShowAuthModal(true)}
-              className="w-full text-center py-2.5 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-black transition"
+              className="w-full text-center py-2.5 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-black transition cursor-pointer"
             >
               Entrar / Criar Conta
             </button>
@@ -597,6 +750,20 @@ export default function App() {
               <span>Início & Diário</span>
             </span>
             <ChevronRight size={12} className="opacity-0 group-hover:opacity-100" />
+          </button>
+
+          <button
+            id="nav-primitiva"
+            onClick={() => { setActiveSection('primitiva'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold transition ${
+              activeSection === 'primitiva' ? 'bg-[#C08261]/10 text-[#C08261] font-bold' : 'text-stone-700 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <Flame size={14} className="text-[#C08261]" />
+              <span>Igreja Primitiva ⛪</span>
+            </span>
+            <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Fundador</span>
           </button>
 
           <button
@@ -795,12 +962,292 @@ export default function App() {
                 </div>
               </div>
 
+              {/* PHASE TWO: COMPROMISSOS DE QUIETUDE, CONSTÂNCIA & RETOMAR */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* 1. COMPROMISSOS DE QUIETUDE CARD */}
+                <div id="card-compromissos-dia" className="bg-white border border-[#C08261]/20 rounded-3xl p-5 shadow-sm space-y-4 md:col-span-2 text-left relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-[#C08261]/3 pointer-events-none rounded-bl-full" />
+                  <div className="flex justify-between items-center pb-2 border-b border-stone-100">
+                    <div className="space-y-0.5">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-bold">Compromissos de Hoje</span>
+                      <h4 className="font-serif text-base font-bold text-stone-850 flex items-center gap-1.5">
+                        Altar de Quietude Diária 🌿
+                      </h4>
+                    </div>
+                    <span id="tracker-completed-challenges-count" className="text-xs bg-stone-100 text-stone-605 font-mono px-2.5 py-1 rounded-full font-bold">
+                      {(progress.completedChallenges || []).length}/3 Concluídos
+                    </span>
+                  </div>
+
+                  <p className="text-stone-500 text-xs leading-relaxed max-w-xl">
+                    Desenvolva constância sem o fardo da obrigação. Cultive pequenas interações de graça e marque o que conseguiu realizar em espírito.
+                  </p>
+
+                  <div className="space-y-3 pt-1">
+                    {/* Item 1: Respiração */}
+                    <div 
+                      id="challenge-item-breathe"
+                      onClick={() => handleToggleChallenge('breathe')}
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border transition cursor-pointer select-none gap-2 ${
+                        (progress.completedChallenges || []).includes('breathe') 
+                          ? 'bg-emerald-50/50 border-emerald-200/50' 
+                          : 'bg-stone-50/50 border-stone-150 hover:bg-stone-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all shrink-0 ${
+                          (progress.completedChallenges || []).includes('breathe') 
+                            ? 'bg-emerald-500 border-transparent text-white' 
+                            : 'border-stone-300'
+                        }`}>
+                          {(progress.completedChallenges || []).includes('breathe') && <Check size={12} strokeWidth={3} />}
+                        </div>
+                        <div>
+                          <span className="text-xs font-serif font-bold text-stone-800">🌬️ Respiração no Secreto</span>
+                          <span className="text-[10px] text-stone-400 font-sans block">Pratique a quietude de 4 segundos imersiva (+2 sementes)</span>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveSection('respiro');
+                        }}
+                        className="text-[10px] font-semibold text-[#C08261] hover:underline self-start sm:self-auto"
+                      >
+                        Praticar ➔
+                      </button>
+                    </div>
+
+                    {/* Item 2: Leitura */}
+                    <div 
+                      id="challenge-item-read"
+                      onClick={() => handleToggleChallenge('read')}
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border transition cursor-pointer select-none gap-2 ${
+                        (progress.completedChallenges || []).includes('read') 
+                          ? 'bg-emerald-50/50 border-emerald-200/50' 
+                          : 'bg-stone-50/50 border-stone-150 hover:bg-stone-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all shrink-0 ${
+                          (progress.completedChallenges || []).includes('read') 
+                            ? 'bg-emerald-500 border-transparent text-white' 
+                            : 'border-stone-300'
+                        }`}>
+                          {(progress.completedChallenges || []).includes('read') && <Check size={12} strokeWidth={3} />}
+                        </div>
+                        <div>
+                          <span className="text-xs font-serif font-bold text-stone-800">📖 Comer do Logos Divino</span>
+                          <span className="text-[10px] text-stone-400 font-sans block">Cultive sabedoria lendo a Bíblia ou os Ebooks (+2 sementes)</span>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveSection('bible');
+                        }}
+                        className="text-[10px] font-semibold text-[#C08261] hover:underline self-start sm:self-auto"
+                      >
+                        Ler Bíblia ➔
+                      </button>
+                    </div>
+
+                    {/* Item 3: Reflexão */}
+                    <div 
+                      id="challenge-item-reflection"
+                      onClick={() => handleToggleChallenge('reflection')}
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border transition cursor-pointer select-none gap-2 ${
+                        (progress.completedChallenges || []).includes('reflection') 
+                          ? 'bg-emerald-50/50 border-emerald-200/50' 
+                          : 'bg-stone-50/50 border-stone-150 hover:bg-stone-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all shrink-0 ${
+                          (progress.completedChallenges || []).includes('reflection') 
+                            ? 'bg-emerald-500 border-transparent text-white' 
+                            : 'border-stone-300'
+                        }`}>
+                          {(progress.completedChallenges || []).includes('reflection') && <Check size={12} strokeWidth={3} />}
+                        </div>
+                        <div>
+                          <span className="text-xs font-serif font-bold text-stone-800">🖋️ Sussurro no Altar</span>
+                          <span className="text-[10px] text-stone-400 font-sans block">Escreva uma oração ou reflexão sincera de conexão (+2 sementes)</span>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const altarSection = document.getElementById('altar-scripture-ref');
+                          if (altarSection) altarSection.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="text-[10px] font-semibold text-[#C08261] hover:underline self-start sm:self-auto"
+                      >
+                        Escrever ➔
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Perfect Day banner */}
+                  {(progress.completedChallenges || []).length === 3 && (
+                    <motion.div 
+                      initial={{ scale: 0.95, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="p-3.5 bg-amber-50/80 border border-[#DCAE6C]/30 rounded-2xl flex items-center space-x-3 text-left shadow-xs mt-2"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-[#DCAE6C]/10 flex items-center justify-center text-base">🌟</div>
+                      <div className="space-y-0.5">
+                        <p className="text-xs font-serif font-bold text-stone-850">Comunhão Perfeita Consolidada!</p>
+                        <p className="text-[10px] text-stone-600">Você concluiu todos os seus marcos de hoje e conquistou +4 sementes bônus! Seu altar brilha.</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+
+                {/* 2. CONSTÂNCIA CARD / STREAK STATS */}
+                <div id="card-constancia-habitos" className="bg-[#FAF8F5]/90 border border-stone-200/55 rounded-3xl p-5 shadow-sm flex flex-col justify-between text-left h-full">
+                  <div className="space-y-4">
+                    <div className="pb-2 border-b border-stone-200/50 space-y-0.5">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-bold">Marcos de Comunhão</span>
+                      <h4 className="font-serif text-base font-bold text-stone-800">Constância Diária 🔥</h4>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white p-3 rounded-2xl border border-stone-150 text-center">
+                        <Flame size={18} fill="#C08261" className="text-[#C08261] mx-auto mb-1 animate-pulse" />
+                        <span id="streak-indicator-val" className="text-sm font-bold text-stone-850 font-serif block">{progress.streak} dias</span>
+                        <span className="text-[9px] text-stone-400 uppercase font-mono tracking-wider block">Sequência</span>
+                      </div>
+                      <div className="bg-white p-3 rounded-2xl border border-stone-150 text-center">
+                        <Award size={18} className="text-[#C08261] mx-auto mb-1" />
+                        <span id="max-streak-indicator-val" className="text-sm font-bold text-stone-850 font-serif block">{progress.maxStreak || Math.max(3, progress.streak)} dias</span>
+                        <span className="text-[9px] text-stone-400 uppercase font-mono tracking-wider block">Recorde</span>
+                      </div>
+                    </div>
+
+                    {/* Cycle counter statistics block for Phase 2 Retention */}
+                    <div className="bg-white p-3.5 rounded-2xl border border-stone-150 space-y-2">
+                      <span className="text-[9.5px] uppercase font-mono tracking-widest font-bold text-[#C08261] block">Ciclos de Quietude</span>
+                      <div className="flex justify-between items-center text-[11px]">
+                        <span className="text-stone-550 font-sans">Sessões Respiratórias:</span>
+                        <span id="cycles-count-val" className="font-serif font-bold text-stone-800">{progress.breathingCyclesCount || 0}</span>
+                      </div>
+                      <div className="flex justify-between items-center pt-1 border-t border-stone-100 text-[11px]">
+                        <span className="text-stone-550 font-sans">Dias Perfeitos de Aliança:</span>
+                        <span id="perfect-days-count-val" className="font-serif font-bold text-stone-800">{progress.perfectDaysCount || 0}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 7-DAY VISUAL TRACKER CHECKS */}
+                  <div className="pt-3 mt-3 border-t border-stone-200/50 space-y-1.5">
+                    <span className="text-[9.5px] uppercase font-mono text-stone-400 font-bold block">Histórico de Aliança Semanal</span>
+                    <div className="flex justify-between items-center">
+                      {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((day, idx) => {
+                        const isToday = idx === 4;
+                        const isDone = isToday && (progress.completedChallenges || []).length > 0;
+                        return (
+                          <div key={idx} className="flex flex-col items-center space-y-1">
+                            <span className="text-[9px] font-mono font-bold text-stone-605">{day}</span>
+                            <div className={`w-5.5 h-5.5 rounded-full flex items-center justify-center text-[9px] font-bold ${
+                              isDone 
+                                ? 'bg-[#C08261] text-white' 
+                                : isToday 
+                                  ? 'border-2 border-[#C08261] text-[#C08261] animate-pulse bg-white' 
+                                  : 'bg-stone-200 text-stone-450 border border-stone-250/30'
+                            }`}>
+                              {isDone ? '✓' : ''}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* RETOMAR DE ONDE PAROU CARD */}
+              {(progress.lastReadBibleInfo || progress.lastReadEbookInfo) && (
+                <div id="card-retomar-caminhada" className="bg-[#FAF8F5]/60 border border-[#C08261]/25 rounded-3xl p-5 text-left space-y-3.5">
+                  <div className="flex items-center space-x-1.5 ">
+                    <span className="w-2 h-2 bg-[#C08261] rounded-full animate-ping" />
+                    <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#C08261]">Retomar Caminhada</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Bible Card */}
+                    {progress.lastReadBibleInfo && (
+                      <div id="resume-bible-box" className="bg-white border border-stone-200 rounded-2xl p-4 flex justify-between items-center hover:shadow-md transition duration-300">
+                        <div className="space-y-1 pr-2">
+                          <span className="text-[9px] font-mono uppercase font-bold text-stone-400">Palavra de Alívio</span>
+                          <h5 id="resume-bible-ref-title" className="font-serif font-bold text-stone-850 text-sm">
+                            {progress.lastReadBibleInfo.bookName} • Capítulo {progress.lastReadBibleInfo.chapter}
+                          </h5>
+                          <p className="text-[10px] text-stone-500 font-sans">Continue saboreando o Logos divino de onde você parou.</p>
+                        </div>
+                        <button
+                          id="btn-resume-bible"
+                          onClick={() => setActiveSection('bible')}
+                          className="px-3.5 py-1.5 bg-[#C08261] hover:bg-[#b07353] text-white text-[11px] font-bold font-serif rounded-xl transition cursor-pointer whitespace-nowrap shadow-xs shrink-0"
+                        >
+                          Retomar ➔
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Ebook Card */}
+                    {progress.lastReadEbookInfo && (
+                      <div id="resume-ebook-box" className="bg-white border border-stone-200 rounded-2xl p-4 flex justify-between items-center hover:shadow-md transition duration-300 w-full overflow-hidden">
+                        <div className="space-y-1 pr-2 max-w-[70%]">
+                          <span className="text-[9px] font-mono uppercase font-bold text-stone-400">Livro de Inspiração</span>
+                          <h5 id="resume-ebook-title" className="font-serif font-bold text-stone-850 text-sm truncate">
+                            {progress.lastReadEbookInfo.ebookTitle}
+                          </h5>
+                          <p id="resume-ebook-chapter-sub" className="text-[10px] text-stone-500 font-sans truncate">Capítulo {progress.lastReadEbookInfo.chapterIndex + 1}: {progress.lastReadEbookInfo.chapterTitle}</p>
+                        </div>
+                        <button
+                          id="btn-resume-ebook"
+                          onClick={() => setActiveSection('ebooks')}
+                          className="px-3.5 py-1.5 bg-stone-900 hover:bg-black text-white text-[11px] font-bold font-serif rounded-xl transition cursor-pointer whitespace-nowrap shadow-xs shrink-0"
+                        >
+                          Continuar ➔
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* CAMINHO PRIMITIVO PROMOTION BANNER */}
+              <div className="bg-[#FAF8F5] border-2 border-dashed border-[#C08261]/40 p-6 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-left shadow-xs">
+                <div className="space-y-2 md:max-w-2xl">
+                  <span className="text-[10px] uppercase font-mono tracking-wider font-extrabold text-[#C08261] flex items-center gap-1.5 bg-[#C08261]/10 px-2.5 py-1 rounded-full w-fit">
+                    <span className="w-1.5 h-1.5 bg-[#C08261] rounded-full animate-ping" />
+                    Movimento de Co-Fundadores
+                  </span>
+                  <h4 className="font-serif text-lg md:text-xl font-bold text-stone-850">
+                    "A igreja primitiva não tinha aplicativo. Mas funcionava assim."
+                  </h4>
+                  <p className="text-stone-605 text-xs md:text-sm leading-relaxed">
+                    Sintonize-se com a economia da graça e serviço descentralizados das primeiras comunidades. Apoie financeiramente a infraestrutura da Bíblia do Despertar e reserve seu lugar de pioneiro.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveSection('primitiva')}
+                  className="py-3 px-6 bg-stone-900 text-white rounded-2xl text-xs font-bold hover:bg-black transition active:scale-95 shrink-0 shadow-md cursor-pointer whitespace-nowrap"
+                >
+                  Conhecer Movimento & Apoiar 🕊️
+                </button>
+              </div>
+
               {/* TWO COLUMN GRID: Left Breathing Space & Stats, Right Daily Devotional & Verse */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                 
                 {/* LEFT COLUMN: Breathing circle + identity tracker */}
                 <div className="space-y-8">
-                  <BreathingGuide />
+                  <BreathingGuide onCycleComplete={handleBreathingCycleCompleted} />
 
                   {/* Spiritual identity recommendation slot */}
                   {currentIdentity ? (
@@ -853,6 +1300,59 @@ export default function App() {
                       "O SENHOR é o meu pastor, nada me faltará. Deitar-me faz em verdes pastos, guia-me mansamente a águas tranquilas."
                     </div>
                     <cite className="font-mono text-xs text-stone-400 uppercase tracking-widest block text-right font-semibold mt-1">— Salmos 23:1-2 • ACF</cite>
+                  </div>
+
+                  {/* MEU ALTAR DE REFLEXÕES DO DIA */}
+                  <div className="bg-white border border-[#C08261]/25 p-6 rounded-3xl shadow-sm space-y-4 relative overflow-hidden text-left">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#C08261]/5 to-transparent pointer-events-none rounded-bl-full" />
+                    
+                    <div className="flex justify-between items-center border-b border-stone-100 pb-3">
+                      <span className="text-[10.5px] font-mono uppercase text-[#C08261] font-bold tracking-wider flex items-center gap-1.5 leading-none">
+                        <Feather size={12} className="text-[#C08261]" />
+                        Meu Altar de Reflexão de Hoje
+                      </span>
+                    </div>
+
+                    <div className="space-y-3.5">
+                      <p className="text-stone-500 text-[11px] leading-relaxed">
+                        O que o Espírito sussurrou ao seu coração hoje? Escreva e guarde de forma segura no seu diário de quietude de forma instantânea.
+                      </p>
+                      
+                      <div className="space-y-2">
+                        <input
+                          type="text"
+                          id="altar-scripture-ref"
+                          placeholder="Referência Bíblica (Opcional, ex: João 15:5)"
+                          value={homeRef}
+                          onChange={(e) => setHomeRef(e.target.value)}
+                          className="w-full bg-stone-50/85 border border-stone-200/50 rounded-xl py-2 px-3 text-xs text-stone-850 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#C08261]"
+                        />
+                        <textarea
+                          rows={2.5}
+                          id="altar-reflection-text"
+                          placeholder="Escreva sua oração ou meditação aqui..."
+                          value={homeText}
+                          onChange={(e) => setHomeText(e.target.value)}
+                          className="w-full bg-stone-50/85 border border-stone-200/50 rounded-xl py-2 px-3 text-xs text-stone-850 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#C08261] resize-none"
+                        />
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!homeText.trim()) return;
+                          handleAddReflection(homeRef.trim() || "Altar de Quietude", homeText);
+                          setHomeText("");
+                          setHomeRef("");
+                          setCommittedToastMsg("Reflexão guardada com sucesso! Seu dia de quietude foi renovado! 🏛️🕊️");
+                          setTimeout(() => setCommittedToastMsg(null), 3500);
+                        }}
+                        disabled={!homeText.trim()}
+                        className="w-full py-2.5 bg-stone-900 hover:bg-black disabled:bg-stone-100 disabled:text-stone-400 text-white text-xs font-bold font-serif rounded-xl transition cursor-pointer flex items-center justify-center space-x-1.5 shadow-sm"
+                      >
+                        <span>Sussurrar no Altar 🖋️</span>
+                      </button>
+                    </div>
                   </div>
 
                   {/* Curated Daily Devotional snippet with real texts */}
@@ -920,6 +1420,9 @@ export default function App() {
                 onAddReflection={handleAddReflection}
                 favorites={progress.favoriteVerses}
                 reflections={progress.savedReflections}
+                initialBookId={progress.lastReadBibleInfo?.bookId}
+                initialChapter={progress.lastReadBibleInfo?.chapter}
+                onChapterRead={handleBibleChapterRead}
               />
             </motion.div>
           )}
@@ -1414,7 +1917,7 @@ export default function App() {
               exit={{ opacity: 0, scale: 0.98 }}
               className="space-y-2"
             >
-              <BreathingGuide mode="sanctuary" />
+              <BreathingGuide mode="sanctuary" onCycleComplete={handleBreathingCycleCompleted} />
             </motion.div>
           )}
 
@@ -1430,6 +1933,9 @@ export default function App() {
               <EbookReader
                 completedChapters={progress.completedChapters}
                 onCompleteChapter={handleCompleteChapter}
+                initialBookId={progress.lastReadEbookInfo?.ebookId}
+                initialChapterIndex={progress.lastReadEbookInfo?.chapterIndex}
+                onChapterRead={handleEbookChapterRead}
               />
             </motion.div>
           )}
@@ -1503,6 +2009,144 @@ export default function App() {
                 </div>
               </div>
 
+              {/* HISTORIC MARCOS ESPIRITUAIS BADGES (Bento / Core features) */}
+              <div id="marcos-espirituais-section" className="space-y-4 pt-4">
+                <div className="flex items-center space-x-1.5 text-stone-850 border-b border-stone-100 pb-2">
+                  <Award size={16} className="text-[#C08261]" />
+                  <h4 className="font-serif text-lg font-medium">Marcas e Frutos do Caminhar 🌿</h4>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  {/* Badge 1: Semente da Presença */}
+                  {(() => {
+                    const isAchieved = (progress.breathingCyclesCount || 0) > 0;
+                    return (
+                      <div className={`border rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 ${
+                        isAchieved 
+                          ? 'bg-amber-50/15 border-[#DCAE6C]/30 shadow-xs' 
+                          : 'bg-stone-50/40 border-stone-150/40 opacity-70'
+                      }`}>
+                        <div className="space-y-2 text-left">
+                          <div className="flex justify-between items-start">
+                            <span className="text-xl">🌟</span>
+                            <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full uppercase font-bold ${
+                              isAchieved ? 'bg-emerald-50 text-emerald-705 font-bold' : 'bg-stone-100 text-stone-400'
+                            }`}>
+                              {isAchieved ? 'Frutificado' : 'Semente'}
+                            </span>
+                          </div>
+                          <h5 className="font-serif text-xs font-bold text-stone-800">Semente da Presença</h5>
+                          <p className="text-[10px] text-stone-500 leading-relaxed font-sans">
+                            Sua jornada rumo ao silêncio interior e quietude respiratória foi iniciada pela primeira vez.
+                          </p>
+                        </div>
+                        <div className="pt-3 border-t border-stone-100/30 mt-3 text-left">
+                          <span className="text-[9.5px] font-mono text-stone-400">
+                            Status: {isAchieved ? 'Concluído' : 'Semear 1 respiração'}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Badge 2: Discípulo do Logos */}
+                  {(() => {
+                    const isAchieved = progress.completedChapters.length >= 5;
+                    return (
+                      <div className={`border rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 ${
+                        isAchieved 
+                          ? 'bg-amber-50/15 border-[#DCAE6C]/30 shadow-xs' 
+                          : 'bg-stone-50/40 border-stone-150/40 opacity-70'
+                      }`}>
+                        <div className="space-y-2 text-left">
+                          <div className="flex justify-between items-start">
+                            <span className="text-xl">📚</span>
+                            <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full uppercase font-bold ${
+                              isAchieved ? 'bg-emerald-50 text-emerald-705 font-bold' : 'bg-stone-100 text-stone-400'
+                            }`}>
+                              {isAchieved ? 'Frutificado' : 'Semente'}
+                            </span>
+                          </div>
+                          <h5 className="font-serif text-xs font-bold text-stone-800">Discípulo do Logos</h5>
+                          <p className="text-[10px] text-stone-500 leading-relaxed font-sans">
+                            Alimentando o coração com pelo menos 5 capítulos devocionais ou sabedorias dos ebooks de graça.
+                          </p>
+                        </div>
+                        <div className="pt-3 border-t border-stone-100/30 mt-3 text-left">
+                          <span className="text-[9.5px] font-mono text-stone-400">
+                            Progresso: {progress.completedChapters.length}/5 Leituras
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Badge 3: Escritor do Secreto */}
+                  {(() => {
+                    const isAchieved = progress.savedReflections.length >= 3;
+                    return (
+                      <div className={`border rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 ${
+                        isAchieved 
+                          ? 'bg-amber-50/15 border-[#DCAE6C]/30 shadow-xs' 
+                          : 'bg-stone-50/40 border-stone-150/40 opacity-70'
+                      }`}>
+                        <div className="space-y-2 text-left">
+                          <div className="flex justify-between items-start">
+                            <span className="text-xl">🖋️</span>
+                            <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full uppercase font-bold ${
+                              isAchieved ? 'bg-emerald-50 text-emerald-705 font-bold' : 'bg-stone-100 text-stone-400'
+                            }`}>
+                              {isAchieved ? 'Frutificado' : 'Semente'}
+                            </span>
+                          </div>
+                          <h5 className="font-serif text-xs font-bold text-stone-800">Escritor do Secreto</h5>
+                          <p className="text-[10px] text-stone-500 leading-relaxed font-sans">
+                            Suas orações e entendimentos estão sendo escritas e guardadas de forma autêntica em seu memorial.
+                          </p>
+                        </div>
+                        <div className="pt-3 border-t border-stone-100/30 mt-3 text-left">
+                          <span className="text-[9.5px] font-mono text-stone-400">
+                            Histórico: {progress.savedReflections.length}/3 Anotações
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Badge 4: Aliança de Ouro */}
+                  {(() => {
+                    const isAchieved = (progress.maxStreak || 0) >= 5 || progress.streak >= 5;
+                    return (
+                      <div className={`border rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 ${
+                        isAchieved 
+                          ? 'bg-amber-50/15 border-[#DCAE6C]/30 shadow-xs' 
+                          : 'bg-stone-50/40 border-stone-150/40 opacity-70'
+                      }`}>
+                        <div className="space-y-2 text-left">
+                          <div className="flex justify-between items-start">
+                            <span className="text-xl">🏆</span>
+                            <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full uppercase font-bold ${
+                              isAchieved ? 'bg-emerald-50 text-emerald-705 font-bold' : 'bg-stone-100 text-stone-400'
+                            }`}>
+                              {isAchieved ? 'Frutificado' : 'Semente'}
+                            </span>
+                          </div>
+                          <h5 className="font-serif text-xs font-bold text-stone-800">Aliança de Ouro</h5>
+                          <p className="text-[10px] text-stone-500 leading-relaxed font-sans">
+                            Consolidando e firmando sua alvorada diária de comunhão por 5 dias consecutivos sem quebras.
+                          </p>
+                        </div>
+                        <div className="pt-3 border-t border-stone-100/30 mt-3 text-left">
+                          <span className="text-[9.5px] font-mono text-stone-400">
+                            Sequência: {progress.streak}/5 dias
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+
               {/* Saved Verses & Reflections list */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
                 {/* Notes list */}
@@ -1565,6 +2209,30 @@ export default function App() {
                   )}
                 </div>
               </div>
+            </motion.div>
+          )}
+
+          {/* ACTIVE PORT: IGREJA PRIMITIVA FUNDADORES LANDING VIEW */}
+          {activeSection === 'primitiva' && !selectedDevotional && (
+            <motion.div
+              key="primitiva"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="space-y-4"
+            >
+              <IgrejaPrimitiva
+                currentUser={currentUser}
+                userProfile={userProfile}
+                onShowAuthModal={() => setShowAuthModal(true)}
+                onSaveProgress={(achievements) => {
+                  setProgress(prev => {
+                    const updated = { ...prev, ...achievements };
+                    localStorage.setItem('despertar_progress_v2', JSON.stringify(updated));
+                    return updated;
+                  });
+                }}
+              />
             </motion.div>
           )}
         </AnimatePresence>

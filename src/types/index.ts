@@ -91,4 +91,13 @@ export interface UserProgress {
   completedChapters: string[]; // e.g. "ebookId_chapterIndex"
   currentIdentityId: string | null;
   answers: { [questionId: string]: string };
+  // Retention & Consistency attributes added in Fase 2
+  maxStreak?: number;
+  lastReadBibleInfo?: { bookId: string; bookName: string; chapter: number };
+  lastReadEbookInfo?: { ebookId: string; ebookTitle: string; chapterIndex: number; chapterTitle: string };
+  lastReadDevotionalInfo?: { devotionalId: string; title: string; dayIndex: number };
+  breathingCyclesCount?: number;
+  dailyChallengesDate?: string;
+  completedChallenges?: string[]; // e.g. ["breath", "read", "reflection"]
+  perfectDaysCount?: number;
 }
