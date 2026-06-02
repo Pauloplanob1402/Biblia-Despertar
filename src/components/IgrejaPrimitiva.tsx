@@ -1146,16 +1146,13 @@ export default function IgrejaPrimitiva({
             {/* INGRESS HERO TEXTS */}
             <div className="text-center space-y-5 py-4">
               <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 leading-tight">
-                A igreja primitiva não tinha aplicativo. <br />
+                A tecnologia como ponte para a comunhão primitiva. <br />
                 <span className="font-serif font-semibold text-[#C08261]">
-                  E funcionava assim.
+                  Conectando vidas, mesas e corações a Deus.
                 </span>
               </h3>
               <p className="text-stone-605 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
-                No primeiro século, cada pessoa dava o que tinha, e recebia o
-                que precisava. Sem templos grandiosos ou transações burocráticas
-                comerciais. Só fé, pão partido nas casas e amparo recíproco sob
-                o Espírito de Deus.
+                No século XXI, usamos a tecnologia não para afastar as pessoas, mas para reatar nossa união. Nossos aplicativos, materiais exclusivos e rico conteúdo no site servem como uma ponte bendita para nos conectar mais uns com os outros e com o Pai, restaurando o pão partido em cada lar.
               </p>
             </div>
 
