@@ -1007,7 +1007,7 @@ export default function IgrejaPrimitiva({
                         {item.title}
                       </h4>
 
-                      <p className="text-stone-605 text-sm leading-relaxed block">
+                      <p className="text-stone-600 text-sm leading-relaxed block">
                         {item.description}
                       </p>
                     </div>
@@ -1151,7 +1151,7 @@ export default function IgrejaPrimitiva({
                   Conectando vidas, mesas e corações a Deus.
                 </span>
               </h3>
-              <p className="text-stone-605 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+              <p className="text-stone-600 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
                 No século XXI, usamos a tecnologia não para afastar as pessoas, mas para reatar nossa união. Nossos aplicativos, materiais exclusivos e rico conteúdo no site servem como uma ponte bendita para nos conectar mais uns com os outros e com o Pai, restaurando o pão partido em cada lar.
               </p>
             </div>
@@ -1177,10 +1177,10 @@ export default function IgrejaPrimitiva({
                   pedir amparo sem que pareça constrangedor demais para as
                   estruturas modernas.
                 </p>
-                <blockquote className="border-l-4 border-[#C08261] pl-5 italic text-stone-750 font-serif bg-orange-50/20 py-2.5 rounded-r-2xl pr-3 text-sm md:text-base">
+                <blockquote className="border-l-4 border-[#C08261] pl-5 italic text-stone-700 font-serif bg-orange-50/20 py-2.5 rounded-r-2xl pr-3 text-sm md:text-base">
                   "Não deixemos de reunir-nos, como alguns têm por costume; pelo
                   contrário, encorajemo-nos uns aos outros."
-                  <cite className="font-mono text-[10px] text-stone-455 block mt-2 not-italic font-bold">
+                  <cite className="font-mono text-[10px] text-[#C08261] block mt-2 not-italic font-bold">
                     — Hebreus 10:25
                   </cite>
                 </blockquote>
@@ -1482,8 +1482,8 @@ export default function IgrejaPrimitiva({
                               : "bg-[#181716] border-stone-850 text-stone-300 hover:border-stone-800 hover:bg-stone-900/50"
                           }`}
                         >
-                          <div className="absolute top-2 right-4 bg-emerald-605/10 text-emerald-400 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase tracking-wider animate-pulse">
-                            Armadura do Reino 🕊️
+                          <div className="absolute top-2 right-4 bg-emerald-600/10 text-emerald-400 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase tracking-wider animate-pulse">
+                            Armadura do Reino
                           </div>
                           <div className="flex items-start gap-3">
                             <span className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center text-base shrink-0 border border-emerald-500/30 text-emerald-400">
@@ -2037,7 +2037,7 @@ export default function IgrejaPrimitiva({
                     <CheckCircle size={15} className="text-[#C08261]" /> 1.
                     Arquitetura 100% Sólida e Limpa
                   </span>
-                  <p className="text-stone-605 text-xs leading-relaxed font-sans">
+                  <p className="text-stone-500 text-xs leading-relaxed font-sans">
                     Nesta fase do Despertar, todas as ações de oração,
                     agendamento de Cadeira Vazia e de mútua assistência são
                     salvas{" "}
@@ -2054,7 +2054,7 @@ export default function IgrejaPrimitiva({
                     <FileText size={15} className="text-[#C08261]" /> 2.
                     Propósito do Patrocínio
                   </span>
-                  <p className="text-stone-605 text-xs leading-relaxed font-sans">
+                  <p className="text-stone-500 text-xs leading-relaxed font-sans">
                     O dinheiro arrecadado com a aquisição do Livro Oficial pelo{" "}
                     <strong className="text-stone-800 font-semibold font-bold">
                       AbacatPay
@@ -2071,7 +2071,7 @@ export default function IgrejaPrimitiva({
                     <Shield size={15} className="text-[#C08261]" /> 3. Blindagem
                     de LGPD (Lei 13.709)
                   </span>
-                  <p className="text-stone-605 text-xs leading-relaxed font-sans">
+                  <p className="text-stone-550 text-xs leading-relaxed font-sans">
                     Declaramos solenemente que:{" "}
                     <strong className="text-stone-800 font-semibold font-bold">
                       I)
@@ -2120,10 +2120,10 @@ export default function IgrejaPrimitiva({
                   Você acredita que a igreja ainda pode ser tudo o que ela já
                   foi um dia?
                 </h4>
-                <p className="text-stone-605 text-xs md:text-sm leading-relaxed max-w-md mx-auto">
+                <p className="text-stone-600 text-xs md:text-sm leading-relaxed max-w-md mx-auto">
                   Abra caminho e faça parte. Garanta sua listagem honorária de
                   co-fundador pioneiro e ganhe{" "}
-                  <strong className="text-stone-900">
+                  <strong className="text-stone-900 font-bold">
                     12 créditos de mordor para estrear os serviços no lançamento
                   </strong>
                   .
@@ -2140,7 +2140,7 @@ export default function IgrejaPrimitiva({
                     size={48}
                     className="text-[#C08261] mx-auto animate-bounce"
                   />
-                  <h5 className="font-serif text-lg font-bold text-stone-855">
+                  <h5 className="font-serif text-lg font-bold text-stone-800">
                     Inscrição de Co-Fundador Registrada!
                   </h5>
                   <p className="text-stone-650 text-xs leading-relaxed">

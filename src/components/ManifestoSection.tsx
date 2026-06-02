@@ -146,7 +146,7 @@ export default function ManifestoSection({
                       className={`px-3 py-1.5 border rounded-xl text-xs font-medium transition ${
                         selectedPreset === name
                           ? 'border-[#C08261] bg-[#C08261]/5 text-[#C08261] font-semibold'
-                          : 'border-stone-200 bg-white text-stone-605 hover:bg-stone-50'
+                          : 'border-stone-200 bg-white text-stone-600 hover:bg-stone-50'
                       }`}
                     >
                       {name}

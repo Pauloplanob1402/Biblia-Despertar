@@ -518,7 +518,7 @@ export default function BreathingGuide({ mode = 'widget', onCycleComplete }: Bre
           color: 'bg-stone-700',
           ringColor: 'border-stone-500',
           scale: [1.35, 1.0],
-          textColor: 'text-stone-705 text-stone-700 font-serif'
+          textColor: 'text-stone-700 font-serif'
         };
       case 'medite':
         return {
@@ -728,7 +728,7 @@ export default function BreathingGuide({ mode = 'widget', onCycleComplete }: Bre
             <h3 className={`text-2xl font-serif font-medium transition-all duration-500 tracking-tight leading-snug ${currentConf.textColor}`}>
               {isPlaying ? currentConf.header : 'Aquiete o seu coração'}
             </h3>
-            <p className="text-stone-605 text-stone-500 font-sans text-sm leading-relaxed min-h-[44px]">
+            <p className="text-stone-500 font-sans text-sm leading-relaxed min-h-[44px]">
               {isPlaying ? currentConf.desc : 'Encontre uma posição confortável, relaxe a sua mente e clique em começar quietude.'}
             </p>
           </div>
@@ -830,76 +830,92 @@ export default function BreathingGuide({ mode = 'widget', onCycleComplete }: Bre
                 <button
                   id="sound-opt-solfeggio"
                   onClick={() => setSoundType('solfeggio')}
-                  className={`p-3 rounded-2xl flex items-center gap-3 text-left border transition-all ${
+                  className={`p-4 rounded-2xl flex items-start gap-3.5 text-left border transition-all duration-300 ${
                     soundType === 'solfeggio' 
-                      ? 'border-[#C08261] bg-[#C08261]/5 text-[#C08261] font-semibold shadow-xs' 
-                      : 'border-stone-200/55 hover:bg-stone-50 text-stone-605'
+                      ? 'border-[#C08261] bg-[#C08261]/5 shadow-sm scale-[1.01]' 
+                      : 'border-stone-200/60 hover:bg-stone-50 hover:border-stone-300 bg-white'
                   }`}
                   disabled={!audioEnabled}
                 >
-                  <div className={`w-3.5 h-3.5 rounded-full border border-[#C08261] flex items-center justify-center ${soundType === 'solfeggio' ? 'bg-[#C08261]' : ''}`}>
+                  <div className={`w-4 h-4 rounded-full border border-[#C08261] flex items-center justify-center shrink-0 mt-0.5 ${soundType === 'solfeggio' ? 'bg-[#C08261]' : ''}`}>
                     {soundType === 'solfeggio' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                   </div>
                   <div>
-                    <h5 className="text-[12.5px] font-serif leading-none">Fundo de Oração (Warm Pad)</h5>
-                    <p className="text-[10px] text-stone-400 font-mono leading-normal mt-0.5">Suave som de teclado e string flutuante de fundo (fundo de pregação).</p>
+                    <h5 className={`text-sm font-serif font-bold transition-colors ${soundType === 'solfeggio' ? 'text-[#8C6239]' : 'text-stone-800'}`}>
+                      Fundo de Oração (Warm Pad)
+                    </h5>
+                    <p className={`text-[11px] font-sans leading-relaxed mt-1 transition-colors ${soundType === 'solfeggio' ? 'text-stone-700' : 'text-stone-450'}`}>
+                      Suave som de teclado e string flutuante de fundo (perfeito para momentos de oração e pregação íntima).
+                    </p>
                   </div>
                 </button>
 
                 <button
                   id="sound-opt-brown"
                   onClick={() => setSoundType('brown')}
-                  className={`p-3 rounded-2xl flex items-center gap-3 text-left border transition-all ${
+                  className={`p-4 rounded-2xl flex items-start gap-3.5 text-left border transition-all duration-300 ${
                     soundType === 'brown' 
-                      ? 'border-[#C08261] bg-[#C08261]/5 text-stone-900 font-semibold shadow-xs' 
-                      : 'border-stone-200/55 hover:bg-stone-50 text-stone-650'
+                      ? 'border-[#C08261] bg-[#C08261]/5 shadow-sm scale-[1.01]' 
+                      : 'border-stone-200/60 hover:bg-stone-50 hover:border-stone-300 bg-white'
                   }`}
                   disabled={!audioEnabled}
                 >
-                  <div className={`w-3.5 h-3.5 rounded-full border border-[#C08261] flex items-center justify-center ${soundType === 'brown' ? 'bg-[#C08261]' : ''}`}>
+                  <div className={`w-4 h-4 rounded-full border border-[#C08261] flex items-center justify-center shrink-0 mt-0.5 ${soundType === 'brown' ? 'bg-[#C08261]' : ''}`}>
                     {soundType === 'brown' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                   </div>
                   <div>
-                    <h5 className="text-[12.5px] font-serif leading-none">Brisa de Quietude (Sopro Amplo)</h5>
-                    <p className="text-[10px] text-stone-400 font-mono leading-normal mt-0.5">Frequências calmas e profundas de vento suave que dissipam distrações.</p>
+                    <h5 className={`text-sm font-serif font-bold transition-colors ${soundType === 'brown' ? 'text-[#8C6239]' : 'text-stone-800'}`}>
+                      Brisa de Quietude (Sopro Amplo)
+                    </h5>
+                    <p className={`text-[11px] font-sans leading-relaxed mt-1 transition-colors ${soundType === 'brown' ? 'text-stone-700' : 'text-stone-450'}`}>
+                      Frequências calmas e profundas de vento suave que suavizam o ambiente e dissipam distrações externas.
+                    </p>
                   </div>
                 </button>
 
                 <button
                   id="sound-opt-water"
                   onClick={() => setSoundType('water')}
-                  className={`p-3 rounded-2xl flex items-center gap-3 text-left border transition-all ${
+                  className={`p-4 rounded-2xl flex items-start gap-3.5 text-left border transition-all duration-300 ${
                     soundType === 'water' 
-                      ? 'border-[#C08261] bg-[#C08261]/5 text-stone-900 font-semibold shadow-xs' 
-                      : 'border-stone-200/55 hover:bg-stone-50 text-stone-600'
+                      ? 'border-[#C08261] bg-[#C08261]/5 shadow-sm scale-[1.01]' 
+                      : 'border-stone-200/60 hover:bg-stone-50 hover:border-stone-300 bg-white'
                   }`}
                   disabled={!audioEnabled}
                 >
-                  <div className={`w-3.5 h-3.5 rounded-full border border-[#C08261] flex items-center justify-center ${soundType === 'water' ? 'bg-[#C08261]' : ''}`}>
+                  <div className={`w-4 h-4 rounded-full border border-[#C08261] flex items-center justify-center shrink-0 mt-0.5 ${soundType === 'water' ? 'bg-[#C08261]' : ''}`}>
                     {soundType === 'water' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                   </div>
                   <div>
-                    <h5 className="text-[12.5px] font-serif leading-none">Água Corrente</h5>
-                    <p className="text-[10px] text-stone-400 font-mono leading-normal mt-0.5">O fluir do riacho para lembrar as águas do Espírito.</p>
+                    <h5 className={`text-sm font-serif font-bold transition-colors ${soundType === 'water' ? 'text-[#8C6239]' : 'text-stone-800'}`}>
+                      Água Corrente
+                    </h5>
+                    <p className={`text-[11px] font-sans leading-relaxed mt-1 transition-colors ${soundType === 'water' ? 'text-stone-700' : 'text-stone-450'}`}>
+                      O fluir constante de um pequeno riacho para lembrar a mansidão e as águas vivas do Espírito Santo.
+                    </p>
                   </div>
                 </button>
 
                 <button
                   id="sound-opt-harp"
                   onClick={() => setSoundType('harp')}
-                  className={`p-3 rounded-2xl flex items-center gap-3 text-left border transition-all ${
+                  className={`p-4 rounded-2xl flex items-start gap-3.5 text-left border transition-all duration-300 ${
                     soundType === 'harp' 
-                      ? 'border-[#C08261] bg-[#C08261]/5 text-stone-900 font-semibold shadow-xs' 
-                      : 'border-stone-200/55 hover:bg-stone-50 text-stone-600'
+                      ? 'border-[#C08261] bg-[#C08261]/5 shadow-sm scale-[1.01]' 
+                      : 'border-stone-200/60 hover:bg-stone-50 hover:border-stone-300 bg-white'
                   }`}
                   disabled={!audioEnabled}
                 >
-                  <div className={`w-3.5 h-3.5 rounded-full border border-[#C08261] flex items-center justify-center ${soundType === 'harp' ? 'bg-[#C08261]' : ''}`}>
+                  <div className={`w-4 h-4 rounded-full border border-[#C08261] flex items-center justify-center shrink-0 mt-0.5 ${soundType === 'harp' ? 'bg-[#C08261]' : ''}`}>
                     {soundType === 'harp' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                   </div>
                   <div>
-                    <h5 className="text-[12.5px] font-serif leading-none">Harpa Celestial de Davi 🕊️</h5>
-                    <p className="text-[10px] text-[#C08261] font-mono leading-normal mt-0.5 font-semibold">Suaves dedilhados e cascatas de harpa pura (som que toca o profundo).</p>
+                    <h5 className={`text-sm font-serif font-bold transition-colors ${soundType === 'harp' ? 'text-[#8C6239]' : 'text-stone-800'}`}>
+                      Harpa Celestial de Davi
+                    </h5>
+                    <p className={`text-[11px] font-sans leading-relaxed mt-1 transition-colors ${soundType === 'harp' ? 'text-stone-700' : 'text-stone-450'}`}>
+                      Suaves dedilhados e cascatas de harpa clássica pura para tocar as profundezas e sensibilizar o coração.
+                    </p>
                   </div>
                 </button>
               </div>

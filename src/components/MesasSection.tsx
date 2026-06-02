@@ -280,7 +280,7 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
       {/* Normalized Section Header Banner */}
       <div className="space-y-3">
         <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">Mesa e Partilha</span>
-        <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-855 tracking-tight leading-tight">Mesas e Relacionamentos</h3>
+        <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-900 tracking-tight leading-tight">Mesas e Relacionamentos</h3>
         <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-2xl mx-auto mt-2">
           Pessoas reais sentando à mesa para partilhar o pão de forma demorada, reacendendo a fé em cada olhar de escuta mútua e encontrando pertença espiritual.
         </p>
@@ -483,7 +483,7 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                 <span className="text-3xl">☕</span>
                 <div className="space-y-1">
                   <h4 className="font-serif font-medium text-stone-850">Conectar com Outros Peregrinos</h4>
-                  <p className="text-stone-505 text-xs">
+                  <p className="text-stone-500 text-xs">
                     Para visualizar outros peregrinos na comunidade e trocar mensagens em tempo real no chat, você precisa criar uma conta rápida.
                   </p>
                 </div>
@@ -540,7 +540,7 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                             <button
                               id={`chat-btn-for-pilgrim-${p.uid}`}
                               onClick={() => onStartChat(p.uid, p.name, p.avatarEmoji)}
-                              className="px-3 py-1.5 border border-stone-200 hover:border-[#C08261] hover:bg-[#C08261]/5 rounded-xl transition text-[11px] font-semibold text-stone-705 flex items-center space-x-1"
+                              className="px-3 py-1.5 border border-stone-200 hover:border-[#C08261] hover:bg-[#C08261]/5 rounded-xl transition text-[11px] font-semibold text-stone-700 flex items-center space-x-1"
                             >
                               <MessageSquare size={12} className="text-[#C08261]" />
                               <span>Conversar</span>

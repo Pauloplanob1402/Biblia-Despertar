@@ -1009,7 +1009,7 @@ export default function App() {
                     </span>
                   </div>
 
-                  <p className="text-stone-605 text-sm md:text-base leading-relaxed max-w-2xl font-medium">
+                  <p className="text-stone-600 text-sm md:text-base leading-relaxed max-w-2xl font-medium">
                     Desenvolva constância sem o fardo da obrigação. Cultive pequenas interações de graça e marque o que conseguiu realizar em espírito.
                   </p>
 
@@ -1159,11 +1159,11 @@ export default function App() {
                     <div className="bg-white p-4.5 rounded-2xl border border-stone-150 space-y-3.5">
                       <span className="text-xs md:text-sm uppercase font-mono tracking-widest font-black text-[#C08261] block">Ciclos de Quietude</span>
                       <div className="flex justify-between items-center text-xs md:text-sm">
-                        <span className="text-stone-605 font-sans font-medium">Sessões Respiratórias:</span>
+                        <span className="text-stone-600 font-sans font-medium">Sessões Respiratórias:</span>
                         <span id="cycles-count-val" className="font-serif font-black text-stone-850 text-sm md:text-base">{progress.breathingCyclesCount || 0}</span>
                       </div>
                       <div className="flex justify-between items-center pt-2 border-t border-stone-100 text-xs md:text-sm">
-                        <span className="text-stone-605 font-sans font-medium">Dias Perfeitos de Aliança:</span>
+                        <span className="text-stone-600 font-sans font-medium">Dias Perfeitos de Aliança:</span>
                         <span id="perfect-days-count-val" className="font-serif font-black text-stone-850 text-sm md:text-base">{progress.perfectDaysCount || 0}</span>
                       </div>
                     </div>
@@ -1178,7 +1178,7 @@ export default function App() {
                         const isDone = isToday && (progress.completedChallenges || []).length > 0;
                         return (
                           <div key={idx} className="flex flex-col items-center space-y-1.5">
-                            <span className="text-xs font-mono font-bold text-stone-605">{day}</span>
+                            <span className="text-xs font-mono font-bold text-stone-500">{day}</span>
                             <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${
                               isDone 
                                 ? 'bg-[#C08261] text-white' 
@@ -1257,10 +1257,10 @@ export default function App() {
                     Movimento de Co-Fundadores
                   </span>
                   <h4 className="font-serif text-xl md:text-2xl font-black text-stone-850">
-                    "A igreja primitiva não tinha aplicativo. Mas funcionava assim."
+                    A tecnologia como ponte para a comunhão primitiva.
                   </h4>
-                  <p className="text-stone-605 text-sm md:text-base leading-relaxed">
-                    Sintonize-se com a economia da graça e serviço descentralizados das primeiras comunidades. Apoie financeiramente a infraestrutura da Bíblia do Despertar e reserve seu lugar de pioneiro.
+                  <p className="text-stone-600 text-sm md:text-base leading-relaxed">
+                    Usamos a tecnologia para nos conectar mais uns com os outros e com o Pai, unindo corações, mesas e lares em amor, fé e graça. Apoie nossa infraestrutura e reserve seu espaço pioneiro.
                   </p>
                 </div>
                 <button
@@ -1724,7 +1724,7 @@ export default function App() {
                 <button
                   id="btn-exit-single-devotional"
                   onClick={() => setSelectedDevotional(null)}
-                  className="flex items-center space-x-1.5 py-1.5 px-3.5 hover:bg-stone-150 rounded-xl text-xs text-stone-605 transition"
+                  className="flex items-center space-x-1.5 py-1.5 px-3.5 hover:bg-stone-150 rounded-xl text-xs text-stone-600 transition"
                 >
                   <ArrowLeft size={13} />
                   <span>Voltar aos Encontros</span>
