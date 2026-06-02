@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import bookCoverImg from "../assets/images/book_cover_1780394449410.png";
 import {
   Heart,
   Compass,
@@ -112,25 +113,15 @@ export default function IgrejaPrimitiva({
   const [sponsorAddress, setSponsorAddress] = useState("");
   const [customBookValue, setCustomBookValue] = useState("50");
 
-  // Customizable AbacatePay links stored in localStorage
+  // Customizable AbacatePay links stored in localStorage for unified payment
   const [linkDespertar, setLinkDespertar] = useState<string>(
-    () => {
-      const stored = localStorage.getItem("abacat_link_despertar");
-      if (stored && !stored.includes("pay.abacatepay.com") && stored !== "https://app.abacatepay.com/pay/bill_MKtu34DrYhKGKbS1cFDp6Xw") {
-        return stored;
-      }
-      return "https://app.abacatepay.com/pay/prod_gqXPEtwDMnF3ht6urCuhpPaG";
-    }
+    () => localStorage.getItem("abacat_link_despertar") || "https://app.abacatepay.com/pay/bill_B0uL2rQs16rB0xsbHyPtknat"
   );
   const [linkDevocionais, setLinkDevocionais] = useState<string>(
-    () => {
-      const stored = localStorage.getItem("abacat_link_devocionais");
-      if (stored && !stored.includes("pay.abacatepay.com")) {
-        return stored;
-      }
-      return "https://app.abacatepay.com/pay/prod_gqXPEtwDMnF3ht6urCuhpPaG"; // fallback
-    }
+    () => localStorage.getItem("abacat_link_devocionais_unified") || "https://app.abacatepay.com/pay/bill_mdatPr3qQceaXzNyKhhdmZup"
   );
+
+  const [paymentMethod, setPaymentMethod] = useState<"pix" | "card">("pix");
 
   // User Credits State (As proposed, starts with 12 initial credits)
   const [userCredits, setUserCredits] = useState<number>(12);
@@ -1291,84 +1282,91 @@ export default function IgrejaPrimitiva({
 
               {/* Layout: Book Visual (Left) & AbacatPay Stepper (Right) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pt-2">
-                {/* 3D BOOK SPINE DISPLAY */}
-                <div className="lg:col-span-5 flex flex-col items-center justify-center bg-stone-900/30 p-6 rounded-2xl border border-stone-800 bg-[#141312] text-center relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#DCAE6C]/5 rounded-full blur-2xl" />
+                <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 bg-stone-950/40 rounded-3xl border border-stone-850 text-center">
+                  {/* REAL BOOK COVER OF O DESPERTAR OR SECURE CSS BACKUP */}
+                  {selectedBookTier === "book_despertar" || selectedBookTier === "book_devocionais" ? (
+                    <img
+                      id="real-book-cover"
+                      src={bookCoverImg}
+                      alt="Capa O Despertar"
+                      className="w-44 h-64 md:w-48 md:h-72 object-cover rounded-r-xl rounded-l-md shadow-[10px_15px_30px_rgba(0,0,0,0.8)] border-l-8 border-stone-950 transition-all duration-500 hover:scale-[1.03] select-none"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div className={`relative w-44 h-64 md:w-48 md:h-72 rounded-r-xl rounded-l-md shadow-[10px_15px_30px_rgba(0,0,0,0.7)] border-l-8 border-stone-950 transition-all duration-500 hover:scale-[1.03] flex flex-col justify-between p-5 text-left ${
+                      selectedBookTier === "book_devocionais"
+                        ? "bg-gradient-to-br from-[#1B2936] via-[#101921] to-[#060A0D]"
+                        : selectedBookTier === "prayer"
+                        ? "bg-gradient-to-br from-[#122A1E] via-[#0B1A13] to-[#040A07]"
+                        : "bg-gradient-to-br from-[#2E1E17] via-[#1F140F] to-[#0A0705]"
+                    }`}>
+                      {/* Spine highlight glow */}
+                      <div className="absolute inset-y-0 left-0 w-1.5 bg-white/10" />
 
-                  {/* CSS BOOK RENDERING */}
-                  <div className={`relative w-44 h-64 md:w-48 md:h-72 rounded-r-xl rounded-l-md shadow-[10px_15px_30px_rgba(0,0,0,0.7)] border-l-8 border-stone-950 transition-all duration-500 hover:scale-[1.03] flex flex-col justify-between p-5 text-left ${
-                    selectedBookTier === "book_devocionais"
-                      ? "bg-gradient-to-br from-[#1B2936] via-[#101921] to-[#060A0D]"
-                      : selectedBookTier === "prayer"
-                      ? "bg-gradient-to-br from-[#122A1E] via-[#0B1A13] to-[#040A07]"
-                      : "bg-gradient-to-br from-[#2E1E17] via-[#1F140F] to-[#0A0705]"
-                  }`}>
-                    {/* Spine highlight glow */}
-                    <div className="absolute inset-y-0 left-0 w-1.5 bg-white/10" />
+                      {/* Gold corners */}
+                      <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-[#DCAE6C]/40" />
+                      <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#DCAE6C]/40" />
 
-                    {/* Gold corners */}
-                    <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-[#DCAE6C]/40" />
-                    <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#DCAE6C]/40" />
+                      <div className="space-y-1.5">
+                        <span className="text-[8.5px] uppercase font-mono tracking-widest text-[#DCAE6C]/85 block font-bold">
+                          {selectedBookTier === "prayer" ? "REDE DE INTERCESSÃO" : "LIVRO OFICIAL"}
+                        </span>
+                        <h4 className="font-serif text-lg md:text-xl font-bold tracking-tight text-stone-100 leading-tight">
+                          {selectedBookTier === "prayer" ? "ORANTES" : "O DESPERTAR"}
+                        </h4>
+                        <p className="text-[7.5px] font-sans text-stone-400 font-extralight tracking-wide leading-tight uppercase">
+                          {selectedBookTier === "book_devocionais"
+                            ? "DEVOCIONAIS DIÁRIOS PARA DESPERTAR"
+                            : selectedBookTier === "prayer"
+                            ? "CORRENTE DE ORAÇÃO ATIVA"
+                            : "A GERAÇÃO QUE VOLTOU A OUVIR A VOZ DE DEUS"}
+                        </p>
+                      </div>
 
-                    <div className="space-y-1.5">
-                      <span className="text-[8.5px] uppercase font-mono tracking-widest text-[#DCAE6C]/85 block font-bold">
-                        {selectedBookTier === "prayer" ? "REDE DE INTERCESSÃO" : "LIVRO OFICIAL"}
-                      </span>
-                      <h4 className="font-serif text-lg md:text-xl font-bold tracking-tight text-stone-100 leading-tight">
-                        {selectedBookTier === "prayer" ? "ORANTES" : "O DESPERTAR"}
-                      </h4>
-                      <p className="text-[7.5px] font-sans text-stone-400 font-extralight tracking-wide leading-tight uppercase">
-                        {selectedBookTier === "book_devocionais"
-                          ? "DEVOCIONAIS DIÁRIOS PARA DESPERTAR"
-                          : selectedBookTier === "prayer"
-                          ? "CORRENTE DE ORAÇÃO ATIVA"
-                          : "A GERAÇÃO QUE VOLTOU A OUVIR A VOZ DE DEUS"}
-                      </p>
-                    </div>
+                      {/* Central artistic sunburst & icon */}
+                      <div className="my-auto flex flex-col items-center justify-center opacity-85 select-none py-2">
+                        <div className="relative w-14 h-14 bg-gradient-to-t from-[#C08261]/25 to-amber-200/5 rounded-full flex items-center justify-center border border-[#DCAE6C]/25">
+                          {selectedBookTier === "book_devocionais" ? (
+                            <Heart
+                              size={20}
+                              className="text-[#DCAE6C] fill-[#DCAE6C]/20"
+                            />
+                          ) : selectedBookTier === "prayer" ? (
+                            <ShieldCheck
+                              size={20}
+                              className="text-emerald-400 fill-emerald-500/20"
+                            />
+                          ) : (
+                            <Flame
+                              size={20}
+                              className="text-[#DCAE6C] fill-[#DCAE6C]/20"
+                            />
+                          )}
+                          <div className="absolute -top-1 w-1 h-3 bg-[#DCAE6C] rounded-full" />
+                          <div className="absolute -bottom-1 w-1 h-3 bg-[#DCAE6C] rounded-full" />
+                          <div className="absolute -left-1 w-3 h-1 bg-[#DCAE6C] rounded-full" />
+                          <div className="absolute -right-1 w-3 h-1 bg-[#DCAE6C] rounded-full" />
+                        </div>
+                      </div>
 
-                    {/* Central artistic sunburst & icon */}
-                    <div className="my-auto flex flex-col items-center justify-center opacity-85 select-none py-2">
-                      <div className="relative w-14 h-14 bg-gradient-to-t from-[#C08261]/25 to-amber-200/5 rounded-full flex items-center justify-center border border-[#DCAE6C]/25">
-                        {selectedBookTier === "book_devocionais" ? (
-                          <Heart
-                            size={20}
-                            className="text-[#DCAE6C] fill-[#DCAE6C]/20"
-                          />
-                        ) : selectedBookTier === "prayer" ? (
-                          <ShieldCheck
-                            size={20}
-                            className="text-emerald-400 fill-emerald-500/20"
-                          />
-                        ) : (
-                          <Flame
-                            size={20}
-                            className="text-[#DCAE6C] fill-[#DCAE6C]/20"
-                          />
-                        )}
-                        <div className="absolute -top-1 w-1 h-3 bg-[#DCAE6C] rounded-full" />
-                        <div className="absolute -bottom-1 w-1 h-3 bg-[#DCAE6C] rounded-full" />
-                        <div className="absolute -left-1 w-3 h-1 bg-[#DCAE6C] rounded-full" />
-                        <div className="absolute -right-1 w-3 h-1 bg-[#DCAE6C] rounded-full" />
+                      <div className="border-t border-[#DCAE6C]/25 pt-1.5 flex justify-between items-center text-[7.5px] font-mono text-stone-400">
+                        <span>SOMOS O DESPERTAR</span>
+                        <span className="text-[#DCAE6C] font-semibold">
+                          2026 ED.
+                        </span>
                       </div>
                     </div>
-
-                    <div className="border-t border-[#DCAE6C]/25 pt-1.5 flex justify-between items-center text-[7.5px] font-mono text-stone-400">
-                      <span>SOMOS O DESPERTAR</span>
-                      <span className="text-[#DCAE6C] font-semibold">
-                        2026 ED.
-                      </span>
-                    </div>
-                  </div>
+                  )}
 
                   <p className="mt-5 text-xs text-stone-300 font-serif leading-relaxed max-w-[240px] min-h-[50px] flex items-center justify-center">
                     {selectedBookTier === "book_devocionais"
                       ? '"Preencha suas manhãs com quietude e propósitos inalienáveis: textos diários sobre fé genuína."'
                       : selectedBookTier === "prayer"
                       ? '"A oração em união move pontes intransponíveis. Participe e ajude o movimento através da intercessão voluntária."'
-                      : '"Uma história real sobre o retorno aos lares, mesas vazias preenchidas e a restauração da pureza primitiva."'}
+                      : '"Faça parte do maior movimento de retorno aos lares, mesas vazias preenchidas e a restauração da pureza primitiva."'}
                   </p>
 
-                  <div className="mt-3 flex items-center gap-1 px-3 py-1.5 bg-stone-900/60 rounded-xl border border-stone-800 text-[10.5px] text-[#DCAE6C] font-mono font-bold font-bold">
+                  <div className="mt-3 flex items-center gap-1 px-3 py-1.5 bg-stone-900/60 rounded-xl border border-stone-800 text-[10.5px] text-[#DCAE6C] font-mono font-bold">
                     <span>⭐⭐⭐⭐⭐</span>
                     <span className="text-white ml-1 font-bold">
                       5.0 (200+ avaliações)
@@ -1380,9 +1378,14 @@ export default function IgrejaPrimitiva({
                 <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                   {abacatStep === "select" && (
                     <div className="space-y-4">
-                      <label className="text-[10px] font-mono uppercase tracking-widest text-[#DCAE6C] font-bold block text-left">
-                        Selecione como deseja apoiar o Movimento Despertar:
-                      </label>
+                      <div className="space-y-1 text-left">
+                        <label className="text-[11px] font-mono uppercase tracking-widest text-[#DCAE6C] font-extrabold block">
+                          Abra espaço na sua mesa para este chamado:
+                        </label>
+                        <p className="text-[10.5px] text-stone-400 leading-relaxed font-sans">
+                          Não comercializamos livros; semeamos instrumentos de comunhão e restauração do altar do lar. Ao equipar sua casa com nossas obras, você ampara voluntariamente todo este ecossistema digital para milhares de outras famílias.
+                        </p>
+                      </div>
 
                       <div className="space-y-2.5">
                         {/* Option 1: E-book Oficial "O Despertar" */}
@@ -1390,26 +1393,26 @@ export default function IgrejaPrimitiva({
                           onClick={() => setSelectedBookTier("book_despertar")}
                           className={`p-4 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 text-left relative ${
                             selectedBookTier === "book_despertar"
-                              ? "bg-stone-900/60 border-[#DCAE6C] text-white shadow-lg"
+                              ? "bg-stone-900/60 border-[#DCAE6C] text-white shadow-xl"
                               : "bg-[#181716] border-stone-850 text-stone-300 hover:border-stone-800 hover:bg-stone-900/50"
                           }`}
                         >
                           <div className="absolute top-2 right-4 bg-emerald-600/10 text-emerald-400 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase tracking-wider">
-                            Mais Apoiado 🌟
+                            Escolha Unânime ✨
                           </div>
                           <div className="flex items-start gap-3 col-span-2">
                             <span className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center text-base shrink-0 border border-[#DCAE6C]/30 text-[#DCAE6C]">
                               📔
                             </span>
                             <div>
-                              <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1">
-                                E-book Oficial "O Despertar"
-                                <span className="text-[9px] bg-amber-500/10 text-[#DCAE6C] font-mono px-1.5 py-0.5 rounded uppercase font-bold">
-                                  PDF + EPub
-                                </span>
+                              <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1 text-[#DCAE6C]">
+                                E-book "O Despertar" — A Geração do Altar
                               </div>
+                              <span className="text-[9px] bg-amber-500/10 text-stone-300 font-mono px-1.5 py-0.5 rounded uppercase font-bold">
+                                PDF + EPub Fundamentais
+                              </span>
                               <p className="text-[11px] text-stone-400 mt-1 leading-relaxed max-w-sm">
-                                Ganhe acesso imediato ao livro digital completo "A Geração que voltou a ouvir a Voz de Deus" + 12 créditos de mordomia.
+                                O guia prático do movimento para regressar às escrituras puras e estruturar cultos no lar. Esta semente livra o acesso do app de anúncios e liberta 12 créditos de mordomia.
                               </p>
                               <div className="mt-1.5 flex items-center gap-1.5">
                                 <span className="text-[9px] font-mono text-stone-500 font-bold">AbacatPay ID:</span>
@@ -1434,31 +1437,31 @@ export default function IgrejaPrimitiva({
                           onClick={() => setSelectedBookTier("book_devocionais")}
                           className={`p-4 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 text-left relative ${
                             selectedBookTier === "book_devocionais"
-                              ? "bg-stone-900/60 border-[#DCAE6C] text-white shadow-lg"
+                              ? "bg-stone-900/60 border-[#DCAE6C] text-white shadow-xl"
                               : "bg-[#181716] border-stone-850 text-stone-300 hover:border-stone-800 hover:bg-stone-900/50"
                           }`}
                         >
                           <div className="absolute top-2 right-4 bg-[#C08261]/10 text-[#C08261] font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border border-[#C08261]/20 uppercase tracking-wider">
-                            Novo Lançamento ✨
+                            Aliança de Manhã ⛅
                           </div>
                           <div className="flex items-start gap-3">
                             <span className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center text-base shrink-0 border border-[#DCAE6C]/30 text-[#DCAE6C]">
                               🙏
                             </span>
                             <div>
-                              <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1">
-                                E-book "Devocionais Diários"
-                                <span className="text-[9px] bg-amber-500/10 text-[#DCAE6C] font-mono px-1.5 py-0.5 rounded uppercase font-bold font-bold">
-                                  Completo
-                                </span>
+                              <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1 text-[#DCAE6C]">
+                                E-book "Devocionais" — Sopro de Fé Pura
                               </div>
+                              <span className="text-[9px] bg-amber-500/10 text-stone-300 font-mono px-1.5 py-0.5 rounded uppercase font-bold font-bold">
+                                365 Dias de Altar
+                              </span>
                               <p className="text-[11px] text-stone-400 mt-1 leading-relaxed max-w-sm">
-                                Devocionais diários para despertar fé genuína, transformação profunda e reconexão com seu propósito original + 10 créditos.
+                                Companheiro diário de cabeceira para guiar minutos silenciosos de oração sincera a cada amanhecer. Este apoio financia diretamente a segurança do app e gera 10 créditos de mordomia.
                               </p>
                               <div className="mt-1.5 flex items-center gap-1.5">
                                 <span className="text-[9px] font-mono text-stone-500 font-bold">AbacatPay ID:</span>
                                 <code className="text-[8px] bg-stone-950 px-1 py-0.5 rounded font-mono text-[#DCAE6C] border border-[#DCAE6C]/10 select-all font-bold">
-                                  prod_xLUBhQ5EJQCKZ5zdm1acwtGS
+                                  bill_mdatPr3qQceaXzNyKhhdmZup
                                 </code>
                               </div>
                             </div>
@@ -1483,89 +1486,32 @@ export default function IgrejaPrimitiva({
                           }`}
                         >
                           <div className="absolute top-2 right-4 bg-emerald-605/10 text-emerald-400 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase tracking-wider animate-pulse">
-                            Apoiador de Oração 🕊️
+                            Armadura do Reino 🕊️
                           </div>
                           <div className="flex items-start gap-3">
                             <span className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center text-base shrink-0 border border-emerald-500/30 text-emerald-400">
                               🛡️
                             </span>
                             <div>
-                              <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1">
-                                Orar pelo Movimento (Compromisso de Fé)
+                              <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1 text-[#DCAE6C]">
+                                Intercessão Pura & Aliança de Mesa
                               </div>
                               <p className="text-[11px] text-stone-400 mt-1 leading-relaxed max-w-sm">
-                                Seus joelhos no chão sustentam esta plataforma. Comprometa-se a interceder semanalmente e ganhe listagem + 5 créditos honorários.
+                                Se seu momento material não lhe permite plantar sementes financeiras, apoie com seu tempo sagrado. Seus joelhos no chão sustentam este local sem vaidades. Ganhe registro local e + 5 créditos honorários.
                               </p>
                             </div>
                           </div>
                           <div className="text-right shrink-0 self-center font-mono">
-                            <span className="text-sm font-black text-emerald-400 uppercase tracking-wider">
-                              Grátis
+                            <span className="text-xs font-black text-emerald-400 uppercase tracking-wider block font-bold">
+                              Guarda de Fé
+                            </span>
+                            <span className="text-[10px] text-emerald-500 block">
+                              Compromisso
                             </span>
                           </div>
                         </div>
 
-                        {/* Option 4: Physical Books (Em Produção ⏳) */}
-                        <div
-                          onClick={() => showTemporaryToast("O livro físico está em fase de revisão final e diagramação gráfica! Adquira o E-book para patrocinar.")}
-                          className="p-3.5 rounded-2xl border border-stone-850/60 bg-[#141312]/70 text-stone-500 opacity-65 cursor-not-allowed flex items-center justify-between gap-3 text-left relative"
-                        >
-                          <div className="absolute top-2 right-4 bg-stone-800 text-stone-400 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border border-stone-700/50">
-                            Em Produção ⏳
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <span className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center text-base shrink-0 border border-stone-850 text-stone-600">
-                              📖
-                            </span>
-                            <div>
-                              <div className="font-serif text-sm flex items-center gap-1.5 font-bold pt-1">
-                                Livros Físicos (Impresso Capa Dura Luxo)
-                              </div>
-                              <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">
-                                Frete Grátis incluso. Lançamento gráfico agendado para breve no ecossistema AbacatPay.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right shrink-0 font-mono self-center">
-                            <span className="text-xs text-stone-600 block line-through">
-                              R$ 89,95
-                            </span>
-                            <span className="text-sm font-semibold text-stone-500">
-                              R$ 69,90
-                            </span>
-                          </div>
-                        </div>
 
-                        {/* Option 5: Combo Co-Fundador Primitivo */}
-                        <div
-                          onClick={() => showTemporaryToast("O Combo Co-fundador completo estará liberado assim que o livro físico for impresso!")}
-                          className="p-3.5 rounded-2xl border border-stone-850/60 bg-[#141312]/70 text-stone-500 opacity-65 cursor-not-allowed flex items-center justify-between gap-3 text-left relative"
-                        >
-                          <div className="absolute top-2 right-4 bg-stone-800 text-stone-400 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border border-stone-700/50">
-                            Em Breve 🔒
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <span className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center text-base shrink-0 border border-stone-850 text-stone-600">
-                              ✨
-                            </span>
-                            <div>
-                              <div className="font-serif text-sm flex items-center gap-1.5 font-bold pt-1">
-                                Combo Co-Fundador Primitivo Completo
-                              </div>
-                              <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">
-                                Livro Físico + Ebooks + Certificado de Papiro no endereço + Recompensas exclusivas de pilar.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right shrink-0 font-mono self-center">
-                            <span className="text-xs text-stone-600 block line-through">
-                              R$ 199,00
-                            </span>
-                            <span className="text-sm font-semibold text-stone-500">
-                              R$ 149,90
-                            </span>
-                          </div>
-                        </div>
 
                         {/* Option 6: Custom Support */}
                         <div
@@ -1581,37 +1527,18 @@ export default function IgrejaPrimitiva({
                               💖
                             </span>
                             <div>
-                              <div className="font-serif text-sm font-bold pt-0.5">
-                                Oferta Voluntária Livre (Ajuda espontânea)
+                              <div className="font-serif text-sm font-bold pt-0.5 text-stone-200">
+                                Semente de Expansão Voluntária Livre
                               </div>
-                              <p className="text-[11px] text-stone-400 mt-0.5 leading-relaxed">
-                                Sinta-se guiado pelo amor à causa para expandir nossa infraestrutura de segurança e registro legal.
+                              <p className="text-[11px] text-stone-400 mt-0.5 leading-relaxed font-sans">
+                                Sinta-se guiado pela generosidade para além das páginas, impulsionando a segurança, registros legais e manutenção livre do app. Entre em contato direto pelo e-mail <strong className="text-[#DCAE6C] select-all">somosodespertar@gmail.com</strong>.
                               </p>
                             </div>
                           </div>
                           <div className="shrink-0 flex items-center self-center">
-                            {selectedBookTier === "custom" ? (
-                              <div
-                                className="flex items-center space-x-1 pl-1 bg-stone-950 rounded border border-stone-800 pr-1.5 py-0.5 max-w-[95px]"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <span className="text-[10px] text-stone-500 font-mono">
-                                  R$
-                                </span>
-                                <input
-                                  type="number"
-                                  value={customBookValue}
-                                  onChange={(e) =>
-                                    setCustomBookValue(e.target.value)
-                                  }
-                                  className="w-full bg-transparent border-0 py-0.5 px-0 text-xs font-mono font-bold text-[#DCAE6C] focus:ring-0 focus:outline-hidden"
-                                />
-                              </div>
-                            ) : (
-                              <span className="font-mono text-xs text-[#DCAE6C] font-bold">
-                                A partir R$ 10
-                              </span>
-                            )}
+                            <span className="font-mono text-xs text-[#DCAE6C] font-bold">
+                              E-mail Direto
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -1632,7 +1559,7 @@ export default function IgrejaPrimitiva({
                                   : "bg-[#181716] border-stone-850 text-stone-400 hover:border-stone-800"
                               }`}
                             >
-                              <span>📥 Guardar para Mim</span>
+                              <span>📥 Pegar o Meu Agora</span>
                             </button>
                             <button
                               type="button"
@@ -1679,7 +1606,7 @@ export default function IgrejaPrimitiva({
                           <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold block">
                             Seu compromisso intercessor:
                           </span>
-                          <p className="text-[11px] text-stone-300 leading-relaxed">
+                          <p className="text-[11px] text-stone-300 leading-relaxed font-sans">
                             Pedimos que interceda pelo Despertar semanalmente na sua mesa de oração. Sinta-se livre para registrar seu pedido ou intenção abaixo, para que também clamemos por você:
                           </p>
                           <textarea
@@ -1687,192 +1614,47 @@ export default function IgrejaPrimitiva({
                             placeholder="Ex: Clamo para que haja restauração dos casamentos em minha cidade e sabedoria aos líderes do ministério."
                             value={prayerIntention}
                             onChange={(e) => setPrayerIntention(e.target.value)}
-                            className="w-full bg-stone-950 border border-stone-800 rounded-xl py-2 px-3 text-xs text-stone-200 focus:outline-hidden focus:border-emerald-600"
+                            className="w-full bg-stone-950 border border-stone-800 rounded-xl py-2 px-3 text-xs text-stone-200 focus:outline-hidden focus:border-emerald-600 animate-fadeIn"
                           />
                         </div>
                       )}
 
-                      <button
-                        type="button"
-                        onClick={() => setAbacatStep("form")}
-                        className="w-full py-4 bg-[#C08261] hover:bg-[#b07353] text-stone-100 font-bold uppercase tracking-wider rounded-xl transition shadow-lg cursor-pointer flex items-center justify-center space-x-2 font-bold"
-                      >
-                        <span>Prosseguir</span>
-                        <ArrowRight size={14} />
-                      </button>
-                    </div>
-                  )}
-
-                  {abacatStep === "form" && (
-                    <div className="space-y-4 text-xs text-left">
-                      <div className="flex justify-between items-center pb-2 border-b border-stone-800">
-                        <h4 className="font-serif text-stone-200 text-sm font-bold flex items-center gap-1.5">
-                          <CheckCircle size={14} className="text-[#DCAE6C]" />{" "}
-                          Detalhes Gerais para Emissão AbacatPay
-                        </h4>
-                        <button
-                          onClick={() => setAbacatStep("select")}
-                          className="font-mono text-[10px] uppercase text-stone-400 hover:text-white font-bold"
-                        >
-                          ← Alterar Pacote
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 block font-bold">
-                            Seu Nome Completo
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Ex: Pedro da Silva"
-                            value={donatorName || name}
-                            onChange={(e) => setDonatorName(e.target.value)}
-                            required
-                            className="w-full bg-stone-950 border border-stone-800 rounded-xl py-2.5 px-3.5 text-xs text-white focus:outline-hidden focus:border-[#C08261]"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 block font-bold">
-                            Seu Melhor E-mail
-                          </label>
-                          <input
-                            type="email"
-                            placeholder="exemplo@igreja.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            className="w-full bg-stone-950 border border-stone-800 rounded-xl py-2.5 px-3.5 text-xs text-white focus:outline-hidden focus:border-[#C08261]"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                        <div className="md:col-span-1 space-y-1.5">
-                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 block font-bold">
-                            WhatsApp / Celular
-                          </label>
-                          <input
-                            type="tel"
-                            placeholder="(11) 98765-4321"
-                            value={sponsorPhone}
-                            onChange={(e) => setSponsorPhone(e.target.value)}
-                            required
-                            className="w-full bg-stone-950 border border-stone-800 rounded-xl py-2.5 px-3.5 text-xs text-white focus:outline-hidden focus:border-[#C08261]"
-                          />
-                        </div>
-
-                        {selectedBookTier === "physical" ||
-                        selectedBookTier === "kit" ? (
-                          <>
-                            <div className="space-y-1.5">
-                              <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 block font-bold">
-                                CEP de Entrega
-                              </label>
-                              <input
-                                type="text"
-                                placeholder="80000-000"
-                                value={sponsorCep}
-                                onChange={(e) => setSponsorCep(e.target.value)}
-                                required
-                                className="w-full bg-stone-950 border border-stone-800 rounded-xl py-2.5 px-3.5 text-xs text-white text-center font-mono focus:outline-hidden focus:border-[#C08261]"
-                              />
-                            </div>
-                            <div className="space-y-1.5">
-                              <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 block font-bold">
-                                Cidade / UF
-                              </label>
-                              <input
-                                type="text"
-                                placeholder="Ex: Curitiba - PR"
-                                value={city ? `${city} - ${stateCode}` : ""}
-                                onChange={(e) => {
-                                  const val = e.target.value;
-                                  if (val.includes("-")) {
-                                    const parts = val.split("-");
-                                    setCity(parts[0].trim());
-                                    setStateCode(parts[1].trim());
-                                  } else {
-                                    setCity(val);
-                                  }
-                                }}
-                                required
-                                className="w-full bg-stone-950 border border-stone-800 rounded-xl py-2.5 px-3.5 text-xs text-stone-200 focus:outline-hidden focus:border-[#C08261]"
-                              />
-                            </div>
-                          </>
-                        ) : (
-                          <div className="md:col-span-2 flex items-center justify-center p-3 bg-stone-900/40 rounded-xl text-stone-400 text-[10px] text-center border border-stone-800">
-                            ✨ Por ser um pacote digital, não há necessidade de
-                            preenchimento postal. O livro será entregue direto
-                            no seu e-mail de correspondência!
-                          </div>
-                        )}
-                      </div>
-
-                      {(selectedBookTier === "physical" ||
-                        selectedBookTier === "kit") && (
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 block font-bold">
-                            Endereço Completo de Destino (Rua, Bairro, Número,
-                            Apto)
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Ex: Rua das Flores, 891, Bairro Centro, Apto 102"
-                            value={sponsorAddress}
-                            onChange={(e) => setSponsorAddress(e.target.value)}
-                            required
-                            className="w-full bg-stone-950 border border-stone-800 rounded-xl py-2.5 px-3.5 text-xs text-white focus:outline-hidden focus:border-[#C08261]"
-                          />
-                        </div>
-                      )}
-
-                      <div className="bg-stone-900/60 p-3.5 rounded-xl border border-stone-800 flex items-start space-x-2">
-                        <ShieldCheck
-                          size={16}
-                          className="text-[#DCAE6C] shrink-0 mt-0.5"
-                        />
-                        <div className="space-y-1 text-left">
-                          <span className="font-mono text-[9px] uppercase font-extrabold tracking-wider text-[#DCAE6C] block font-bold text-left">
-                            Privacidade Garantida e LGPD (Lei nº 13.709/18)
+                      {/* Custom Support Option Description */}
+                      {selectedBookTier === "custom" && (
+                        <div className="p-4 rounded-2xl bg-[#0e0d0c] border border-stone-800 space-y-3 text-left mt-3 animate-fadeIn">
+                          <span className="text-[10px] font-mono uppercase tracking-widest text-[#DCAE6C] font-bold block">
+                            Como enviar sua contribuição:
                           </span>
-                          <p className="text-[10.5px] text-stone-400 leading-relaxed font-sans text-left">
-                            Seus dados cadastrais destinam-se exclusivamente ao
-                            faturamento do livro e envio postal de recompensas.
-                            O ecossistema Despertar não faz rastreamento
-                            mercantil, não vende seus dados e adere ao
-                            compromisso inalienável de sigilo das suas orações e
-                            necessidades íntimas.
+                          <p className="text-[11px] text-stone-300 leading-relaxed font-sans">
+                            Para semear qualquer apoio voluntário customizado ou estabelecer novas parcerias de infraestrutura para o movimento, envie um e-mail diretamente para:
                           </p>
+                          <div className="p-3 bg-stone-950 rounded-xl border border-stone-850 flex items-center justify-between gap-2.5">
+                            <span className="font-mono text-xs text-[#DCAE6C] select-all font-bold">
+                              somosodespertar@gmail.com
+                            </span>
+                            <a
+                              href="mailto:somosodespertar@gmail.com?subject=Semente de Expansão Voluntária Livre - Movimento Despertar"
+                              className="text-[10px] uppercase font-mono px-2.5 py-1.5 bg-[#C08261] text-stone-100 rounded-lg font-bold hover:bg-[#b07353] transition"
+                            >
+                              Escrever E-mail
+                            </a>
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       <button
                         type="button"
                         onClick={() => {
-                          const activeEmail =
-                            email || "patrocinador@somosodespertar.org";
-                          const activeName =
-                            donatorName || name || "Amigo do Despertar";
-                          if (
-                            !activeEmail.includes("@") ||
-                            activeName.length < 3
-                          ) {
-                            showTemporaryToast(
-                              "Por favor, preencha seu nome e e-mail válidos.",
-                            );
-                            return;
-                          }
                           if (selectedBookTier === "prayer") {
                             setUserCredits((p) => p + 5);
                             setConfirmedDonation(true);
                             setAbacatStep("success");
                             
+                            const activeName = "Intercessor Primordial";
                             setFundadores((prev) => [
                               {
                                 name: activeName,
-                                location: city ? `${city}, ${stateCode}` : "Brasil",
+                                location: "Brasil",
                                 service: "Intercessor do Desígnio 🛡️",
                                 type: "offer",
                                 avatarEmoji: "🙏",
@@ -1887,7 +1669,7 @@ export default function IgrejaPrimitiva({
                               category: "oracao",
                               author: activeName,
                               avatarEmoji: "🙏",
-                              location: city ? `${city}, ${stateCode}` : "Brasil",
+                              location: "Brasil",
                               title: "Corrente de Oração Ativa",
                               description: prayerIntention || "Comprometeu-se a orar semanalmente pela pureza dos ministérios e expansão do Reino nas mesas.",
                               timestamp: "Agora mesmo",
@@ -1907,33 +1689,21 @@ export default function IgrejaPrimitiva({
                             }
 
                             showTemporaryToast("Que bênção! Seu compromisso de oração foi registrado no Altar.");
-                            return;
+                          } else if (selectedBookTier === "custom") {
+                            window.location.href = "mailto:somosodespertar@gmail.com?subject=Semente de Expansão Voluntária Livre - Movimento Despertar";
+                            showTemporaryToast("Abrindo seu aplicativo de e-mail para contato direto!");
+                          } else {
+                            setAbacatStep("qr");
                           }
-                           const abacatePayUrl = selectedBookTier === "book_devocionais" ? linkDevocionais : linkDespertar;
-                          try {
-                            window.open(abacatePayUrl, "_blank", "noopener,noreferrer");
-                          } catch (err) {
-                            console.warn("Popup blocked, fallback checkout button will handle it", err);
-                          }
-                          setAbacatStep("qr");
                         }}
-                        className={`w-full py-3.5 text-stone-900 font-extrabold uppercase tracking-wider rounded-xl transition shadow-lg cursor-pointer flex items-center justify-center space-x-2 font-bold ${
-                          selectedBookTier === "prayer"
-                            ? "bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-stone-950"
-                            : "bg-gradient-to-r from-[#C28463] to-[#DCAE6C] hover:from-[#b07353] text-stone-950"
-                        }`}
+                        className="w-full py-4 bg-[#C08261] hover:bg-[#b07353] text-stone-100 font-bold uppercase tracking-wider rounded-xl transition shadow-lg cursor-pointer flex items-center justify-center space-x-2 font-bold"
                       >
-                        {selectedBookTier === "prayer" ? (
-                          <>
-                            <CheckCircle size={15} className="text-stone-950 animate-bounce" />
-                            <span>Registrar Compromisso de Oração 🕊️</span>
-                          </>
-                        ) : (
-                          <>
-                            <Lock size={13} className="text-stone-950" />
-                            <span>Gerar Link & QR Code AbacatPay</span>
-                          </>
-                        )}
+                        <span>
+                          {selectedBookTier === "custom"
+                            ? "Entrar em Contato por E-mail ✉️"
+                            : "Prosseguir"}
+                        </span>
+                        {selectedBookTier !== "custom" && <ArrowRight size={14} />}
                       </button>
                     </div>
                   )}
@@ -1946,10 +1716,10 @@ export default function IgrejaPrimitiva({
                           Checkout Oficial AbacatePay
                         </span>
                         <button
-                          onClick={() => setAbacatStep("form")}
+                          onClick={() => setAbacatStep("select")}
                           className="font-mono text-[10px] uppercase text-stone-400 hover:text-white font-bold"
                         >
-                          ← Voltar aos Dados
+                          ← Alterar Pacote
                         </button>
                       </div>
 
@@ -1967,7 +1737,7 @@ export default function IgrejaPrimitiva({
                           </span>
                         </div>
                         <div className="text-xs text-stone-400 leading-relaxed font-sans">
-                          Comprador: <strong className="text-stone-200">{donatorName || name || "Patrocinador"}</strong> ({email || "E-mail não informado"})
+                          ✨ Os seus dados de faturamento e e-mail para envio serão preenchidos uma única vez diretamente na tela segura de pagamento do AbacatePay.
                         </div>
                         <div className="text-xs text-stone-400 leading-relaxed font-sans pt-1">
                           Valor total: <span className="text-[#DCAE6C] font-bold font-mono">R$ {
@@ -1982,66 +1752,64 @@ export default function IgrejaPrimitiva({
                         </div>
                       </div>
 
-                      <div className="w-full space-y-3">
+                      <div className="w-full space-y-4">
                         <p className="text-stone-300 text-xs md:text-sm leading-relaxed font-sans text-left">
-                          O link seguro para realizar o pagamento Pix com entrega automática do e-book foi disponibilizado pelo gateway <strong className="text-stone-100">AbacatePay</strong>.
+                          O link seguro para realizar o pagamento via <strong className="text-stone-100">Pix, Cartão ou Boleto</strong> com entrega e liberação automática do e-book foi disponibilizado.
                         </p>
                         
                         <a
-                          href={selectedBookTier === "book_devocionais" ? linkDevocionais : linkDespertar}
+                          href={
+                            selectedBookTier === "book_devocionais"
+                              ? linkDevocionais
+                              : linkDespertar
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full py-4.5 bg-gradient-to-r from-[#C28463] to-[#DCAE6C] hover:from-[#b07353] text-stone-950 font-black uppercase tracking-wider rounded-xl transition shadow-xl cursor-pointer flex items-center justify-center space-x-2 w-full animate-pulse hover:animate-none font-bold text-center"
+                          className="w-full py-4.5 bg-gradient-to-r from-[#C28463] to-[#DCAE6C] hover:from-[#b07353] text-stone-950 font-black uppercase tracking-wider rounded-xl transition shadow-xl cursor-pointer flex items-center justify-center space-x-2 w-full animate-pulse hover:animate-none font-bold text-center text-sm md:text-base border border-amber-350/20"
                         >
-                          <span>Ir para Página de Pagamento AbacatePay 💳</span>
+                          <span>Ir para Pagamento Seguro 💳</span>
                           <span className="text-stone-950 font-sans font-bold">→</span>
                         </a>
 
-                        {/* AbacatePay Link Configurator */}
-                        <div className="mt-4 p-4 bg-stone-900/60 rounded-2xl border border-dashed border-[#C28463]/30 text-left space-y-2">
-                          <span className="text-[#DCAE6C] font-serif text-xs font-bold block">
-                            ⚙️ Configurar Seus Links Reais do AbacatePay:
-                          </span>
-                          <p className="text-stone-400 text-[11px] leading-relaxed">
-                            No painel do AbacatePay, vá em <strong>Sua Loja → Produtos</strong>, clique no produto e copie o <strong>Link de Pagamento</strong> (que começa com <code>app.abacatepay.com/pay/prod_...</code> ou <code>app.abacatepay.com/pay/bill_...</code>). Cole-os abaixo para atualizar o aplicativo em tempo real:
-                          </p>
-                          <div className="space-y-2 pt-1 font-sans">
-                            <div>
-                              <label className="text-stone-450 text-[10px] uppercase font-mono block mb-1">
-                                Link de Pagamento "O Despertar" (R$ 19,90)
-                              </label>
-                              <input
-                                type="text"
-                                value={linkDespertar}
-                                onChange={(e) => {
-                                  setLinkDespertar(e.target.value);
-                                  localStorage.setItem("abacat_link_despertar", e.target.value);
-                                }}
-                                placeholder="https://app.abacatepay.com/pay/bill_..."
-                                className="w-full bg-stone-950 border border-stone-800 rounded-lg px-2.5 py-1.5 text-xs text-stone-250 font-mono focus:outline-none focus:border-[#C28463]"
-                              />
+                        {/* Hidden/collapsed API config to update payment gateway links */}
+                        <div className="pt-2 text-center">
+                          <details className="inline-block text-left opacity-15 hover:opacity-100 transition-opacity duration-300">
+                            <summary className="text-[9px] text-stone-550 font-mono cursor-pointer list-none flex items-center justify-center">
+                              <span>⚙️ Configurar Links de Pagamento</span>
+                            </summary>
+                            <div className="mt-3 p-3 bg-stone-950 rounded-xl border border-stone-850 text-left space-y-2 mt-2 w-72 max-w-sm absolute left-1/2 transform -translate-x-1/2 z-50 shadow-2xl">
+                              <p className="text-stone-400 text-[9px] leading-relaxed font-sans">
+                                Insira os links reais do AbacatePay:
+                              </p>
+                              <div className="space-y-2.5 pt-1 font-sans text-[10px]">
+                                <div>
+                                  <label className="text-stone-500 text-[9px] uppercase font-mono block mb-1">O Despertar (Link Único)</label>
+                                  <input
+                                    type="text"
+                                    value={linkDespertar}
+                                    onChange={(e) => {
+                                      setLinkDespertar(e.target.value);
+                                      localStorage.setItem("abacat_link_despertar", e.target.value);
+                                    }}
+                                    className="w-full bg-stone-900 border border-stone-800 rounded-lg px-2 py-1 text-stone-305 font-mono focus:outline-none focus:border-[#C28463]"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="text-[#DCAE6C] text-[9px] uppercase font-mono block mb-1">Devocionais (Link Único)</label>
+                                  <input
+                                    type="text"
+                                    value={linkDevocionais}
+                                    onChange={(e) => {
+                                      setLinkDevocionais(e.target.value);
+                                      localStorage.setItem("abacat_link_devocionais_unified", e.target.value);
+                                    }}
+                                    className="w-full bg-stone-900 border border-stone-800 rounded-lg px-2 py-1 text-stone-305 font-mono focus:outline-none focus:border-[#C28463]"
+                                  />
+                                </div>
+                              </div>
                             </div>
-                            <div>
-                              <label className="text-stone-450 text-[10px] uppercase font-mono block mb-1">
-                                Link de Pagamento "Devocionais Diários" (R$ 24,90)
-                              </label>
-                              <input
-                                type="text"
-                                value={linkDevocionais}
-                                onChange={(e) => {
-                                  setLinkDevocionais(e.target.value);
-                                  localStorage.setItem("abacat_link_devocionais", e.target.value);
-                                }}
-                                placeholder="https://app.abacatepay.com/pay/bill_..."
-                                className="w-full bg-stone-950 border border-stone-800 rounded-lg px-2.5 py-1.5 text-xs text-stone-250 font-mono focus:outline-none focus:border-[#C28463]"
-                              />
-                            </div>
-                          </div>
+                          </details>
                         </div>
-
-                        <p className="text-[11px] text-stone-400 leading-normal text-left pt-2 font-sans">
-                          💡 <strong>Por que o AbacatePay?</strong> Ele é o nosso parceiro de pagamentos seguro nacional. Nele, você faz o pagamento via PIX em ambiente 100% criptografado e certificado pela LGPD e, **dentro do próprio AbacatePay**, você já recebe e faz download do seu e-book imediatamente no seu celular ou computador!
-                        </p>
                       </div>
 
                       <div className="pt-5 border-t border-stone-850 w-full space-y-3">
