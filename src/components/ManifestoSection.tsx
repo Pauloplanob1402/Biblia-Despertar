@@ -46,9 +46,7 @@ export default function ManifestoSection({
       
       {/* SECTION 1: PRE-SUASION POETIC INGRESS */}
       <div className="space-y-10 text-center relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-8 text-[#C08261]/25 select-none font-serif font-semibold text-8xl pointer-events-none opacity-40">
-          🕊️
-        </div>
+        {/* Removed dove emoji */}
         
         <div className="space-y-3 z-10 relative">
           <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">
