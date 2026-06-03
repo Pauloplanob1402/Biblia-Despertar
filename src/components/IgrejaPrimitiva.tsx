@@ -113,12 +113,12 @@ export default function IgrejaPrimitiva({
   const [sponsorAddress, setSponsorAddress] = useState("");
   const [customBookValue, setCustomBookValue] = useState("50");
 
-  // Customizable AbacatePay links stored in localStorage for unified payment
+  // Customizable Kiwify links stored in localStorage for unified payment
   const [linkDespertar, setLinkDespertar] = useState<string>(
-    () => localStorage.getItem("abacat_link_despertar") || "https://app.abacatepay.com/pay/bill_B0uL2rQs16rB0xsbHyPtknat"
+    () => localStorage.getItem("kiwify_link_despertar") || "https://pay.kiwify.com.br/JRqrznH"
   );
   const [linkDevocionais, setLinkDevocionais] = useState<string>(
-    () => localStorage.getItem("abacat_link_devocionais_unified") || "https://app.abacatepay.com/pay/bill_mdatPr3qQceaXzNyKhhdmZup"
+    () => localStorage.getItem("kiwify_link_devocionais") || "https://pay.kiwify.com.br/X23KvCQ"
   );
 
   const [paymentMethod, setPaymentMethod] = useState<"pix" | "card">("pix");
@@ -1246,7 +1246,7 @@ export default function IgrejaPrimitiva({
                   simultaneamente robusto, fluido e 100% focado no calor humano,
                   precisamos vencer barreiras de servidores soberanos e
                   conformidades jurídicas. Ao adquirir nosso livro oficial via{" "}
-                  <strong className="text-white font-bold">AbacatPay</strong>,
+                  <strong className="text-white font-bold">Kiwify</strong>,
                   seu patrocínio financia diretamente este lançamento nacional e
                   a regularização jurídica de nossas ações de caridade.
                 </p>
@@ -1360,7 +1360,7 @@ export default function IgrejaPrimitiva({
                       ? '"Preencha suas manhãs com quietude e propósitos inalienáveis: textos diários sobre fé genuína."'
                       : selectedBookTier === "prayer"
                       ? '"A oração em união move pontes intransponíveis. Participe e ajude o movimento através da intercessão voluntária."'
-                      : '"Faça parte do maior movimento de retorno aos lares, mesas vazias preenchidas e a restauração da pureza primitiva."'}
+                      : '"A geração que voltou a ouvir a voz de Deus. Em uma época de distrações, este livro é um convite para ouvir o Pai e encontrar propósito."'}
                   </p>
 
                   <div className="mt-3 flex items-center gap-1 px-3 py-1.5 bg-stone-900/60 rounded-xl border border-stone-800 text-[10.5px] text-[#DCAE6C] font-mono font-bold">
@@ -1403,28 +1403,28 @@ export default function IgrejaPrimitiva({
                             </span>
                             <div>
                               <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1 text-[#DCAE6C]">
-                                E-book "O Despertar" — A Geração do Altar
+                                E-book "O Despertar" — Geração que Ouve Deus
                               </div>
                               <span className="text-[9px] bg-amber-500/10 text-stone-300 font-mono px-1.5 py-0.5 rounded uppercase font-bold">
-                                PDF + EPub Fundamentais
+                                Livro + Movimento Oficial
                               </span>
                               <p className="text-[11px] text-stone-400 mt-1 leading-relaxed max-w-sm">
-                                O guia prático do movimento para regressar às escrituras puras e estruturar cultos no lar. Esta semente livra o acesso do app de anúncios e liberta 12 créditos de mordomia.
+                                O Despertar: A geração que voltou a ouvir a voz de Deus. Em uma época de distrações, ansiedade e vazio espiritual, este livro é um convite para ouvir o Pai, encontrar propósito e viver uma fé autêntica. Mais do que páginas, é o início de um movimento transformador. Libera 12 créditos.
                               </p>
                               <div className="mt-1.5 flex items-center gap-1.5">
-                                <span className="text-[9px] font-mono text-stone-500 font-bold">AbacatPay ID:</span>
+                                <span className="text-[9px] font-mono text-stone-500 font-bold">Kiwify ID:</span>
                                 <code className="text-[8px] bg-stone-950 px-1 py-0.5 rounded font-mono text-[#DCAE6C] border border-[#DCAE6C]/10 select-all font-bold">
-                                  prod_gqXPEtwDMnF3ht6urCuhpPaG
+                                  JRqrznH
                                 </code>
                               </div>
                             </div>
                           </div>
                           <div className="text-right shrink-0 self-center">
                             <span className="font-mono text-xs text-stone-450 block line-through">
-                              R$ 29,90
+                              R$ 34,90
                             </span>
                             <span className="font-mono text-sm font-black text-[#DCAE6C]">
-                              R$ 19,90
+                              R$ 24,90
                             </span>
                           </div>
                         </div>
@@ -1447,28 +1447,28 @@ export default function IgrejaPrimitiva({
                             </span>
                             <div>
                               <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1 text-[#DCAE6C]">
-                                E-book "Devocionais" — Sopro de Fé Pura
+                                O Despertar — Devocional Diário
                               </div>
-                              <span className="text-[9px] bg-amber-500/10 text-stone-300 font-mono px-1.5 py-0.5 rounded uppercase font-bold font-bold">
-                                365 Dias de Altar
+                              <span className="text-[9px] bg-amber-500/10 text-stone-300 font-mono px-1.5 py-0.5 rounded uppercase font-bold">
+                                Devocionais Diários
                               </span>
                               <p className="text-[11px] text-stone-400 mt-1 leading-relaxed max-w-sm">
-                                Companheiro diário de cabeceira para guiar minutos silenciosos de oração sincera a cada amanhecer. Este apoio financia diretamente a segurança do app e gera 10 créditos de mordomia.
+                                Poucos minutos por dia podem mudar uma vida inteira. O Despertar — Devocional reúne reflexões inspiradoras, versículos, orações e desafios práticos para ajudar você a fortalecer sua fé, ouvir Deus com mais clareza e caminhar diariamente em direção ao propósito para o qual foi criado.
                               </p>
                               <div className="mt-1.5 flex items-center gap-1.5">
-                                <span className="text-[9px] font-mono text-stone-500 font-bold">AbacatPay ID:</span>
+                                <span className="text-[9px] font-mono text-stone-500 font-bold">Kiwify ID:</span>
                                 <code className="text-[8px] bg-stone-950 px-1 py-0.5 rounded font-mono text-[#DCAE6C] border border-[#DCAE6C]/10 select-all font-bold">
-                                  bill_mdatPr3qQceaXzNyKhhdmZup
+                                  X23KvCQ
                                 </code>
                               </div>
                             </div>
                           </div>
                           <div className="text-right shrink-0 self-center">
                             <span className="font-mono text-xs text-stone-450 block line-through">
-                              R$ 34,90
+                              R$ 39,90
                             </span>
                             <span className="font-mono text-sm font-black text-[#DCAE6C]">
-                              R$ 24,90
+                              R$ 27,90
                             </span>
                           </div>
                         </div>
@@ -1710,7 +1710,7 @@ export default function IgrejaPrimitiva({
                       <div className="w-full flex justify-between items-center pb-2 border-b border-stone-800 text-left">
                         <span className="text-[10px] uppercase font-mono text-[#DCAE6C] font-extrabold tracking-widest flex items-center gap-1.5 font-bold">
                           <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shrink-0" />{" "}
-                          Checkout Oficial AbacatePay
+                          Checkout Oficial Kiwify
                         </span>
                         <button
                           onClick={() => setAbacatStep("select")}
@@ -1734,17 +1734,17 @@ export default function IgrejaPrimitiva({
                           </span>
                         </div>
                         <div className="text-xs text-stone-400 leading-relaxed font-sans">
-                          ✨ Os seus dados de faturamento e e-mail para envio serão preenchidos uma única vez diretamente na tela segura de pagamento do AbacatePay.
+                          ✨ Os seus dados de faturamento e e-mail para envio serão preenchidos uma única vez diretamente na tela segura de pagamento do Kiwify.
                         </div>
                         <div className="text-xs text-stone-400 leading-relaxed font-sans pt-1">
                           Valor total: <span className="text-[#DCAE6C] font-bold font-mono">R$ {
                             selectedBookTier === "book_despertar"
-                              ? "19,90"
-                              : selectedBookTier === "book_devocionais"
                               ? "24,90"
+                              : selectedBookTier === "book_devocionais"
+                              ? "27,90"
                               : selectedBookTier === "custom"
                               ? parseFloat(customBookValue).toFixed(2)
-                              : "19,90"
+                              : "24,90"
                           }</span>
                         </div>
                       </div>
@@ -1776,7 +1776,7 @@ export default function IgrejaPrimitiva({
                             </summary>
                             <div className="mt-3 p-3 bg-stone-950 rounded-xl border border-stone-850 text-left space-y-2 mt-2 w-72 max-w-sm absolute left-1/2 transform -translate-x-1/2 z-50 shadow-2xl">
                               <p className="text-stone-400 text-[9px] leading-relaxed font-sans">
-                                Insira os links reais do AbacatePay:
+                                Insira os links reais do Kiwify:
                               </p>
                               <div className="space-y-2.5 pt-1 font-sans text-[10px]">
                                 <div>
@@ -1786,7 +1786,7 @@ export default function IgrejaPrimitiva({
                                     value={linkDespertar}
                                     onChange={(e) => {
                                       setLinkDespertar(e.target.value);
-                                      localStorage.setItem("abacat_link_despertar", e.target.value);
+                                      localStorage.setItem("kiwify_link_despertar", e.target.value);
                                     }}
                                     className="w-full bg-stone-900 border border-stone-800 rounded-lg px-2 py-1 text-stone-305 font-mono focus:outline-none focus:border-[#C28463]"
                                   />
@@ -1798,7 +1798,7 @@ export default function IgrejaPrimitiva({
                                     value={linkDevocionais}
                                     onChange={(e) => {
                                       setLinkDevocionais(e.target.value);
-                                      localStorage.setItem("abacat_link_devocionais_unified", e.target.value);
+                                      localStorage.setItem("kiwify_link_devocionais", e.target.value);
                                     }}
                                     className="w-full bg-stone-900 border border-stone-800 rounded-lg px-2 py-1 text-stone-305 font-mono focus:outline-none focus:border-[#C28463]"
                                   />
@@ -1890,7 +1890,7 @@ export default function IgrejaPrimitiva({
                             showTemporaryToast(
                               purchaseMode === "gift"
                                 ? `Sua doação foi confirmada! O E-book de presente foi enviado com sucesso para ${giftName}! +${rewardCredits} créditos.`
-                                : `Obrigado pelo seu patrocínio via AbacatePay! +${rewardCredits} créditos de Mordomia gerados com amor!`
+                                : `Obrigado pelo seu patrocínio via Kiwify! +${rewardCredits} créditos de Mordomia gerados com amor!`
                             );
                           }}
                           className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-black uppercase tracking-wider rounded-xl transition shadow-lg cursor-pointer flex items-center justify-center space-x-2 font-bold"
@@ -1915,12 +1915,12 @@ export default function IgrejaPrimitiva({
                       <h4 className="font-serif text-lg font-bold text-white">
                         {selectedBookTier === "prayer"
                           ? "Compromisso de Intercessão Ativo! 🙏"
-                          : "Transação Confirmada no AbacatPay!"}
+                          : "Transação Confirmada no Kiwify!"}
                       </h4>
                       <p className="text-stone-300 text-xs leading-relaxed font-sans">
                         {selectedBookTier === "prayer"
                           ? "Agradecemos profundamente. Suas orações alimentam a chama do Despertar. Registramos seu compromisso no altar de oração contínuo da comunidade."
-                          : "Que abundância! Seu apoio via AbacatPay foi confirmado com sucesso pelo ecossistema financeiro. Registramos o seu nome no rol oficial dos Co-Fundadores Pioneiros."}
+                          : "Que abundância! Seu apoio via Kiwify foi confirmado com sucesso pelo ecossistema financeiro. Registramos o seu nome no rol oficial dos Co-Fundadores Pioneiros."}
                       </p>
 
                       <div className="bg-stone-900/60 p-3 rounded-xl border border-stone-850 text-left text-[11px] text-stone-400 space-y-1.5 max-w-sm mx-auto font-mono">
@@ -2057,7 +2057,7 @@ export default function IgrejaPrimitiva({
                   <p className="text-stone-500 text-xs leading-relaxed font-sans">
                     O dinheiro arrecadado com a aquisição do Livro Oficial pelo{" "}
                     <strong className="text-stone-800 font-semibold font-bold">
-                      AbacatPay
+                      Kiwify
                     </strong>{" "}
                     é inteiramente destinado a custear a consultoria jurídica
                     para estruturação civil do movimento, aquisição de datacenter
