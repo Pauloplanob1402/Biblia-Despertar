@@ -585,8 +585,8 @@ export default function App() {
                   }`}
                 >
                   <span className="flex items-center space-x-2.5">
-                    <Feather size={14} />
-                    <span>40 Dias Despertando</span>
+                    <Coffee size={14} />
+                    <span>Café e Comunhão</span>
                   </span>
                 </button>
 
@@ -816,8 +816,8 @@ export default function App() {
             }`}
           >
             <span className="flex items-center space-x-2.5">
-              <Feather size={14} />
-              <span>40 Dias Despertando</span>
+              <Coffee size={14} />
+              <span>Café e Comunhão</span>
             </span>
           </button>
 
@@ -940,53 +940,62 @@ export default function App() {
               className="space-y-8 text-left"
             >
               {/* Emotional Custom Welcome Header and Streak */}
-              <div id="emotional-banner" className="relative group overflow-hidden bg-gradient-to-br from-[#1E1C1A] via-[#121110] to-[#0A0A09] p-8 md:p-10 rounded-3xl border border-[#DCAE6C]/20 shadow-xl space-y-6">
+              <div id="emotional-banner" className="relative group overflow-hidden bg-gradient-to-br from-[#1E1C1A] via-[#121110] to-[#0A0A09] p-8 md:p-10 rounded-3xl border border-[#DCAE6C]/25 shadow-xl space-y-6">
                 {/* Golden Sunburst background effect */}
-                <div className="absolute top-0 right-0 w-[250px] h-[250px] bg-gradient-to-b from-[#DCAE6C]/10 to-transparent pointer-events-none rounded-full blur-3xl -mr-16 -mt-16 opacity-80" />
+                <div className="absolute top-0 right-0 w-[250px] h-[250px] bg-gradient-to-b from-[#DCAE6C]/10 to-transparent pointer-events-none rounded-full blur-3xl -mr-16 -mt-16 opacity-80 animate-pulse" />
                 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10 w-full">
-                  <div className="space-y-3.5 max-w-2xl text-left">
+                  <div className="space-y-4 max-w-2xl text-left">
                     <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs uppercase font-mono tracking-widest text-[#DCAE6C] bg-[#DCAE6C]/10 border border-[#DCAE6C]/20 font-bold">
-                      <Sparkles size={11} className="text-[#DCAE6C]" />
-                      <span>A Bíblia do Despertar</span>
+                      <Coffee size={12} className="text-[#DCAE6C] mr-0.5" />
+                      <span>Café com o Despertar</span>
                     </span>
-                    <h2 className="font-serif text-3xl md:text-5xl font-light text-stone-200 tracking-tight leading-tight">
-                      <span className="text-stone-200/35">A Palavra que </span><span className="text-[#DCAE6C] font-semibold">acorda</span><span className="text-stone-200/35">.</span><br />
-                      <span className="text-[#DCAE6C]/35">A Verdade que </span><span className="text-[#DCAE6C] font-semibold">transforma</span><span className="text-stone-200/35">.</span><br />
-                      <span className="text-stone-200/35">A Vida que </span><span className="text-[#DCAE6C] font-semibold">floresce</span><span className="text-stone-200/35">.</span>
+                    <h2 className="font-serif text-3xl md:text-5xl font-light text-stone-100 tracking-tight leading-tight">
+                      <span className="text-stone-300">À Mesa com o </span><span className="text-[#DCAE6C] font-semibold">Pai</span><span className="text-stone-400">.</span><br />
+                      <span className="text-stone-400">Um café quente, um silêncio, </span><span className="text-[#DCAE6C] font-semibold">um recomeço</span><span className="text-stone-400">.</span>
                     </h2>
-                    <p className="text-stone-400 text-xs md:text-sm leading-relaxed font-sans max-w-lg mt-2">
-                      Você já imaginou ter uma Bíblia criada para ajudar uma nova geração a despertar para aquilo que Deus sonhou? Desenvolva uma caminhada diária com Deus, compreenda as Escrituras e viva uma fé autêntica.
-                    </p>
+                    
+                    {/* The Slippery Slide Hook (Joseph Sugarman style) */}
+                    <div className="space-y-2.5 text-stone-300 text-xs md:text-sm leading-relaxed max-w-xl font-sans">
+                      <p>
+                        Você já percebeu como a primeira escolha da sua manhã dita as regras de todo o seu dia? Se abrimos o celular logo ao acordar, a avalanche de ansiedade, notícias e cobranças vence a nossa paz antes mesmo de colocarmos os pés fora da cama.
+                      </p>
+                      <p className="font-serif italic text-[#DCAE6C]/90 text-sm md:text-base border-l-2 border-[#DCAE6C]/30 pl-3">
+                        "Mas existe um lugar de silêncio, café fresco e Palavra esperando por você a cada amanhecer..."
+                      </p>
+                      <p>
+                        Aqui, você não é cobrado a alcançar metas religiosas impossíveis. Você é o herói de uma jornada real, e nosso papel é apenas servir o melhor café: um guia dócil de quietude, um altar livre para suas orações e uma mesa de irmãos para partir o pão da fé.
+                      </p>
+                    </div>
                   </div>
 
                   {/* Micro-interactive Streak card */}
-                  <div className="flex items-center space-x-4 bg-[#1F1D1B] py-4 px-6 rounded-2xl shadow-lg border border-[#DCAE6C]/15 backdrop-blur-xs shrink-0 self-start md:self-auto">
+                  <div className="flex items-center space-x-4 bg-[#1F1D1B] py-4 px-6 rounded-2xl shadow-lg border border-[#DCAE6C]/15 backdrop-blur-xs shrink-0 self-start md:self-auto hover:border-[#DCAE6C]/40 transition-colors duration-300">
                     <Flame size={24} fill="#DCAE6C" className="text-[#DCAE6C] animate-pulse" />
                     <div className="text-left font-mono">
                       <span className="text-2xl font-black text-[#DCAE6C]">{progress.streak} dias</span>
-                      <p className="text-xs text-stone-400 uppercase tracking-widest font-bold mt-1">Sintonia Diária</p>
+                      <p className="text-xs text-stone-400 uppercase tracking-widest font-bold mt-1">À Mesa do Pai</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Scannable Grid featuring the brand benefits */}
+                {/* Scannable Grid featuring the benefits instead of features (Ray Edwards style) */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 border-t border-[#DCAE6C]/15 relative z-10 text-left">
                   <div className="space-y-1.5">
-                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Leitura Ativa</span>
-                    <p className="text-xs md:text-sm text-stone-300 leading-relaxed">Aproximação diária e simples com o Logos divino</p>
+                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Respiro Coeso</span>
+                    <p className="text-xs text-stone-300 leading-relaxed font-sans">Aquiete seu coração em 4 segundos e retome o controle diante do barulho do mundo.</p>
                   </div>
                   <div className="space-y-1.5">
-                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Planos Práticos</span>
-                    <p className="text-xs md:text-sm text-stone-300 leading-relaxed">Desafios projetados para cada fase da sua fé</p>
+                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Sabedoria Diária</span>
+                    <p className="text-xs text-stone-300 leading-relaxed font-sans">Se alimente de reflexões práticas que decifram a Bíblia numa linguagem do seu dia a dia.</p>
                   </div>
                   <div className="space-y-1.5">
-                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Devocionais Livres</span>
-                    <p className="text-xs md:text-sm text-stone-300 leading-relaxed">Meditações focadas na graça, livres de cobranças</p>
+                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Altar Sem Fardos</span>
+                    <p className="text-xs text-stone-300 leading-relaxed font-sans">Guarde suas próprias reflexões de quietude de forma segura, íntima e vitalícia.</p>
                   </div>
                   <div className="space-y-1.5">
-                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ 12 Inspiradores</span>
-                    <p className="text-xs md:text-sm text-stone-300 leading-relaxed">Encontre seu jeito único e importante para o Reino</p>
+                    <span className="text-xs md:text-sm font-mono font-black text-[#DCAE6C] uppercase tracking-wider block">✔ Mesa de Família</span>
+                    <p className="text-xs text-stone-300 leading-relaxed font-sans font-semibold">Faça parte de um movimento unificado de peregrinos sinceros longe das fachadas.</p>
                   </div>
                 </div>
               </div>
@@ -1460,10 +1469,10 @@ export default function App() {
           {activeSection === 'devotionals' && !selectedDevotional && (() => {
             const currentList = activeDevotionalTab === 'comunhao' ? DEVOCIONAIS : MULTIPLICACAO;
             
-            // Check if Comunhão has been fully completed (all 40 days of DEVOCIONAIS)
-            const totalComunhaoDays = DEVOCIONAIS.length; // 40
+            // Check if Comunhão has been started with a symbolic week (7 days) to allow users to easily test/experience
+            const totalRequiredComunhaoDays = 7;
             const completedComunhaoDays = DEVOCIONAIS.filter(dev => progress.completedChapters.includes(dev.id)).length;
-            const isComunhaoFullyComplete = completedComunhaoDays >= totalComunhaoDays;
+            const isComunhaoFullyComplete = completedComunhaoDays >= totalRequiredComunhaoDays;
 
             const completedCount = currentList.filter(dev => progress.completedChapters.includes(dev.id)).length;
             const completionPercent = Math.round((completedCount / currentList.length) * 100);
@@ -1480,45 +1489,47 @@ export default function App() {
                 exit={{ opacity: 0, y: -12 }}
                 className="space-y-8 text-left max-w-5xl mx-auto"
               >
-                {/* Header Banner with Premium Styling */}
-                <div className="text-center py-6 max-w-3xl mx-auto space-y-3">
-                  <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">Caminho de Despertar</span>
+                {/* Header Banner with Cozy Copywriting Styling (Sugarman & Edwards inspired) */}
+                <div className="text-center py-8 max-w-3xl mx-auto space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#C08261]/10 text-[#C08261] rounded-full border border-[#C08261]/20">
+                    <span className="text-xs font-mono uppercase tracking-widest font-semibold">☕ Um Café na Presença do Pai</span>
+                  </div>
                   <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 tracking-tight leading-tight">
-                    Consagração Diária e Preparação para o Chamado
+                    Diário do Despertar: <span className="font-semibold text-[#C08261]">365 Dias</span> de Intimidade
                   </h3>
                   <p className="text-stone-500 text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-sans mt-2">
-                    Cultive a presença invisível através do silêncio devocional e multiplique o chamado.
+                    Sente-se confortavelmente, feche os olhos por alguns segundos e saboreie este momento. Poucos minutos de sincera comunhão diária podem redirecionar o seu propósito e amparar sua alma.
                   </p>
                 </div>
 
-                {/* Highly intuitive segmented choice control (Krug's Ease of Decision & Norman Affordance) */}
+                {/* Highly intuitive segmented choice control */}
                 <div id="devotionals-segmented-control" className="flex justify-center p-1 bg-stone-150/60 rounded-2xl max-w-md mx-auto border border-stone-200/50">
                   <button
                     id="tab-devotional-comunhao"
                     onClick={() => setActiveDevotionalTab('comunhao')}
-                    className={`flex-1 flex flex-col items-center py-2 px-3 rounded-xl transition-all ${
+                    className={`flex-1 flex flex-col items-center py-2.5 px-3 rounded-xl transition-all ${
                       activeDevotionalTab === 'comunhao'
                         ? 'bg-white text-[#C08261] shadow-sm font-semibold'
                         : 'text-stone-500 hover:text-stone-800'
                     }`}
                   >
-                    <span className="text-xs font-serif leading-none">40 Dias Despertando</span>
-                    <span className="text-[9px] font-mono uppercase opacity-75 mt-0.5 tracking-wider">Comunhão Íntima</span>
+                    <span className="text-xs font-serif leading-none">Comunhão Íntima</span>
+                    <span className="text-[9px] font-mono uppercase opacity-75 mt-0.5 tracking-wider">Dias 1 a 180</span>
                   </button>
                   <button
                     id="tab-devotional-multiplicacao"
                     onClick={() => setActiveDevotionalTab('multiplicacao')}
-                    className={`flex-1 flex flex-col items-center py-2 px-3 rounded-xl transition-all ${
+                    className={`flex-1 flex flex-col items-center py-2.5 px-3 rounded-xl transition-all ${
                       activeDevotionalTab === 'multiplicacao'
                         ? 'bg-white text-[#C08261] shadow-sm font-semibold'
                         : 'text-stone-500 hover:text-stone-800'
                     }`}
                   >
                     <span className="text-xs font-serif leading-none flex items-center gap-1">
-                      <span>Imersão do Despertador</span>
+                      <span>A Multiplicação</span>
                       {!isComunhaoFullyComplete && <span className="text-[10px]">🔒</span>}
                     </span>
-                    <span className="text-[9px] font-mono uppercase opacity-75 mt-0.5 tracking-wider">A Multiplicação</span>
+                    <span className="text-[9px] font-mono uppercase opacity-75 mt-0.5 tracking-wider">Dias 181 a 365</span>
                   </button>
                 </div>
 
@@ -1543,25 +1554,25 @@ export default function App() {
                       </span>
                       
                       <h4 className="font-serif text-2xl md:text-3xl text-stone-100 tracking-tight font-light leading-snug">
-                        Os 40 dias no <span className="text-[#C08261] font-semibold">Deserto do Despertador</span> só se abrem após o término da Comunhão Íntima
+                        O caminho da <span className="text-[#C08261] font-semibold">Multiplicação</span> se abre após o término de <span className="text-[#C08261] font-semibold">7 dias</span> da Jornada de Comunhão Íntima
                       </h4>
                     </div>
 
                     <div className="border-t border-stone-800/65 pt-6 space-y-4 max-w-lg mx-auto relative z-10 text-stone-400 text-xs md:text-sm leading-relaxed text-left font-serif font-light">
                       <p className="indent-4">
-                        Assim como Jesus foi guiado pelo Espírito ao deserto, enfrentando, jejuando e orando por <strong>40 dias e 40 noites</strong> (Mateus 4:1-11, Marcos 1:12-15) em profunda provação, purificação e preparo íntimo com o Pai, o seu chamado como Despertador — um ganhador e multiplicador de almas — exige a consolidação prévia do seu fogo secreto.
+                        Assim como Jesus fortaleceu as estacas do Seu preparo no secreto antes de iniciar Seu ministério público, o seu chamado de transbordo e discipulado exige a consolidação prévia das suas primeiras estacas de integridade diária.
                       </p>
                       <p className="indent-4">
-                        Nenhum homem pode dar o que não possui. A multiplicação só floresce a partir do transbordo de uma mesa de intimidade. Complete primeiro os 40 dias da sua consagração pessoal antes de receber as ferramentas da obra pública de resgate.
+                        Sente-se à mesa, acolha o Espírito, e complete pelo menos as primeiras <strong>7 lições de Comunhão</strong> para provar de sua constância antes de partir para a multiplicação.
                       </p>
                       
                       <div className="bg-stone-900/50 rounded-2xl p-4.5 border border-stone-800 flex items-start gap-3.5 mt-3">
                         <span className="text-xl">🕊️</span>
                         <div className="space-y-1 flex-1 font-sans">
                           <span className="text-[10px] font-mono text-stone-500 uppercase tracking-wide block font-semibold">Atendimento ao Seu Progresso</span>
-                          <span className="text-xs text-stone-300 font-medium">Você concluiu {completedComunhaoDays} de 40 encontros diários.</span>
+                          <span className="text-xs text-stone-300 font-medium">Você concluiu {completedComunhaoDays} de 7 encontros diários.</span>
                           <div className="w-full bg-stone-850 h-1.5 rounded-full mt-1.5 overflow-hidden">
-                            <div className="bg-[#C08261] h-full" style={{ width: `${(completedComunhaoDays / 40) * 100}%` }} />
+                            <div className="bg-[#C08261] h-full" style={{ width: `${Math.min((completedComunhaoDays / 7) * 100, 100)}%` }} />
                           </div>
                         </div>
                       </div>
@@ -1581,7 +1592,7 @@ export default function App() {
                         onClick={handleSimulateAllComunhao}
                         className="px-4 py-2 bg-stone-900 hover:bg-black text-stone-400 hover:text-stone-200 text-[10.5px] font-mono rounded-xl border border-stone-800 transition shadow-inner"
                       >
-                        ⚡ Simular 40 dias (Bypass)
+                        ⚡ Simular 7 dias (Bypass)
                       </button>
                     </div>
                   </motion.div>
