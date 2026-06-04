@@ -1,20 +1,12 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC3JmJP8jEcRJ6_6ED3vY81977TYbXO-8g",
-  authDomain: "gen-lang-client-0310482706.firebaseapp.com",
-  projectId: "gen-lang-client-0310482706",
-  storageBucket: "gen-lang-client-0310482706.firebasestorage.app",
-  messagingSenderId: "821480017249",
-  appId: "1:821480017249:web:85dc26abcb515c2ba3c920",
-};
+import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 // CRITICAL: Pointing to the custom named database instance
-export const db = getFirestore(app, 'ai-studio-31e21226-b8e7-4113-86f2-060e8131ca38');
+export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 
 export enum OperationType {
   CREATE = 'create',

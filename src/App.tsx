@@ -23,6 +23,7 @@ import ManifestoSection from './components/ManifestoSection';
 import WitnessesSection from './components/WitnessesSection';
 import IgrejaPrimitiva from './components/IgrejaPrimitiva';
 import AppsSection from './components/AppsSection';
+import MuralComunidade from './components/MuralComunidade';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
@@ -32,10 +33,13 @@ import { UserProgress, Devotional, SpiritualIdentity } from './types';
 import { auth, db } from './lib/firebase';
 import { buscarMovimentos } from './lib/sementes';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, query, collection, where, orderBy, limit, updateDoc, increment } from 'firebase/firestore';
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas' | 'primitiva' | 'apps'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas' | 'primitiva' | 'apps' | 'mural'>('home');
+  const [activePrayersCount, setActivePrayersCount] = useState<number>(0);
+  const [homePrayerOfTheDay, setHomePrayerOfTheDay] = useState<any>(null);
+  const [homeTestimonyOfTheDay, setHomeTestimonyOfTheDay] = useState<any>(null);
   const [mesasSubTab, setMesasSubTab] = useState<'mesas' | 'pilgrims'>('mesas');
   const [activeDevotionalTab, setActiveDevotionalTab] = useState<'comunhao' | 'multiplicacao'>('comunhao');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
@@ -55,7 +59,7 @@ export default function App() {
   
   // Real-time Sementes do Reino balance (Mateus 6)
   const [sementesSaldo, setSementesSaldo] = useState<number>(0);
-  const [floatingSementes, setFloatingSementes] = useState<{ id: string; tipo: string; descricao: string }[]>([]);
+  const [floatingSementes, setFloatingSementes] = useState<{ id: string; tipo: string; descricao: string; valor?: number; mensagemEspecial?: string; versiculo?: string }[]>([]);
   const [sementesMovimentos, setSementesMovimentos] = useState<any[]>([]);
 
   // Growth loop & Norman Feedback states
@@ -178,6 +182,95 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  // Listen to active prayers count, daily prayer, and daily testimony
+  useEffect(() => {
+    // 1. Count of active prayers
+    const qCount = query(
+      collection(db, 'pedidosOracao'),
+      where('respondido', '==', false)
+    );
+    const unsubCount = onSnapshot(qCount, (snapshot) => {
+      setActivePrayersCount(snapshot.size);
+    }, (error) => {
+      console.error("Error listening to active prayers count:", error);
+    });
+
+    // 2. Spotlight Prayer of the Day (latest active or semi-stable)
+    const qPrayer = query(
+      collection(db, 'pedidosOracao'),
+      where('respondido', '==', false),
+      orderBy('criadoEm', 'desc'),
+      limit(5)
+    );
+    const unsubPrayer = onSnapshot(qPrayer, (snapshot) => {
+      if (!snapshot.empty) {
+        const docs: any[] = [];
+        snapshot.forEach(docSnap => {
+          docs.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        // Select first item or fallback
+        setHomePrayerOfTheDay(docs[0]);
+      } else {
+        setHomePrayerOfTheDay(null);
+      }
+    }, (err) => {
+      console.error("Error listening to spotlight prayer:", err);
+    });
+
+    // 3. Spotlight Testimony of the Day (latest)
+    const qTestimony = query(
+      collection(db, 'testemunhos'),
+      orderBy('criadoEm', 'desc'),
+      limit(5)
+    );
+    const unsubTestimony = onSnapshot(qTestimony, (snapshot) => {
+      if (!snapshot.empty) {
+        const docs: any[] = [];
+        snapshot.forEach(docSnap => {
+          docs.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        setHomeTestimonyOfTheDay(docs[0]);
+      } else {
+        setHomeTestimonyOfTheDay(null);
+      }
+    }, (err) => {
+      console.error("Error listening to spotlight testimony:", err);
+    });
+
+    return () => {
+      unsubCount();
+      unsubPrayer();
+      unsubTestimony();
+    };
+  }, []);
+
+  // Home spotlight support actions
+  const handleSupportPrayerFromHome = async (id: string) => {
+    try {
+      const docRef = doc(db, 'pedidosOracao', id);
+      await updateDoc(docRef, {
+        contadorOracoes: increment(1)
+      });
+      setCommittedToastMsg("Você uniu sua fé a esta oração! Deus ouviu! 🙏");
+      setTimeout(() => setCommittedToastMsg(null), 3000);
+    } catch (err) {
+      console.error("Error backing up prayer request:", err);
+    }
+  };
+
+  const handleSupportTestimonyFromHome = async (id: string) => {
+    try {
+      const docRef = doc(db, 'testemunhos', id);
+      await updateDoc(docRef, {
+        fortalecidos: increment(1)
+      });
+      setCommittedToastMsg("Sua fé foi fortalecida! Glórias a Deus! 🌱");
+      setTimeout(() => setCommittedToastMsg(null), 3000);
+    } catch (err) {
+      console.error("Error backing up testimony:", err);
+    }
+  };
+
   // Sync state changes to Firestore/localStorage
   useEffect(() => {
     if (currentUser) {
@@ -214,16 +307,16 @@ export default function App() {
     const handleSementePlantada = (e: Event) => {
       const customEvent = e as CustomEvent;
       if (customEvent.detail) {
-        const { tipo, descricao } = customEvent.detail;
+        const { tipo, descricao, valor, mensagemEspecial, versiculo } = customEvent.detail;
         const newId = Math.random().toString();
         
         // Add to floating pool
-        setFloatingSementes(prev => [...prev, { id: newId, tipo, descricao }]);
+        setFloatingSementes(prev => [...prev, { id: newId, tipo, descricao, valor, mensagemEspecial, versiculo }]);
         
-        // Clean up after 3 seconds
+        // Clean up after 4.5 seconds
         setTimeout(() => {
           setFloatingSementes(prev => prev.filter(item => item.id !== newId));
-        }, 3000);
+        }, 4500);
       }
     };
 
@@ -635,6 +728,28 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Necessidade Aberta (Mobile Gatilho Zeigarnik / Clé do Loop) */}
+              <div className="mx-4 mt-3 p-4 bg-amber-50/50 border border-amber-100/70 rounded-xl text-left space-y-2.5 shadow-3xs hover:border-amber-200 transition-colors duration-300">
+                <div className="flex items-center space-x-2 text-stone-800">
+                  <span className="text-sm select-none animate-pulse">🕊️</span>
+                  <span className="text-[10px] font-mono uppercase font-black text-amber-800 tracking-wider">
+                    Hoje existem {activePrayersCount} pedidos ativos
+                  </span>
+                </div>
+                <p className="text-[11px] text-stone-600 leading-normal font-sans">
+                  Sempre há fardos para carregar em comunidade. Seja a resposta de apoio ao clamor de um irmão agora!
+                </p>
+                <button
+                  onClick={() => {
+                    setActiveSection('mural');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full py-1.5 px-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[10px] font-mono uppercase tracking-widest font-black rounded-lg transition text-center block shadow-2xs hover:shadow-sm"
+                >
+                  Orar por alguém agora 🙏
+                </button>
+              </div>
+
               {/* Drawer Navigation items list */}
               <nav className="flex-1 p-4 space-y-1 overflow-y-auto w-full">
                 <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2 text-left">Santuário do Secreto</span>
@@ -716,6 +831,20 @@ export default function App() {
                     <Compass size={14} />
                     <span>Caminhos do Coração</span>
                   </span>
+                </button>
+
+                <button
+                  id="mobile-nav-mural"
+                  onClick={() => { setActiveSection('mural'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold border-[#C08261]/20 border bg-[#C08261]/5 transition ${
+                    activeSection === 'mural' ? 'bg-[#C08261]/15 text-[#C08261] font-bold' : 'text-stone-750 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Compass size={14} className="text-[#C08261]" />
+                    <span>Mural de Oração & Fé 🕊️</span>
+                  </span>
+                  <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Novo</span>
                 </button>
 
                 <button
@@ -880,6 +1009,27 @@ export default function App() {
           </div>
         </div>
 
+        {/* Necessidade Aberta (Gatilho Zeigarnik / Clé do Loop) */}
+        <div className="mx-4 mt-3 p-4 bg-amber-50/50 border border-amber-100/70 rounded-xl text-left space-y-2.5 shadow-3xs hover:border-amber-200 transition-colors duration-300">
+          <div className="flex items-center space-x-2 text-stone-800">
+            <span className="text-sm select-none animate-pulse">🕊️</span>
+            <span className="text-[10px] font-mono uppercase font-black text-amber-800 tracking-wider">
+              Hoje existem {activePrayersCount} pedidos ativos
+            </span>
+          </div>
+          <p className="text-[11px] text-stone-600 leading-normal font-sans">
+            Sempre há fardos para carregar em comunidade. Seja a resposta de apoio ao clamor de um irmão agora!
+          </p>
+          <button
+            onClick={() => {
+              setActiveSection('mural');
+            }}
+            className="w-full py-1.5 px-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[10px] font-mono uppercase tracking-widest font-black rounded-lg transition text-center block shadow-2xs hover:shadow-sm"
+          >
+            Orar por alguém agora 🙏
+          </button>
+        </div>
+
         {/* Navigation lists */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2 text-left">Santuário do Secreto</span>
@@ -963,6 +1113,20 @@ export default function App() {
               <Compass size={14} />
               <span>Caminhos do Coração</span>
             </span>
+          </button>
+
+          <button
+            id="nav-mural"
+            onClick={() => { setActiveSection('mural'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition ${
+              activeSection === 'mural' ? 'bg-[#C08261]/15 text-[#C08261] font-bold' : 'text-stone-750 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <Compass size={14} className="text-[#C08261]" />
+              <span>Mural de Oração & Fé 🕊️</span>
+            </span>
+            <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Novo</span>
           </button>
 
           <button
@@ -1153,6 +1317,141 @@ export default function App() {
                   <Sparkles size={13} className="text-amber-400 shrink-0" />
                   <span>Puxar Palavra de Graça</span>
                 </button>
+              </div>
+
+              {/* DESTAQUES DO ALTAR PÚBLICO (SPONSOR LOOP) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-2">
+                
+                {/* 1. PEDIDO DE ORAÇÃO DO DIA SPOTLIGHT */}
+                <div className="bg-[#fffdfb] border border-[#C08261]/25 rounded-3xl p-6 shadow-xs space-y-4 text-left relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#C08261]/4 pointer-events-none rounded-bl-full" />
+                  <div className="flex justify-between items-center pb-2 border-b border-stone-100">
+                    <span className="text-[10px] font-mono uppercase bg-[#C08261]/10 text-[#C08261] px-2.5 py-0.5 rounded-full font-bold">
+                      🙏 Clamor do Dia
+                    </span>
+                    <span className="text-[11px] font-mono text-stone-400">Selecionada no Altar</span>
+                  </div>
+
+                  {homePrayerOfTheDay ? (
+                    <div className="space-y-3">
+                      <p className="font-serif text-[14px] text-stone-750 italic leading-relaxed line-clamp-2">
+                        "{homePrayerOfTheDay.descricaoCurta}"
+                      </p>
+                      
+                      <div className="flex justify-between items-center text-[11px] text-stone-400 font-mono">
+                        <span>Por {homePrayerOfTheDay.criadorGenerico || 'Irmão'} {homePrayerOfTheDay.criadorNome || 'Membro'}</span>
+                        <span>{homePrayerOfTheDay.contadorOracoes || 0} já oraram</span>
+                      </div>
+
+                      <div className="pt-1.5 flex gap-2">
+                        <button
+                          onClick={() => handleSupportPrayerFromHome(homePrayerOfTheDay.id)}
+                          className="flex-1 py-2 bg-stone-900 hover:bg-[#C08261] text-white text-[10.5px] font-mono uppercase tracking-widest font-black rounded-xl transition shadow-3xs"
+                        >
+                          🙏 Unir minha Fé
+                        </button>
+                        <button
+                          onClick={() => {
+                            setActiveSection('mural');
+                          }}
+                          className="px-3.5 py-2 border border-stone-200 text-stone-600 text-[10.5px] font-mono uppercase tracking-wide rounded-xl font-bold hover:bg-stone-50 transition"
+                        >
+                          Mural
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    // Graceful fallback
+                    <div className="space-y-3">
+                      <p className="font-serif text-[14px] text-stone-500 italic leading-relaxed">
+                        "Senhor, renova a esperança dos aflitos e cobre com Teu manto de graça todas as famílias que oram."
+                      </p>
+                      <div className="flex justify-between items-center text-[11px] text-stone-400 font-mono">
+                        <span>Por Irmão André • Geral</span>
+                        <span>37 já oraram</span>
+                      </div>
+                      <div className="pt-1.5 flex gap-2">
+                        <button
+                          onClick={() => {
+                            setActiveSection('mural');
+                          }}
+                          className="w-full py-2 bg-[#C08261]/10 hover:bg-[#C08261]/20 text-[#C08261] text-[10.5px] font-mono uppercase tracking-widest font-black rounded-xl transition text-center"
+                        >
+                          Visitar o Mural 🙏
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. TESTEMUNHO DO DIA SPOTLIGHT */}
+                <div className="bg-[#fbfcfa] border border-emerald-500/15 rounded-3xl p-6 shadow-xs space-y-4 text-left relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/4 pointer-events-none rounded-bl-full" />
+                  <div className="flex justify-between items-center pb-2 border-b border-stone-100">
+                    <span className="text-[10px] font-mono uppercase bg-emerald-700/10 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold">
+                      🌱 Testemunho do Dia
+                    </span>
+                    <span className="text-[11px] font-mono text-stone-400">Graça Manifestada</span>
+                  </div>
+
+                  {homeTestimonyOfTheDay ? (
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <h4 className="font-serif text-sm font-bold text-stone-850 truncate">{homeTestimonyOfTheDay.titulo}</h4>
+                        <p className="font-serif text-[13px] text-stone-605 italic line-clamp-2 leading-relaxed">
+                          "{homeTestimonyOfTheDay.relato}"
+                        </p>
+                      </div>
+                      
+                      <div className="flex justify-between items-center text-[11px] text-stone-404 font-mono">
+                        <span>Por {homeTestimonyOfTheDay.criadorGenerico || 'Irmão'} {homeTestimonyOfTheDay.criadorNome || 'Membro'}</span>
+                        <span>{homeTestimonyOfTheDay.fortalecidos || 0} fortalecidos</span>
+                      </div>
+
+                      <div className="pt-1.5 flex gap-2">
+                        <button
+                          onClick={() => handleSupportTestimonyFromHome(homeTestimonyOfTheDay.id)}
+                          className="flex-1 py-2 bg-emerald-700 hover:bg-emerald-850 text-white text-[10.5px] font-mono uppercase tracking-widest font-black rounded-xl transition shadow-3xs"
+                        >
+                          ❤️ Fortaleceu-me
+                        </button>
+                        <button
+                          onClick={() => {
+                            setActiveSection('mural');
+                          }}
+                          className="px-3.5 py-2 border border-stone-200 text-stone-600 text-[10.5px] font-mono uppercase tracking-wide rounded-xl font-bold hover:bg-stone-50 transition"
+                        >
+                          Mural
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    // Graceful fallback
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <h4 className="font-serif text-sm font-bold text-stone-850">Provisão e Sabedoria de Deus</h4>
+                        <p className="font-serif text-[13px] text-stone-500 italic line-clamp-2 leading-relaxed">
+                          "O Senhor supriu magnificamente nossas necessidades no momento mais crítico. Glórias sejam dadas!"
+                        </p>
+                      </div>
+                      <div className="flex justify-between items-center text-[11px] text-stone-400 font-mono">
+                        <span>Por Irmã Lara • Providência</span>
+                        <span>89 fortalecidos</span>
+                      </div>
+                      <div className="pt-1.5 flex gap-2">
+                        <button
+                          onClick={() => {
+                            setActiveSection('mural');
+                          }}
+                          className="w-full py-2 bg-emerald-700/10 hover:bg-emerald-700/20 text-emerald-800 text-[10.5px] font-mono uppercase tracking-widest font-black rounded-xl transition text-center"
+                        >
+                          Visitar o Mural 🌱
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
               </div>
 
               {/* PHASE TWO: COMPROMISSOS DE QUIETUDE, CONSTÂNCIA & RETOMAR */}
@@ -2258,6 +2557,23 @@ export default function App() {
             </motion.div>
           )}
 
+          {/* ACTIVE PORT: COMMUNITY MURAL WALL */}
+          {activeSection === 'mural' && !selectedDevotional && (
+            <motion.div
+              key="mural"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="space-y-2"
+            >
+              <MuralComunidade
+                currentUser={currentUser}
+                userProfile={userProfile}
+                onShowAuthModal={() => setShowAuthModal(true)}
+              />
+            </motion.div>
+          )}
+
           {/* ACTIVE PORT: USER EXPENSIVE PROGRESSION PROFILE */}
           {activeSection === 'profile' && !selectedDevotional && (
             <motion.div
@@ -2317,6 +2633,73 @@ export default function App() {
                    </div>
                  </div>
                </div>
+
+              {/* O JARDIM VISUAL DO SECRETO (Don Norman / Hooked feedback loop) */}
+              <div className="bg-[#f7faf8] border border-emerald-100/60 p-6 md:p-8 rounded-3xl text-left space-y-6 relative overflow-hidden mt-6 animate-fade-in shadow-xs">
+                <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-[#dcfce7]/30 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
+                
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-mono uppercase bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-bold tracking-wider leading-none">
+                      Metáfora Viva • O Jardim do Coração
+                    </span>
+                    <h4 className="font-serif text-xl md:text-2xl font-bold text-stone-850 flex items-center space-x-2">
+                      <span>{(() => {
+                        if (sementesSaldo <= 5) return '🌱 Jardim Sementeiro';
+                        if (sementesSaldo <= 15) return '🔥 Cultivo das Chamas';
+                        if (sementesSaldo <= 30) return '🌻 Semeador da Esperança';
+                        if (sementesSaldo <= 50) return '🌳 Floresta da Intimidade';
+                        return '👑 Arauto Real do Secreto';
+                      })()}</span>
+                    </h4>
+                    <p className="text-stone-500 text-xs md:text-sm font-sans max-w-xl">
+                      Para cada semente que você planta no secreto através de orações ou reflexões na comunidade, seu altar invisível floresce com novos galhos e frutos eternos.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-white border border-emerald-100/80 px-4 py-3 rounded-2xl shadow-2xs font-mono text-center shrink-0">
+                    <span className="text-xl md:text-2xl font-black text-emerald-800 block">{sementesSaldo}</span>
+                    <span className="text-[9px] uppercase tracking-widest text-[#C08261] font-bold">Fidelidade Viva</span>
+                  </div>
+                </div>
+
+                {/* Simulated physical grid representation of seeds that illuminate or bloom */}
+                <div className="relative z-10 bg-white/70 border border-emerald-100/40 p-4 rounded-2xl">
+                  <div className="grid grid-cols-5 sm:grid-cols-10 gap-3 md:gap-4 justify-items-center">
+                    {Array.from({ length: 20 }).map((_, i) => {
+                      const seedThreshold = i + 1;
+                      const hasSeed = sementesSaldo >= seedThreshold;
+                      const isMultipleOf5 = seedThreshold % 5 === 0;
+                      
+                      return (
+                        <div 
+                          key={i} 
+                          className={`w-9 h-9 md:w-11 md:h-11 rounded-xl flex items-center justify-center transition-all duration-500 relative group select-none ${
+                            hasSeed 
+                              ? isMultipleOf5 
+                                ? 'bg-[#dcfce7] border border-emerald-300 text-base animate-pulse shadow-xs' 
+                                : 'bg-[#f0fdf4] border border-emerald-200 text-sm hover:scale-105' 
+                              : 'bg-stone-50 border border-stone-100 opacity-30 italic text-stone-300 hover:opacity-50'
+                          }`}
+                        >
+                          {hasSeed ? (
+                            isMultipleOf5 ? '🌸' : '🌱'
+                          ) : (
+                            '💤'
+                          )}
+                          <span className="absolute -bottom-2 text-[7.5px] font-mono text-stone-400 bg-white/90 border border-stone-100 px-1.5 py-0 rounded-full scale-75 leading-none">
+                            {seedThreshold}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex justify-between items-center text-[10px] text-stone-400 mt-5 pt-3 border-t border-emerald-50/50">
+                    <span>🌱 Mudas Cultivadas</span>
+                    <span className="flex items-center space-x-1"><span>🌸</span> <span>Flores de Alianças (Células de 5)</span></span>
+                  </div>
+                </div>
+              </div>
 
               {/* HISTORIC MARCOS ESPIRITUAIS BADGES (Bento / Core features) */}
               <div id="marcos-espirituais-section" className="space-y-4 pt-4">
@@ -2680,7 +3063,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* Floating Sementes Particle/Popup System */}
-      <div className="fixed bottom-10 right-6 z-50 pointer-events-none flex flex-col items-end space-y-2">
+      <div className="fixed bottom-10 right-6 z-50 pointer-events-none flex flex-col items-end space-y-2 max-w-sm md:max-w-md">
         <AnimatePresence>
           {floatingSementes.map((item) => (
             <motion.div
@@ -2689,24 +3072,38 @@ export default function App() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -80, scale: 0.9, filter: 'blur(4px)' }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-emerald-950/95 text-stone-100 border border-emerald-500/35 px-4 py-3 rounded-2xl shadow-xl flex items-center space-x-3 pointer-events-auto backdrop-blur-md max-w-sm"
+              className="bg-emerald-950/98 text-stone-105 border-2 border-emerald-500/40 p-4 rounded-3xl shadow-2xl flex flex-col space-y-2 pointer-events-auto backdrop-blur-md w-80 md:w-96"
             >
-              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-lg animate-bounce shrink-0">
-                🌱
-              </div>
-              <div className="text-left">
-                <div className="flex items-center space-x-1.5">
-                  <span className="text-[10px] font-mono text-emerald-300 font-extrabold uppercase tracking-wide">
-                    +1 Semente do Reino!
-                  </span>
-                  <span className="text-[9px] bg-emerald-500/30 text-emerald-400 px-1 py-0.5 rounded font-extrabold font-mono uppercase tracking-widest leading-none">
-                    {item.tipo === 'oracao' ? '🙏 Oração' : '📖 Testemunho'}
-                  </span>
+              <div className="flex items-center space-x-3">
+                <div className="w-9 h-9 rounded-full bg-emerald-505/20 border border-emerald-500/30 flex items-center justify-center text-lg animate-bounce shrink-0 select-none">
+                  🌱
                 </div>
-                <p className="text-xs text-stone-200 mt-0.5 leading-snug font-sans truncate pr-1">
-                  {item.descricao}
-                </p>
+                <div className="text-left leading-tight">
+                  <div className="flex items-center space-x-1.5 flex-wrap">
+                    <span className="text-[11px] font-mono text-emerald-300 font-black uppercase tracking-wider">
+                      +{item.valor || 1} Sementes do Reino!
+                    </span>
+                    <span className="text-[8.5px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-mono uppercase tracking-wider block font-bold">
+                      {item.tipo === 'oracao' ? '🙏 Oração' : '📖 Testemunho'}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-stone-300 font-sans font-medium line-clamp-1 mt-0.5">
+                    {item.descricao}
+                  </p>
+                </div>
               </div>
+
+              {item.mensagemEspecial && (
+                <div className="text-[10px] font-mono text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1.5 rounded-xl font-bold text-left">
+                  🌟 {item.mensagemEspecial}
+                </div>
+              )}
+
+              {item.versiculo && (
+                <div className="text-[10px] font-serif italic text-emerald-100/90 bg-[#142d1d] border border-emerald-800/55 p-2 rounded-xl text-left leading-relaxed">
+                  {item.versiculo}
+                </div>
+              )}
             </motion.div>
           ))}
         </AnimatePresence>

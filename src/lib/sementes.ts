@@ -29,16 +29,42 @@ export async function plantarSemente({
   // Always update local storage first as a graceful client-side immediate reference
   const localVal = localStorage.getItem('despertar_sementes_saldo');
   const currentLocal = localVal ? parseInt(localVal) : 0;
-  const newSaldo = currentLocal + 1;
+
+  let valor = 1;
+  let mensagemEspecial = '';
+  let versiculo = '';
+  
+  const rand = Math.random();
+  if (rand < 0.15) {
+    valor = 3;
+    const proverbios = [
+      { text: "O homem bom deixa uma herança para os filhos de seus filhos.", ref: "Provérbios 13:22" },
+      { text: "O coração alegre serve de bom remédio, mas o espírito abatido seca os ossos.", ref: "Provérbios 17:22" },
+      { text: "Como o ferro com o ferro se afia, assim o homem ao seu amigo.", ref: "Provérbios 27:17" },
+      { text: "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.", ref: "Provérbios 3:5" },
+      { text: "A resposta branda desvia o furor, mas a palavra dura suscita a ira.", ref: "Provérbios 15:1" }
+    ];
+    const escolhido = proverbios[Math.floor(Math.random() * proverbios.length)];
+    mensagemEspecial = "🔥 Colheita Especial Triplicada! (Sua oração tocou profundamente o Secreto)";
+    versiculo = `"${escolhido.text}" — ${escolhido.ref}`;
+  } else if (rand < 0.35) {
+    valor = 2;
+    mensagemEspecial = " ✨ Sua semente ecoou com força no invisível!";
+  } else {
+    valor = 1;
+  }
+
+  const newSaldo = currentLocal + valor;
   localStorage.setItem('despertar_sementes_saldo', newSaldo.toString());
 
-  // Also store local movements history
+  // Also store local movements history with the correct valor
   const localMovsStr = localStorage.getItem('despertar_sementes_movimentos');
   const localMovs = localMovsStr ? JSON.parse(localMovsStr) : [];
   const newMov = {
+    id: Math.random().toString(),
     tipo,
     descricao,
-    valor: 1,
+    valor,
     criadoEm: new Date().toISOString()
   };
   localMovs.unshift(newMov); // newest first
@@ -47,7 +73,7 @@ export async function plantarSemente({
   // Dispatch events so the UI updates and animates immediately
   window.dispatchEvent(new Event('storage-sementes-updated'));
   window.dispatchEvent(new CustomEvent('semente-plantada', {
-    detail: { tipo, descricao, newSaldo }
+    detail: { tipo, descricao, newSaldo, valor, mensagemEspecial, versiculo }
   }));
 
   if (!uid) return;
@@ -56,7 +82,7 @@ export async function plantarSemente({
 
     // Cria ou atualiza o documento raiz com saldo acumulado
     await setDoc(sementeRef, {
-      saldo: increment(1),
+      saldo: increment(valor),
       ultimaAtualizacao: serverTimestamp()
     }, { merge: true });
 
@@ -64,7 +90,7 @@ export async function plantarSemente({
     await addDoc(collection(db, 'sementes', uid, 'movimentos'), {
       tipo,
       descricao,
-      valor: 1,
+      valor,
       criadoEm: serverTimestamp()
     });
   } catch (err) {

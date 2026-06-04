@@ -78,5 +78,25 @@ service cloud.firestore {
         allow create: if isSignedIn();
       }
     }
+
+    // Pedidos de Oração (Área 1 e Área 3)
+    match /pedidosOracao/{pedidoId} {
+      allow read: if true;
+      allow create: if isSignedIn()
+        && request.resource.data.criadoPor == request.auth.uid
+        && request.resource.data.contadorOracoes == 0
+        && request.resource.data.respondido == false;
+      allow update: if (isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['contadorOracoes']))
+        || (isSignedIn() && resource.data.criadoPor == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['respondido']));
+    }
+
+    // Testemunhos (Área 2)
+    match /testemunhos/{testemunhoId} {
+      allow read: if true;
+      allow create: if isSignedIn()
+        && request.resource.data.criadoPor == request.auth.uid
+        && request.resource.data.fortalecidos == 0;
+      allow update: if isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fortalecidos']);
+    }
   }
 }

@@ -13,9 +13,33 @@
         "streak": { "type": "integer" },
         "totalVotes": { "type": "integer" },
         "ideasShared": { "type": "integer" },
-        "joinedAt": { "type": "string", "format": "date-time" }
+        "joinedAt": { "type": "string", "format": "date-time" },
+        "savedReflections": { "type": "array" },
+        "favoriteVerses": { "type": "array" },
+        "completedChapters": { "type": "array" },
+        "answers": { "type": "object" }
       },
       "required": ["uid", "name", "email", "avatarEmoji"]
+    },
+    "Semente": {
+      "title": "Semente Balance",
+      "description": "Real-time balance of sementes",
+      "type": "object",
+      "properties": {
+        "saldo": { "type": "integer" },
+        "ultimaAtualizacao": { "type": "string", "format": "date-time" }
+      }
+    },
+    "SementeMovimento": {
+      "title": "Semente Movimento",
+      "description": "A single movement of planting seeds",
+      "type": "object",
+      "properties": {
+        "tipo": { "type": "string" },
+        "descricao": { "type": "string" },
+        "valor": { "type": "integer" },
+        "criadoEm": { "type": "string", "format": "date-time" }
+      }
     },
     "Conversation": {
       "title": "Conversation",
@@ -55,6 +79,14 @@
     "/conversations/{cid}/messages/{msgId}": {
       "schema": { "$ref": "#/entities/Message" },
       "description": "Chat messages inside a conversation"
+    },
+    "/sementes/{uid}": {
+      "schema": { "$ref": "#/entities/Semente" },
+      "description": "Vessel for sementes balance (Mateus 6)"
+    },
+    "/sementes/{uid}/movimentos/{movId}": {
+      "schema": { "$ref": "#/entities/SementeMovimento" },
+      "description": "Chronicle of sementes actions/rewards"
     }
   }
 }
