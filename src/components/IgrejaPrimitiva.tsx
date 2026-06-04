@@ -72,9 +72,26 @@ export default function IgrejaPrimitiva({
   onSaveProgress,
 }: IgrejaPrimitivaProps) {
   // Main view navigation tab
-  const [activeTab, setActiveTab] = useState<"comunhao" | "chamado">(
+  const [activeTab, setActiveTab] = useState<"comunhao" | "chamado" | "cocriacao">(
     "comunhao"
   );
+
+  // States for New Power vs Old Power Quiz & Co-creation
+  const [quizAnswer, setQuizAnswer] = useState<"old" | "new" | null>(null);
+  const [centelhas, setCentelhas] = useState<{
+    id: string;
+    author: string;
+    location: string;
+    prompt: string;
+    content: string;
+    votes: number;
+    voted?: boolean;
+  }[]>([]);
+  const [newCentelhaContent, setNewCentelhaContent] = useState("");
+  const [newCentelhaAuthor, setNewCentelhaAuthor] = useState("");
+  const [newCentelhaLocation, setNewCentelhaLocation] = useState("");
+  const [selectedPrompt, setSelectedPrompt] = useState("Qual foi a batalha que ninguém viu você vencer?");
+  const [hasVotedPost, setHasVotedPost] = useState<Record<string, boolean>>({});
 
   // Landing and interactives state
   const [email, setEmail] = useState("");
@@ -285,6 +302,48 @@ export default function IgrejaPrimitiva({
       }
     }
 
+    // Initialize co-created centelhas
+    const savedCentelhas = localStorage.getItem("despertar_cocreated_centelhas");
+    if (savedCentelhas) {
+      try {
+        setCentelhas(JSON.parse(savedCentelhas));
+      } catch (e) {
+        // use default
+      }
+    } else {
+      const initialCentelhas = [
+        {
+          id: "c1",
+          author: "Priscila Alencar",
+          location: "Fortaleza, CE",
+          prompt: "Qual foi a batalha que ninguém viu você vencer?",
+          content: "Silenciar o choro na cozinha para que meus filhos não se assustassem, e dobrar os joelhos no azulejo gelado. Senti uma mão quente no meu ombro dizendo: 'Eu estou cuidando de tudo'. E desde então, sei que não estou sozinha.",
+          votes: 78,
+          voted: false
+        },
+        {
+          id: "c2",
+          author: "Thiago Mendes",
+          location: "Niterói, RJ",
+          prompt: "Ninguém deveria enfrentar seus dias sozinho. O que você diria para alguém hoje?",
+          content: "Você não está atrasado. Você está sendo preparado. O deserto não é o fim da sua história; é onde o poço de água viva é cavado no seu interior. A mesa da Presença do Pai está com o café quente te esperando a cada manhã.",
+          votes: 54,
+          voted: false
+        },
+        {
+          id: "c3",
+          author: "Débora Santos",
+          location: "Goiânia, GO",
+          prompt: "Em qual momento desta semana você sentiu o sopro da graça?",
+          content: "Quando eu ia apagar o aplicativo e desistir da minha constância de oração. Uma notificação me lembrou de respirar fundo no Altar de quietude por 4 segundos. Aquele respiro mudou meu dia e me trouxe de volta ao aconchego.",
+          votes: 91,
+          voted: false
+        }
+      ];
+      setCentelhas(initialCentelhas);
+      localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(initialCentelhas));
+    }
+
     // Simulate real-time progress slightly to create high pre-suasion engagement
     const interval = setInterval(() => {
       setVagasRestantes((prev) => {
@@ -301,6 +360,75 @@ export default function IgrejaPrimitiva({
   const saveMuralToStorage = (updatedMural: MuralItem[]) => {
     setMuralItems(updatedMural);
     localStorage.setItem("despertar_mural_v1", JSON.stringify(updatedMural));
+  };
+
+  // Co-creation actions (New Power)
+  const handlePublishCentelha = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCentelhaContent.trim()) {
+      showTemporaryToast("Por favor, derrame a sua palavra ou resposta antes de enviar.");
+      return;
+    }
+
+    const authorToUse = newCentelhaAuthor.trim() || userProfile?.name || "Um Peregrino Sincero";
+    const locationToUse = newCentelhaLocation.trim() || userProfile?.city || "Brasil";
+
+    const newCent: {
+      id: string;
+      author: string;
+      location: string;
+      prompt: string;
+      content: string;
+      votes: number;
+      voted?: boolean;
+    } = {
+      id: "cent_" + Date.now().toString(),
+      author: authorToUse,
+      location: locationToUse,
+      prompt: selectedPrompt,
+      content: newCentelhaContent.trim(),
+      votes: 1, // Start with their own vote
+      voted: true
+    };
+
+    const updated = [newCent, ...centelhas];
+    setCentelhas(updated);
+    localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(updated));
+
+    // Reward active participation (New Power mechanism: circulation of credits)
+    const nextCredits = userCredits + 5;
+    setUserCredits(nextCredits);
+    localStorage.setItem("despertar_user_credits", nextCredits.toString());
+
+    setNewCentelhaContent("");
+    setNewCentelhaAuthor("");
+    setNewCentelhaLocation("");
+    showTemporaryToast("Chama acesa! Sua resposta brilha na mesa de Co-Criação e você ganhou +5 créditos! 🕯️🔥");
+  };
+
+  const handleVoteCentelha = (id: string) => {
+    if (hasVotedPost[id]) {
+      showTemporaryToast("Você já somou sua fé a esta resposta.");
+      return;
+    }
+
+    const updated = centelhas.map(c => {
+      if (c.id === id) {
+        return { ...c, votes: c.votes + 1, voted: true };
+      }
+      return c;
+    });
+
+    setCentelhas(updated);
+    localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(updated));
+    setHasVotedPost(prev => ({ ...prev, [id]: true }));
+
+    // Circulate power: reward voter
+    const nextCredits = userCredits + 1;
+    setUserCredits(nextCredits);
+    localStorage.setItem("despertar_user_credits", nextCredits.toString());
+
+    showTemporaryToast("Você concordou em oração! +1 de Crédito de Mordomia! 🙏");
   };
 
   const handleCopyToClipboard = (text: string) => {
@@ -691,6 +819,22 @@ export default function IgrejaPrimitiva({
             Pioneiro
           </span>
         </button>
+
+        <button
+          id="tab-cocriacao-pioneira"
+          onClick={() => setActiveTab("cocriacao")}
+          className={`pb-4 text-sm font-semibold tracking-wide transition relative flex items-center gap-2 cursor-pointer ${
+            activeTab === "cocriacao"
+              ? "text-stone-900 border-b-2 border-[#C08261]"
+              : "text-stone-400 hover:text-stone-600"
+          }`}
+        >
+          <Sparkles size={15} className="text-amber-500 animate-pulse" />
+          <span>💡 Centelhas Co-Criadas</span>
+          <span className="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-mono font-bold uppercase tracking-wider">
+            Fé Ativa
+          </span>
+        </button>
       </div>
 
       <AnimatePresence mode="wait">
@@ -703,32 +847,145 @@ export default function IgrejaPrimitiva({
             exit={{ opacity: 0, y: -10 }}
             className="space-y-8 text-left"
           >
-            {/* Introductory Concept Block based strictly on User Phrasing */}
-            <div className="space-y-4 max-w-3xl">
-              <p className="text-stone-650 text-base md:text-lg leading-relaxed font-sans">
-                No movimento do Despertar, acreditamos que ninguém muda sozinho.
-                Que a fé se vive em mesa, não em solidão. Que o discipulado é
-                caminhar junto.{" "}
-                <strong className="text-stone-900 font-semibold">
-                  A Comunhão dos Santos
-                </strong>{" "}
-                é o espaço sagrado onde as necessidades de uns encontram as mãos
-                de amor e serviço de outros. É o sagrado e o comum partilhados
-                como oferta real.
-              </p>
-              <div className="flex flex-wrap gap-2.5 text-xs text-stone-550 pt-2 font-medium">
-                <span className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full">
-                  <Check size={12} className="text-[#C08261]" /> Hospitalidade
-                  Autêntica
+            {/* Painel do Sacerdócio Universal: O Chamado Primitivo */}
+            <div className="bg-stone-50 border border-stone-200/60 rounded-3xl p-6 md:p-8 space-y-6">
+              <div className="space-y-2">
+                <span className="text-[10px] md:text-xs font-mono uppercase bg-[#C08261]/10 text-[#C08261] px-2.5 py-1 rounded-full font-bold inline-block">
+                  ⚡ O Ministério Primitivo
                 </span>
-                <span className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full">
-                  <Check size={12} className="text-[#C08261]" /> Economia de
-                  Dádiva
-                </span>
-                <span className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full">
-                  <Check size={12} className="text-[#C08261]" /> Moderação
-                  Solidária
-                </span>
+                <h3 className="font-serif text-xl md:text-3xl font-light text-stone-850 tracking-tight leading-tight">
+                  Sacerdócio de Todos: Do Ouvinte Passivo para a Comunidade de Mesa
+                </h3>
+                <p className="text-stone-500 text-sm leading-relaxed max-w-2xl">
+                  O verdadeiro avivamento na história da Igreja não acontece por templos centralizados, mas pelo mover do Espírito Santo operando em cada coração sincero. A pergunta central da Igreja de Atos é: <strong className="text-stone-850 hover:text-[#C08261] transition font-semibold">"Desejamos apenas ser espectadores na casa de Deus ou parte integrante do Seu Corpo vivo?"</strong>
+                </p>
+              </div>
+
+              {/* Comparative Matrix (Religiosidade Passiva vs Sacerdócio Vivo) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                {/* VELHO PODER CARD -> RELIGIOSIDADE PASSIVA */}
+                <div className="bg-white border text-stone-700 border-stone-200/80 p-5 rounded-2xl relative overflow-hidden flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2 text-stone-400 font-mono text-[10px] uppercase tracking-wider font-extrabold">
+                      <span>🏦 A Religiosidade de Consumo</span>
+                      <span className="bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded font-bold">Ritos de Palco</span>
+                    </div>
+                    <h4 className="font-serif text-lg font-bold text-stone-850">Estruturas Centralizadas</h4>
+                    <ul className="space-y-2 text-xs text-stone-500 list-disc list-inside">
+                      <li><strong>Ação concentrada:</strong> O sacerdócio e o serviço concentram-se em poucos nomes influentes ou profissionais da fé.</li>
+                      <li><strong>Espectadores da graça:</strong> A liturgia convida à passividade – as pessoas assistem ao invés de viverem em comunhão.</li>
+                      <li><strong>Paredes e templos isolados:</strong> Forte barreira de convívio fora do dia do culto; a fé se encerra no cronograma semanal.</li>
+                      <li className="list-none text-stone-400 italic py-1 border-t border-stone-100 mt-2">Foco: Programações pesadas e estéreis de consumo espiritual.</li>
+                    </ul>
+                  </div>
+                  <div className="text-[10.5px] font-medium text-stone-450 mt-4 font-mono uppercase border-l-2 border-stone-300 pl-2">
+                    O povo apenas obedece, assiste e consome.
+                  </div>
+                </div>
+
+                {/* NOVO PODER CARD -> SACERDÓCIO VIVO & DISTRIBUÍDO */}
+                <div className="bg-gradient-to-br from-stone-900 via-stone-950 to-black text-stone-100 border border-[#C08261]/25 p-5 rounded-2xl relative overflow-hidden flex flex-col justify-between">
+                  {/* Glowing light effect inside */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-b from-[#C08261]/15 to-transparent pointer-events-none rounded-full blur-3xl -mr-8 -mt-8 opacity-80" />
+                  
+                  <div className="space-y-3 relative z-10">
+                    <div className="flex items-center space-x-2 text-[#DCAE6C] font-mono text-[10px] uppercase tracking-wider font-extrabold">
+                      <span>🔥 O Sacerdócio Vivo</span>
+                      <span className="bg-[#C08261]/25 text-[#DCAE6C] px-1.5 py-0.5 rounded font-bold">Como Fogo Pentecostal</span>
+                    </div>
+                    <h4 className="font-serif text-lg font-bold text-[#DCAE6C]">O Movimento de Mesa</h4>
+                    <ul className="space-y-2 text-xs text-stone-300 list-disc list-inside">
+                      <li><strong>Dádiva que circula:</strong> O sacerdócio pertence a todos os crentes. Flui de lar em lar, de mesa em mesa diariamente.</li>
+                      <li><strong>Participação ativa:</strong> Co-criação de pão, de testemunhos, orações sinceras e acolhimento mútuo.</li>
+                      <li><strong>Comunidade orgânica:</strong> Qualquer discípulo pode iniciar uma mesa nos lares e espalhar a chama da Revelação.</li>
+                      <li className="list-none text-stone-400 italic py-1 border-t border-[#C59B63]/20 mt-2">Exemplos: A Igreja Primitiva do livro de Atos e redes orgânicas de compaixão.</li>
+                    </ul>
+                  </div>
+                  <div className="text-[10.5px] font-medium text-[#DCAE6C] mt-4 font-mono uppercase border-l-2 border-[#C08261] pl-2 relative z-10">
+                    Quanto mais gente participa, mais forte brilha a mesa.
+                  </div>
+                </div>
+              </div>
+
+              {/* Pilgrim Mindset Test (Interactive Quiz) */}
+              <div className="bg-white border border-stone-200/90 rounded-2xl p-5 md:p-6 text-left space-y-4">
+                <div className="flex items-center space-x-2.5">
+                  <span className="text-xl">🕯️</span>
+                  <div>
+                    <span className="text-[9px] uppercase font-mono tracking-wider text-stone-400 font-extrabold">Teste de Consciência Primitiva</span>
+                    <h4 className="font-serif text-sm md:text-base font-medium text-stone-850">
+                      Como você deseja canalizar a luz de Deus em seu cotidiano?
+                    </h4>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuizAnswer("old");
+                      showTemporaryToast("Interessante... Mas lembre-se: discípulos passivos esvaziam a efervescência da Igreja primitiva!");
+                    }}
+                    className={`p-3 border rounded-xl text-left cursor-pointer transition ${
+                      quizAnswer === "old"
+                        ? "border-amber-300 bg-amber-50/20 text-stone-800 font-medium"
+                        : "border-stone-200 bg-stone-50/50 hover:bg-stone-50 text-stone-600"
+                    }`}
+                  >
+                    <span className="text-xs font-serif block font-bold mb-1">⛪ Consumidor da fé</span>
+                    <span className="text-[10px] leading-relaxed block text-stone-500">
+                      Entrar passivamente nos templos murados, ouvir uma boa mensagem e delegar a obra espiritual para que outros gerenciem.
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuizAnswer("new");
+                      // Reward them with user credits for discovering!
+                      if (quizAnswer !== "new") {
+                        const nextCredits = userCredits + 10;
+                        setUserCredits(nextCredits);
+                        localStorage.setItem("despertar_user_credits", nextCredits.toString());
+                      }
+                      showTemporaryToast("Excelente! Você escolheu o Sacerdócio Vivo! +10 Créditos de Mordomia! ⚡🔥");
+                    }}
+                    className={`p-3 border rounded-xl text-left cursor-pointer transition ${
+                      quizAnswer === "new"
+                        ? "border-emerald-300 bg-emerald-50/30 text-stone-850 font-medium"
+                        : "border-stone-200 bg-stone-50/50 hover:bg-stone-50 text-stone-600"
+                    }`}
+                  >
+                    <span className="text-xs font-serif block font-bold text-stone-850 mb-1 flex items-center gap-1">
+                      <span>🔥 Condutor do Despertar</span>
+                      {quizAnswer === "new" && <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Ativo</span>}
+                    </span>
+                    <span className="text-[10px] leading-relaxed block text-stone-500">
+                      Sacerdócio de todos os crentes. Abrir a mesa de casa, co-criar o socorro e espalhar mensagens vivas sem depender de palcos intermediários.
+                    </span>
+                  </button>
+                </div>
+
+                <AnimatePresence mode="wait">
+                  {quizAnswer && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      className="p-4 rounded-xl text-xs font-sans border bg-stone-50 border-stone-150 text-stone-700 leading-relaxed"
+                    >
+                      {quizAnswer === "old" ? (
+                        <p>
+                          <strong>Reflexão para o Caminho:</strong> A passividade silenciosa limita os frutos do Reino de Deus — ela centraliza a ação litúrgica em poucas mãos profissionais e faz com que os santos se sintam apenas espectadores secundários. Mas Deus deseja reviver o sacerdócio ativo e real em cada um de nós! Que tal reacender sua mesa e partilhar a revelação no Secreto de forma dócil e ativa?
+                        </p>
+                      ) : (
+                        <p>
+                          <strong>Você ativou o Sacerdócio Universal de Atos!</strong> Exatamente! No princípio, a Igreja primitiva dependia do fluxo contínuo de afeto e testemunho que vertia das mesas habitadas (Atos 4:32). Nenhum membro guardava para si os recursos carismáticos ou espirituais; todos os faziam circular. Você acaba de receber mais <strong>+10 créditos virtuais de mordomia</strong> para espalhar gratidão, socorrer necessitados ou semear graça no painel abaixo!
+                        </p>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
@@ -1122,14 +1379,289 @@ export default function IgrejaPrimitiva({
                 A Cadeira Vazia — Hospitalidade Real
               </h4>
               <p className="text-stone-550 text-xs md:text-sm leading-relaxed max-w-lg mx-auto">
-                Inspirado na teologia da mesa do Despertar, a "Cadeira Vazia" é
-                um convite constante:{" "}
+                Inspirado na teologia da mesa do Despertar, a "Cadeira Vazia" é um convite constante:{" "}
                 <em className="text-stone-850 font-serif">
-                  "Na sua mesa, há sempre uma cadeira vazia para um irmão que
-                  ainda não tem grupo local."
+                  "Na sua mesa, há sempre uma cadeira vazia para um irmão que ainda não tem grupo local."
                 </em>{" "}
                 Faça do seu lar um tabernáculo físico de graça.
               </p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* TAB 3: CO-CREATION OF CENTELHAS (Sacerdócio Universal / Atos 4) */}
+        {activeTab === "cocriacao" && (
+          <motion.div
+            key="cocriacao-view"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="space-y-8 text-left"
+          >
+            {/* Call to action & concept block */}
+            <div className="bg-[#C08261]/5 border border-[#C08261]/15 p-6 rounded-3xl space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-[#C08261]/10 flex items-center justify-center text-2xl shrink-0 select-none">
+                  💡
+                </div>
+                <div className="space-y-1">
+                  <h3 className="font-serif text-lg md:text-xl font-bold text-stone-850">
+                    Mesa de Semeação: Frutos de Edificação e Testemunho
+                  </h3>
+                  <p className="text-stone-650 text-xs md:text-sm leading-relaxed font-sans">
+                    Na religiosidade centralizada e passiva, apenas os grandes púlpitos determinam a vivência prática, restando para nós apenas assistir. Mas aqui no <strong>Despertar</strong>, o Espírito e a fé de Atos fluem de coração em coração através de mesas de comunhão. Você é parte ativa da edificação mútua do Corpo! Escolha uma das perguntas profundas abaixo, partilhe sua história real de forma sincera e faça com que a sua centelha de graça console, edifique e acenda outros corações.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2 text-xs pt-1">
+                <span className="bg-white border border-stone-200 px-3 py-1 rounded-full text-stone-500 font-mono">
+                  🔥 +5 Créditos por Semeação
+                </span>
+                <span className="bg-white border border-stone-200 px-3 py-1 rounded-full text-stone-500 font-mono">
+                  ❤️ +1 Crédito por Concordar
+                </span>
+                <span className="bg-white border border-stone-200 px-3 py-1 rounded-full text-stone-500 font-mono">
+                  📱 Livre Compartilhamento
+                </span>
+              </div>
+            </div>
+
+            {/* Main Interactive Form section */}
+            <div className="bg-white border border-stone-200 p-6 rounded-3xl grid grid-cols-1 lg:grid-cols-5 gap-8">
+              {/* Form Side */}
+              <div className="lg:col-span-3 space-y-5">
+                <h4 className="font-serif font-bold text-stone-850 text-base border-b border-stone-100 pb-2.5 flex items-center gap-1.5">
+                  <Sparkles size={16} className="text-amber-500" />
+                  <span>Derrame Sua Centelha na Mesa</span>
+                </h4>
+
+                <form onSubmit={handlePublishCentelha} className="space-y-4">
+                  {/* Select interactive question prompt */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
+                      Selecione a Pergunta do Dia
+                    </label>
+                    <div className="grid grid-cols-1 gap-2">
+                      {[
+                        "Qual foi a batalha que ninguém viu você vencer?",
+                        "Ninguém deveria enfrentar seus dias sozinho. O que você diria para alguém hoje?",
+                        "Em qual momento desta semana você sentiu o sopro da graça?",
+                      ].map((promptText) => (
+                        <button
+                          key={promptText}
+                          type="button"
+                          onClick={() => setSelectedPrompt(promptText)}
+                          className={`p-3 border rounded-xl text-left cursor-pointer text-xs transition ${
+                            selectedPrompt === promptText
+                              ? "border-[#C08261] bg-[#C08261]/5 text-stone-850 font-medium"
+                              : "border-stone-150 bg-stone-50/50 text-stone-500 hover:bg-stone-50"
+                          }`}
+                        >
+                          {promptText}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Message body input */}
+                  <div className="space-y-1.1">
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
+                      Sua Resposta Sincera (Faça vibrar a alma de quem lê) *
+                    </label>
+                    <textarea
+                      rows={4}
+                      value={newCentelhaContent}
+                      onChange={(e) => setNewCentelhaContent(e.target.value)}
+                      placeholder="Derrame sua inspiração aqui, em poucas frases sinceras..."
+                      maxLength={320}
+                      className="w-full bg-stone-50/75 border border-stone-200 rounded-2xl p-4 text-xs md:text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C08261] transition"
+                    />
+                    <div className="flex justify-between items-center text-[10px] text-stone-400 pt-1 font-mono">
+                      <span>* Máximo de 320 caracteres para caber com elegância nos cards.</span>
+                      <span>{newCentelhaContent.length}/320</span>
+                    </div>
+                  </div>
+
+                  {/* Profile parameters (Frictionless / Fast) */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
+                        Assinar como (Nome)
+                      </label>
+                      <input
+                        type="text"
+                        value={newCentelhaAuthor}
+                        onChange={(e) => setNewCentelhaAuthor(e.target.value)}
+                        placeholder={userProfile?.name || "Opcional (Ex: Lucas R.)"}
+                        maxLength={18}
+                        className="w-full bg-stone-50/75 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C08261] transition"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
+                        Cidade / UF
+                      </label>
+                      <input
+                        type="text"
+                        value={newCentelhaLocation}
+                        onChange={(e) => setNewCentelhaLocation(e.target.value)}
+                        placeholder={userProfile?.city || "Opcional (Ex: Recife, PE)"}
+                        maxLength={24}
+                        className="w-full bg-stone-50/75 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C08261] transition"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3 bg-stone-900 hover:bg-black text-white text-xs font-mono uppercase tracking-wider font-bold rounded-2xl transition flex items-center justify-center space-x-2"
+                  >
+                    <span>🕯️ Ecoar Minha Chama na Mesa (+5 Créditos)</span>
+                  </button>
+                </form>
+              </div>
+
+              {/* Preview Side */}
+              <div className="lg:col-span-2 flex flex-col justify-between bg-stone-50/50 border border-stone-150 p-5 rounded-2xl text-left min-h-[300px]">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[9px] font-mono uppercase bg-amber-50 text-[#8C6239] border border-amber-200/50 px-2.5 py-0.5 rounded-full font-bold">
+                      Visualização do Card de Identidade
+                    </span>
+                    <span className="text-sm">🔥</span>
+                  </div>
+
+                  {/* Card Content representation */}
+                  <div className="bg-gradient-to-br from-stone-900 via-stone-950 to-black text-stone-100 p-6 rounded-2xl relative shadow-md overflow-hidden flex flex-col justify-between h-[230px] border border-stone-800">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#C08261]/10 rounded-full blur-2xl pointer-events-none" />
+                    <div className="space-y-3 relative z-10">
+                      <p className="text-[9px] font-mono uppercase tracking-widest text-[#DCAE6C]">
+                        {selectedPrompt}
+                      </p>
+                      <p className="font-serif text-xs leading-normal italic text-stone-200">
+                        "{newCentelhaContent.trim() || "Derrame o seu coração no formulário ao lado para moldar o seu card de identidade espiritual compartilhável..."}"
+                      </p>
+                    </div>
+
+                    <div className="border-t border-stone-800 pt-3 flex justify-between items-center relative z-10">
+                      <div className="space-y-0.5">
+                        <cite className="text-[10px] font-serif not-italic font-bold text-stone-100 block">
+                          {newCentelhaAuthor.trim() || userProfile?.name || "Um Peregrino Sincero"}
+                        </cite>
+                        <span className="text-[8px] font-mono uppercase tracking-wider text-stone-450 block">
+                          📍 {newCentelhaLocation.trim() || userProfile?.city || "Brasil"}
+                        </span>
+                      </div>
+                      <span className="text-[8px] font-mono border border-[#C08261]/40 px-2 py-0.5 rounded text-[#DCAE6C] font-bold">
+                        SOMOS O DESPERTAR
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 text-center">
+                  <p className="text-[10px] text-stone-400 font-serif leading-relaxed">
+                    Sua assinatura (identidade) se torna um farol de esperança. Esse card representa quem você é em Deus e é estruturado especificamente para espalhar convites no WhatsApp.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Commmunity Centelhas list */}
+            <div className="space-y-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                <div className="space-y-0.5">
+                  <h4 className="font-serif text-lg font-bold text-stone-850">
+                    Mesa Redonda das Centelhas de Graça
+                  </h4>
+                  <p className="text-stone-500 text-xs">
+                    Testemunhos ativos e respostas dos despertar-peregrinos por todo o Brasil. Respostas reais, nada de robôs.
+                  </p>
+                </div>
+                <div className="flex items-center space-x-1 font-mono text-[10px] uppercase font-bold text-[#C08261] bg-[#C08261]/10 px-3 py-1 rounded-full">
+                  <span>🕯️ {centelhas.length} Centelhas Vivas Circulando</span>
+                </div>
+              </div>
+
+              {/* Centelha list grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <AnimatePresence mode="popLayout">
+                  {centelhas.map((cent) => (
+                    <motion.div
+                      key={cent.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      className="bg-[#FAF8F5] border border-stone-200/60 p-5 rounded-2xl flex flex-col justify-between h-[280px] hover:border-[#C08261]/40 transition shadow-xs hover:shadow-md"
+                    >
+                      <div className="space-y-4 text-left">
+                        {/* Prompt title */}
+                        <div className="flex justify-between items-start">
+                          <span className="text-[8px] font-mono uppercase bg-stone-100 text-[#C08261] px-2 py-0.5 rounded font-extrabold max-w-[85%] truncate">
+                            {cent.prompt}
+                          </span>
+                          <span className="text-xs">🕊️</span>
+                        </div>
+                        {/* Content text */}
+                        <p className="font-serif text-xs md:text-sm text-stone-850 leading-relaxed italic line-clamp-6">
+                          "{cent.content}"
+                        </p>
+                      </div>
+
+                      {/* Footer signatures and actions */}
+                      <div className="border-t border-stone-200/50 pt-3 flex justify-between items-center">
+                        <div className="space-y-0.5">
+                          <span className="text-[10px] font-bold text-stone-900 block font-serif">
+                            {cent.author}
+                          </span>
+                          <span className="text-[9px] font-mono text-stone-450 block">
+                            {cent.location}
+                          </span>
+                        </div>
+
+                        {/* Actions: Align with Novo Poder (Amém vote + WhatsApp share text) */}
+                        <div className="flex items-center space-x-1.5">
+                          {/* Vote action */}
+                          <button
+                            type="button"
+                            onClick={() => handleVoteCentelha(cent.id)}
+                            className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs cursor-pointer transition ${
+                              hasVotedPost[cent.id] || cent.voted
+                                ? "bg-emerald-50 text-emerald-700 font-extrabold border border-emerald-200"
+                                : "bg-white hover:bg-stone-100 text-stone-550 border border-stone-200"
+                            }`}
+                          >
+                            <Heart size={11} className={hasVotedPost[cent.id] || cent.voted ? "fill-emerald-700 text-emerald-700" : ""} />
+                            <span>{cent.votes}</span>
+                          </button>
+
+                          {/* Share textual card on WhatsApp */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const shareText = `*O DESPERTAR — CENTELHA VIVA* 🕯️\n\n_"${cent.content}"_\n\n*Assinado por:* ${cent.author} (${cent.location})\n*Pergunta:* ${cent.prompt}\n\nouça a voz de Deus. Caminhe em mesa conosco: https://somosodespertar.com.br`;
+                              try {
+                                navigator.clipboard.writeText(shareText);
+                                showTemporaryToast("Centelha copiada! Compartilhe no seu grupo do WhatsApp! 🕊️📲");
+                              } catch (e) {
+                                showTemporaryToast("Copiado com sucesso!");
+                              }
+                            }}
+                            className="p-1.5 rounded-lg bg-white border border-stone-200 hover:bg-stone-50 hover:border-[#C08261] text-stone-550 cursor-pointer transition text-xs"
+                            title="Compartilhar no WhatsApp"
+                          >
+                            <Share2 size={11} />
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
             </div>
           </motion.div>
         )}

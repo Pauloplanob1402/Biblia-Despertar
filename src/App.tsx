@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Compass, Book, Coffee, User, Bookmark, Feather, 
   Flame, Sparkles, Clock, Heart, Calendar, ArrowLeft, 
-  AlertCircle, ChevronRight, Terminal, FileText, Check, Code, MessageSquare, Award, Smartphone
+  AlertCircle, ChevronRight, Terminal, FileText, Check, Code, MessageSquare, Award, Smartphone, Share2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -40,6 +40,12 @@ export default function App() {
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
+  // Card Generator theme & signature states (Novo Poder)
+  const [cardTheme, setCardTheme] = useState<'cosmic' | 'linen' | 'emerald'>('cosmic');
+  const [cardSignature, setCardSignature] = useState('');
+  const [randomQuote, setRandomQuote] = useState<{ text: string; title: string; scripture: string } | null>(null);
+  const [showFrictionlessModal, setShowFrictionlessModal] = useState(false);
+  
   // Firebase Auth states
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -66,6 +72,21 @@ export default function App() {
       setCommittedToastMsg("Enviado com amor! Texto copiado para colar no WhatsApp. 🕊️");
       setTimeout(() => setCommittedToastMsg(null), 3000);
     }
+  };
+
+  // Zero Fricção Quote Selector (Novo Poder Feature)
+  const handlePullRandomQuote = () => {
+    const allQuotes = [...DEVOCIONAIS, ...MULTIPLICACAO];
+    if (allQuotes.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * allQuotes.length);
+    const selected = allQuotes[randomIndex];
+    
+    setRandomQuote({
+      text: selected.prayer,
+      title: selected.title,
+      scripture: selected.scripture
+    });
+    setShowFrictionlessModal(true);
   };
 
   // User profile persistent state engine
@@ -1000,6 +1021,30 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Zero Fricção: Palavra do Silêncio Banner (Novo Poder) */}
+              <div className="bg-[#FAF8F5] border-2 border-dashed border-[#C08261]/25 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 text-left relative overflow-hidden">
+                <div className="space-y-2 max-w-2xl">
+                  <span className="text-[9px] font-mono bg-[#C08261]/15 text-[#C08261] px-2.5 py-1 rounded-full uppercase tracking-wider font-extrabold inline-block">
+                    ☕ Corrente Elétrica do Espírito
+                  </span>
+                  <h3 className="font-serif text-lg md:text-xl font-bold text-stone-850 leading-tight">
+                    Sua fé não é para ser vivida no isolamento. Ninguém deveria enfrentar seus dias sozinho.
+                  </h3>
+                  <p className="text-stone-500 text-xs md:text-sm font-sans leading-relaxed">
+                    Sentiu cansaço, ansiedade ou aperto no peito? Você não precisa fazer cadastros compridos, criar mesas ou assinar planos para receber um sopro de esperança. Toque abaixo para receber uma palavra do Secreto dócil e providencial para o seu fôlego de agora.
+                  </p>
+                </div>
+                
+                <button
+                  type="button"
+                  onClick={handlePullRandomQuote}
+                  className="w-full md:w-auto py-3 px-6 bg-stone-900 border border-stone-900 hover:bg-black text-white text-xs font-mono uppercase tracking-wider font-extrabold rounded-2xl shadow-sm transition transform active:scale-95 shrink-0 flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <Sparkles size={13} className="text-amber-400 shrink-0" />
+                  <span>Puxar Palavra de Graça</span>
+                </button>
+              </div>
+
               {/* PHASE TWO: COMPROMISSOS DE QUIETUDE, CONSTÂNCIA & RETOMAR */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
@@ -1872,6 +1917,110 @@ export default function App() {
                     </button>
                   </div>
 
+                  {/* Gerador de Card de Identidade Espiritual (Novo Poder) */}
+                  <div className="mt-8 pt-6 border-t border-stone-100 space-y-5">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-mono uppercase bg-amber-50 text-[#8C6239] border border-amber-200/55 px-2 py-0.5 rounded-full font-bold inline-block">
+                        🎨 Propagador de Fé Ativa
+                      </span>
+                      <h4 className="font-serif text-base font-bold text-stone-850">
+                        Gerador de Card de Identidade Espiritual
+                      </h4>
+                      <p className="text-xs text-stone-500 leading-relaxed font-sans">
+                        As pessoas espalham o que as define. Crie um card personalizado com a verdade que impactou seu coração hoje para compartilhar em grupos ou conversas individuais.
+                      </p>
+                    </div>
+
+                    {/* Customize tools */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Theme selection & custom signature inputs */}
+                      <div className="space-y-4">
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
+                            Selecione o Tema Visual do Card
+                          </label>
+                          <div className="flex gap-2">
+                            {[
+                              { id: 'cosmic', label: 'Cosmic Dark', bg: 'bg-stone-900 border-stone-800 text-stone-200' },
+                              { id: 'linen', label: 'Sand Altar', bg: 'bg-[#FAF8F5] border-amber-200 text-[#8C6239]' },
+                              { id: 'emerald', label: 'Emerald Prayer', bg: 'bg-emerald-950 border-emerald-800 text-emerald-100' }
+                            ].map((thm) => (
+                              <button
+                                key={thm.id}
+                                type="button"
+                                onClick={() => setCardTheme(thm.id as any)}
+                                className={`flex-1 py-2 px-1 border text-[10px] font-mono tracking-wide font-extrabold rounded-xl transition cursor-pointer text-center ${thm.bg} ${
+                                  cardTheme === thm.id ? 'ring-2 ring-[#C08261] ring-offset-1' : 'opacity-70 hover:opacity-100'
+                                }`}
+                              >
+                                {thm.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
+                            Sua Assinatura no Rodapé (Identidade)
+                          </label>
+                          <input
+                            type="text"
+                            value={cardSignature}
+                            onChange={(e) => setCardSignature(e.target.value)}
+                            maxLength={24}
+                            placeholder={userProfile?.name || "Ex: Peregrino Lucas"}
+                            className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C08261] transition text-stone-800"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Interactive Visual Preview */}
+                      <div className={`p-5 rounded-2xl border flex flex-col justify-between h-[180px] transition shadow-xs ${
+                        cardTheme === 'cosmic'
+                          ? 'bg-gradient-to-br from-stone-900 via-stone-950 to-black text-stone-100 border-stone-800'
+                          : cardTheme === 'linen'
+                          ? 'bg-[#FAF8F5] text-stone-800 border-amber-100/80'
+                          : 'bg-gradient-to-br from-emerald-950 to-stone-900 text-emerald-100 border-emerald-900'
+                      }`}>
+                        <div className="space-y-2 text-left">
+                          <div className="flex justify-between items-center text-[8px] font-mono uppercase tracking-widest text-[#C08261] font-extrabold">
+                            <span>Dia {currentIndex + 1} • {selectedDevotional.title}</span>
+                            <span>🕊️</span>
+                          </div>
+                          
+                          <p className="font-serif text-xs md:text-[13px] leading-relaxed italic line-clamp-4">
+                            "{selectedDevotional.prayer}"
+                          </p>
+                        </div>
+
+                        <div className="border-t border-stone-200/10 pt-2.5 flex justify-between items-center text-[9px] font-mono uppercase">
+                          <span className={cardTheme === 'linen' ? 'text-stone-500 font-bold' : 'text-stone-400 font-bold'}>
+                            — {cardSignature || userProfile?.name || 'Um Despertador'}
+                          </span>
+                          <span className="text-[#C08261] font-bold">SOMOS O DESPERTAR</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const signatureToUse = cardSignature.trim() || userProfile?.name || "Um Peregrino Sincero";
+                          const formattedQuoteText = `🕊️ *CARD DE SEGREDO — O DESPERTAR* 🕯️\n*Estudo:* Dia ${currentIndex + 1} - ${selectedDevotional.title}\n\n_"${selectedDevotional.prayer}"_\n\n*Reflexão e Presença por:* — ${signatureToUse}\n\n"Você nunca deveria cear ou enfrentar seus dias sozinho. Puxe uma cadeira à mesa conosco!"\nSintonize: https://somosodespertar.com.br`;
+                          handleCopyToClipboard(formattedQuoteText);
+                          setCommittedToastMsg("Design de texto do Card copiado para o WhatsApp! 🎨📲");
+                          setTimeout(() => setCommittedToastMsg(null), 3500);
+                        }}
+                        className="flex-1 py-3 bg-stone-900 hover:bg-black text-white text-xs font-mono uppercase tracking-wider font-extrabold rounded-2xl transition flex items-center justify-center space-x-1.5 cursor-pointer"
+                      >
+                        <Feather size={13} className="text-amber-400" />
+                        <span>Copiar Card em Texto para WhatsApp</span>
+                      </button>
+                    </div>
+                  </div>
+
                   {/* continuous escorregador next day flow (Joseph Sugarman - low cognitive drag) */}
                   {nextDevotional && (
                     <motion.button
@@ -2292,6 +2441,84 @@ export default function App() {
       </main>
 
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+
+      {/* Zero Fricção: Palavra do Silêncio Modal Overlay */}
+      <AnimatePresence>
+        {showFrictionlessModal && randomQuote && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-[#0A0A09]/75 backdrop-blur-md z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              className="bg-gradient-to-br from-stone-900 via-stone-950 to-black text-stone-100 max-w-lg w-full border border-[#DCAE6C]/30 p-6 md:p-8 rounded-3xl shadow-2xl relative space-y-6 text-left"
+            >
+              {/* Gold light burst */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-b from-[#DCAE6C]/10 to-transparent pointer-events-none rounded-full blur-3xl" />
+              
+              <div className="flex justify-between items-center pb-3 border-b border-stone-800 relative z-10">
+                <div className="flex items-center space-x-2">
+                  <span className="w-2 h-2 rounded-full bg-[#DCAE6C] animate-ping" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#DCAE6C] font-extrabold">
+                    {randomQuote.title}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowFrictionlessModal(false)}
+                  className="w-7 h-7 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-300 flex items-center justify-center text-xs transition cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-4 relative z-10">
+                <span className="text-[9px] font-mono text-stone-400 block uppercase tracking-wider">
+                  📖 {randomQuote.scripture}
+                </span>
+
+                <blockquote className="font-serif text-lg md:text-xl italic text-stone-100 leading-relaxed border-l-2 border-[#C08261] pl-4">
+                  "{randomQuote.text}"
+                </blockquote>
+
+                <p className="text-[10.5px] text-[#DCAE6C] font-serif leading-relaxed pt-2">
+                  "Ninguém deveria enfrentar seus dias sozinho. Sentiu que esta centelha foi escrita exatamente para você? Não a guarde com exclusividade — faça a corrente elétrica circular."
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 pt-2 relative z-10">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const formatted = `🕊️ *CENTELHA ENCONTRADA NO SILÊNCIO* 🕯️\n\n_"${randomQuote.text}"_\n\n📖 *Passagem:* ${randomQuote.scripture}\n*Origem:* Café com o Despertar\n\n"Pensei em você hoje. O amor sempre andou de mesa em mesa, não enfrente seu dia sozinho!"\nSintonize: https://somosodespertar.com.br`;
+                    handleCopyToClipboard(formatted);
+                    setShowFrictionlessModal(false);
+                    // Reward with a credit for sharing/doing!
+                    const savedCredits = localStorage.getItem("despertar_user_credits");
+                    const currentC = savedCredits ? parseInt(savedCredits) : 50;
+                    localStorage.setItem("despertar_user_credits", (currentC + 3).toString());
+                  }}
+                  className="flex-1 py-3 bg-[#C08261] hover:bg-[#b07353] text-white text-xs font-mono uppercase tracking-wider font-extrabold rounded-2xl transition flex items-center justify-center space-x-1.5 cursor-pointer"
+                >
+                  <Share2 size={13} className="text-white shrink-0" />
+                  <span>Enviar no WhatsApp (+3 Créditos)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowFrictionlessModal(false)}
+                  className="py-3 px-5 bg-stone-850 hover:bg-stone-800 border border-stone-850 text-stone-300 text-xs font-mono uppercase rounded-2xl transition cursor-pointer"
+                >
+                  Amém, Guardar
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
