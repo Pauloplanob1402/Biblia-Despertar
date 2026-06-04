@@ -30,8 +30,9 @@ import {
   Mail,
   Calendar,
   Clock,
-  Sparkle,
   Lock,
+  BookOpen,
+  Star,
 } from "lucide-react";
 
 interface IgrejaPrimitivaProps {
@@ -50,10 +51,10 @@ interface MuralItem {
   title: string;
   description: string;
   timestamp: string;
-  counter?: number; // For intercessors or empty seats
-  maxCounter?: number; // For empty seats limit
-  actionsTaken?: string[]; // Log emails/names of users who interacted
-  userInteracted?: boolean; // If local user joined
+  counter?: number;
+  maxCounter?: number;
+  actionsTaken?: string[];
+  userInteracted?: boolean;
 }
 
 interface Fundador {
@@ -71,12 +72,10 @@ export default function IgrejaPrimitiva({
   onShowAuthModal,
   onSaveProgress,
 }: IgrejaPrimitivaProps) {
-  // Main view navigation tab
   const [activeTab, setActiveTab] = useState<"comunhao" | "chamado" | "cocriacao" | "livros">(
     "comunhao"
   );
 
-  // States for New Power vs Old Power Quiz & Co-creation
   const [quizAnswer, setQuizAnswer] = useState<"old" | "new" | null>(null);
   const [centelhas, setCentelhas] = useState<{
     id: string;
@@ -93,28 +92,21 @@ export default function IgrejaPrimitiva({
   const [selectedPrompt, setSelectedPrompt] = useState("Qual foi a batalha que ninguém viu você vencer?");
   const [hasVotedPost, setHasVotedPost] = useState<Record<string, boolean>>({});
 
-  // Landing and interactives state
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
   const [stateCode, setStateCode] = useState("SP");
   const [chosenService, setChosenService] = useState("Oração");
-  const [interactionType, setInteractionType] = useState<"offer" | "receive">(
-    "offer"
-  );
-
+  const [interactionType, setInteractionType] = useState<"offer" | "receive">("offer");
   const [isRegistered, setIsRegistered] = useState(false);
   const [vagasRestantes, setVagasRestantes] = useState(47);
-  const [estadosContados, setEstadosContados] = useState(8);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
-  // Donation State
   const [selectedPreset, setSelectedPreset] = useState<number | null>(30);
   const [customValue, setCustomValue] = useState("");
   const [donatorName, setDonatorName] = useState("");
   const [confirmedDonation, setConfirmedDonation] = useState(false);
 
-  // AbacatPay Book Sponsorship Custom States
   const [selectedBookTier, setSelectedBookTier] = useState<
     "book_despertar" | "book_devocionais" | "physical" | "kit" | "custom" | "prayer"
   >("book_despertar");
@@ -122,15 +114,9 @@ export default function IgrejaPrimitiva({
   const [giftName, setGiftName] = useState("");
   const [giftEmail, setGiftEmail] = useState("");
   const [prayerIntention, setPrayerIntention] = useState("");
-  const [abacatStep, setAbacatStep] = useState<
-    "select" | "form" | "qr" | "success"
-  >("select");
-  const [sponsorPhone, setSponsorPhone] = useState("");
-  const [sponsorCep, setSponsorCep] = useState("");
-  const [sponsorAddress, setSponsorAddress] = useState("");
+  const [abacatStep, setAbacatStep] = useState<"select" | "form" | "qr" | "success">("select");
   const [customBookValue, setCustomBookValue] = useState("50");
 
-  // Customizable Kiwify links stored in localStorage for unified payment
   const [linkDespertar, setLinkDespertar] = useState<string>(
     () => localStorage.getItem("kiwify_link_despertar") || "https://pay.kiwify.com.br/JRqrznH"
   );
@@ -138,12 +124,8 @@ export default function IgrejaPrimitiva({
     () => localStorage.getItem("kiwify_link_devocionais") || "https://pay.kiwify.com.br/X23KvCQ"
   );
 
-  const [paymentMethod, setPaymentMethod] = useState<"pix" | "card">("pix");
-
-  // User Credits State (As proposed, starts with 12 initial credits)
   const [userCredits, setUserCredits] = useState<number>(12);
 
-  // Interactive Mural Posts State (Pre-populated with rich editorial, personal stories based on proposal)
   const [muralItems, setMuralItems] = useState<MuralItem[]>([
     {
       id: "1",
@@ -195,8 +177,8 @@ export default function IgrejaPrimitiva({
       description:
         "Vou abrir meu apartamento na terça-feira às 19:30h para passarmos o pão, orar e estudar o livro de João. Tenho vagas na mesa. Venha como está!",
       timestamp: "Há 8 horas",
-      counter: 3, // Taken seats
-      maxCounter: 5, // Total seats
+      counter: 3,
+      maxCounter: 5,
       actionsTaken: [],
       userInteracted: false,
     },
@@ -208,7 +190,7 @@ export default function IgrejaPrimitiva({
       location: "Limoeiro do Norte, CE",
       title: "Bíblias de estudo para novos convertidos",
       description:
-        "Iniciamos um pequeno grupo em comunidade carente aqui no interior, mas temos apenas 2 Bíblias para 8 pessoas. Se alguém puder doar Bíblias usadas ou novas, faria toda diferença para o início da jornada deles.",
+        "Iniciamos um pequeno grupo em comunidade carente aqui no interior, mas temos apenas 2 Bíblias para 8 pessoas. Se alguém puder doar Bíblias usadas ou novas, faria toda diferença.",
       timestamp: "Há 1 dia",
       actionsTaken: [],
       userInteracted: false,
@@ -230,7 +212,6 @@ export default function IgrejaPrimitiva({
     },
   ]);
 
-  // Handle publishing a new item
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [newAuthor, setNewAuthor] = useState("");
@@ -241,119 +222,38 @@ export default function IgrejaPrimitiva({
   >("necessidade");
   const [showPublishForm, setShowPublishForm] = useState(false);
 
-  // List of active founders with realistic details
   const [fundadores, setFundadores] = useState<Fundador[]>([
-    {
-      name: "Marcos F.",
-      location: "Curitiba, PR",
-      service: "discipulado",
-      type: "offer",
-      avatarEmoji: "👨‍👣",
-      isDonator: true,
-    },
-    {
-      name: "Ana S.",
-      location: "São Paulo, SP",
-      service: "aconselhamento",
-      type: "receive",
-      avatarEmoji: "👩‍⚕️",
-    },
-    {
-      name: "Roberto O.",
-      location: "Fortaleza, CE",
-      service: "líder de célula",
-      type: "offer",
-      avatarEmoji: "👨‍💼",
-      isDonator: true,
-    },
-    {
-      name: "Juliana M.",
-      location: "Belo Horizonte, MG",
-      service: "Oração",
-      type: "offer",
-      avatarEmoji: "👩‍🙏",
-    },
-    {
-      name: "Gabriel K.",
-      location: "Porto Alegre, RS",
-      service: "Ensino bíblico",
-      type: "offer",
-      avatarEmoji: "👨‍📖",
-    },
+    { name: "Marcos F.", location: "Curitiba, PR", service: "discipulado", type: "offer", avatarEmoji: "👨‍👣", isDonator: true },
+    { name: "Ana S.", location: "São Paulo, SP", service: "aconselhamento", type: "receive", avatarEmoji: "👩‍⚕️" },
+    { name: "Roberto O.", location: "Fortaleza, CE", service: "líder de célula", type: "offer", avatarEmoji: "👨‍💼", isDonator: true },
+    { name: "Juliana M.", location: "Belo Horizonte, MG", service: "Oração", type: "offer", avatarEmoji: "👩‍🙏" },
+    { name: "Gabriel K.", location: "Porto Alegre, RS", service: "Ensino bíblico", type: "offer", avatarEmoji: "👨‍📖" },
   ]);
 
-  // Load from local storage if registered as founder or has interactive progress
   useEffect(() => {
     const savedFounder = localStorage.getItem("somosodespertar_founder_status");
-    if (savedFounder) {
-      setIsRegistered(true);
-      setVagasRestantes(46);
-    }
+    if (savedFounder) { setIsRegistered(true); setVagasRestantes(46); }
     const savedCredits = localStorage.getItem("despertar_user_credits");
-    if (savedCredits) {
-      setUserCredits(parseInt(savedCredits));
-    }
+    if (savedCredits) setUserCredits(parseInt(savedCredits));
     const savedMural = localStorage.getItem("despertar_mural_v1");
-    if (savedMural) {
-      try {
-        setMuralItems(JSON.parse(savedMural));
-      } catch (e) {
-        // use default
-      }
-    }
+    if (savedMural) { try { setMuralItems(JSON.parse(savedMural)); } catch (e) {} }
 
-    // Initialize co-created centelhas
     const savedCentelhas = localStorage.getItem("despertar_cocreated_centelhas");
     if (savedCentelhas) {
-      try {
-        setCentelhas(JSON.parse(savedCentelhas));
-      } catch (e) {
-        // use default
-      }
+      try { setCentelhas(JSON.parse(savedCentelhas)); } catch (e) {}
     } else {
       const initialCentelhas = [
-        {
-          id: "c1",
-          author: "Priscila Alencar",
-          location: "Fortaleza, CE",
-          prompt: "Qual foi a batalha que ninguém viu você vencer?",
-          content: "Silenciar o choro na cozinha para que meus filhos não se assustassem, e dobrar os joelhos no azulejo gelado. Senti uma mão quente no meu ombro dizendo: 'Eu estou cuidando de tudo'. E desde então, sei que não estou sozinha.",
-          votes: 78,
-          voted: false
-        },
-        {
-          id: "c2",
-          author: "Thiago Mendes",
-          location: "Niterói, RJ",
-          prompt: "Ninguém deveria enfrentar seus dias sozinho. O que você diria para alguém hoje?",
-          content: "Você não está atrasado. Você está sendo preparado. O deserto não é o fim da sua história; é onde o poço de água viva é cavado no seu interior. A mesa da Presença do Pai está com o café quente te esperando a cada manhã.",
-          votes: 54,
-          voted: false
-        },
-        {
-          id: "c3",
-          author: "Débora Santos",
-          location: "Goiânia, GO",
-          prompt: "Em qual momento desta semana você sentiu o sopro da graça?",
-          content: "Quando eu ia apagar o aplicativo e desistir da minha constância de oração. Uma notificação me lembrou de respirar fundo no Altar de quietude por 4 segundos. Aquele respiro mudou meu dia e me trouxe de volta ao aconchego.",
-          votes: 91,
-          voted: false
-        }
+        { id: "c1", author: "Priscila Alencar", location: "Fortaleza, CE", prompt: "Qual foi a batalha que ninguém viu você vencer?", content: "Silenciar o choro na cozinha para que meus filhos não se assustassem, e dobrar os joelhos no azulejo gelado. Senti uma mão quente no meu ombro dizendo: 'Eu estou cuidando de tudo'. E desde então, sei que não estou sozinha.", votes: 78, voted: false },
+        { id: "c2", author: "Thiago Mendes", location: "Niterói, RJ", prompt: "Ninguém deveria enfrentar seus dias sozinho. O que você diria para alguém hoje?", content: "Você não está atrasado. Você está sendo preparado. O deserto não é o fim da sua história; é onde o poço de água viva é cavado no seu interior.", votes: 54, voted: false },
+        { id: "c3", author: "Débora Santos", location: "Goiânia, GO", prompt: "Em qual momento desta semana você sentiu o sopro da graça?", content: "Quando eu ia apagar o aplicativo e desistir da minha constância de oração. Uma notificação me lembrou de respirar fundo por 4 segundos. Aquele respiro mudou meu dia.", votes: 91, voted: false }
       ];
       setCentelhas(initialCentelhas);
       localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(initialCentelhas));
     }
 
-    // Simulate real-time progress slightly to create high pre-suasion engagement
     const interval = setInterval(() => {
-      setVagasRestantes((prev) => {
-        if (prev > 12) {
-          return prev - (Math.random() > 0.85 ? 1 : 0);
-        }
-        return prev;
-      });
+      setVagasRestantes((prev) => prev > 12 ? prev - (Math.random() > 0.85 ? 1 : 0) : prev);
     }, 15000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -362,88 +262,32 @@ export default function IgrejaPrimitiva({
     localStorage.setItem("despertar_mural_v1", JSON.stringify(updatedMural));
   };
 
-  // Co-creation actions (New Power)
   const handlePublishCentelha = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newCentelhaContent.trim()) {
-      showTemporaryToast("Por favor, derrame a sua palavra ou resposta antes de enviar.");
-      return;
-    }
-
+    if (!newCentelhaContent.trim()) { showTemporaryToast("Por favor, derrame a sua palavra antes de enviar."); return; }
     const authorToUse = newCentelhaAuthor.trim() || userProfile?.name || "Um Peregrino Sincero";
     const locationToUse = newCentelhaLocation.trim() || userProfile?.city || "Brasil";
-
-    const newCent: {
-      id: string;
-      author: string;
-      location: string;
-      prompt: string;
-      content: string;
-      votes: number;
-      voted?: boolean;
-    } = {
-      id: "cent_" + Date.now().toString(),
-      author: authorToUse,
-      location: locationToUse,
-      prompt: selectedPrompt,
-      content: newCentelhaContent.trim(),
-      votes: 1, // Start with their own vote
-      voted: true
-    };
-
+    const newCent = { id: "cent_" + Date.now().toString(), author: authorToUse, location: locationToUse, prompt: selectedPrompt, content: newCentelhaContent.trim(), votes: 1, voted: true };
     const updated = [newCent, ...centelhas];
     setCentelhas(updated);
     localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(updated));
-
-    // Reward active participation (New Power mechanism: circulation of credits)
     const nextCredits = userCredits + 5;
     setUserCredits(nextCredits);
     localStorage.setItem("despertar_user_credits", nextCredits.toString());
-
-    setNewCentelhaContent("");
-    setNewCentelhaAuthor("");
-    setNewCentelhaLocation("");
-    showTemporaryToast("Chama acesa! Sua resposta brilha na mesa de Co-Criação e você ganhou +5 créditos! 🕯️🔥");
+    setNewCentelhaContent(""); setNewCentelhaAuthor(""); setNewCentelhaLocation("");
+    showTemporaryToast("Chama acesa! Sua resposta brilha na mesa e você ganhou +5 créditos! 🕯️🔥");
   };
 
   const handleVoteCentelha = (id: string) => {
-    if (hasVotedPost[id]) {
-      showTemporaryToast("Você já somou sua fé a esta resposta.");
-      return;
-    }
-
-    const updated = centelhas.map(c => {
-      if (c.id === id) {
-        return { ...c, votes: c.votes + 1, voted: true };
-      }
-      return c;
-    });
-
+    if (hasVotedPost[id]) { showTemporaryToast("Você já somou sua fé a esta resposta."); return; }
+    const updated = centelhas.map(c => c.id === id ? { ...c, votes: c.votes + 1, voted: true } : c);
     setCentelhas(updated);
     localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(updated));
     setHasVotedPost(prev => ({ ...prev, [id]: true }));
-
-    // Circulate power: reward voter
     const nextCredits = userCredits + 1;
     setUserCredits(nextCredits);
     localStorage.setItem("despertar_user_credits", nextCredits.toString());
-
-    showTemporaryToast("Você concordou em oração! +1 de Crédito de Mordomia! 🙏");
-  };
-
-  const handleCopyToClipboard = (text: string) => {
-    try {
-      navigator.clipboard.writeText(text);
-      showTemporaryToast("Código PIX copiado com sucesso! 🕊️");
-    } catch (e) {
-      const tempInput = document.createElement("textarea");
-      tempInput.value = text;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand("copy");
-      document.body.removeChild(tempInput);
-      showTemporaryToast("Código PIX copiado com sucesso! 🕊️");
-    }
+    showTemporaryToast("Você concordou em oração! +1 Crédito! 🙏");
   };
 
   const showTemporaryToast = (msg: string) => {
@@ -453,283 +297,118 @@ export default function IgrejaPrimitiva({
 
   const handleRegisterFounder = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !name || !city) {
-      showTemporaryToast(
-        "Por favor, preencha todos os campos do cadastro do Reino."
-      );
-      return;
-    }
-
-    // Add user to founders pool
-    const newFounder: Fundador = {
-      name: name,
-      location: `${city}, ${stateCode}`,
-      service: chosenService.toLowerCase(),
-      type: interactionType,
-      avatarEmoji: interactionType === "offer" ? "🕊️" : "🙌",
-      isDonator: false,
-    };
-
+    if (!email || !name || !city) { showTemporaryToast("Por favor, preencha todos os campos."); return; }
+    const newFounder: Fundador = { name, location: `${city}, ${stateCode}`, service: chosenService.toLowerCase(), type: interactionType, avatarEmoji: interactionType === "offer" ? "🕊️" : "🙌", isDonator: false };
     setFundadores((prev) => [newFounder, ...prev]);
     setIsRegistered(true);
     setVagasRestantes((prev) => Math.max(1, prev - 1));
     localStorage.setItem("somosodespertar_founder_status", "registered");
     localStorage.setItem("somosodespertar_founder_email", email);
     localStorage.setItem("somosodespertar_founder_name", name);
-    showTemporaryToast(
-      "Reserva efetuada com sucesso! Bem-vindo(a), Fundador! 🎉"
-    );
+    showTemporaryToast("Reserva efetuada! Bem-vindo(a), Fundador! 🎉");
   };
 
-  const getDonationAmount = () => {
-    if (selectedPreset) return selectedPreset;
-    const custom = parseFloat(customValue);
-    return isNaN(custom) ? 0 : custom;
-  };
-
-  const handleSimulateDonation = (e: React.FormEvent) => {
-    e.preventDefault();
-    const activeName =
-      donatorName ||
-      name ||
-      (currentUser
-        ? userProfile?.name || currentUser.displayName
-        : "Doador Anônimo");
-    const valorStr = getDonationAmount();
-
-    if (valorStr <= 0) {
-      showTemporaryToast("Por favor, defina um valor simbólico de gratidão.");
-      return;
-    }
-
-    // Create a notification of support
-    setConfirmedDonation(true);
-    showTemporaryToast(
-      `Generosidade registrada! R$ ${valorStr} simulados com amor.`
-    );
-
-    // If already in founders, check them as donator
-    setFundadores((prev) => {
-      const exists = prev.some(
-        (f) => f.name.toLowerCase() === activeName.toLowerCase()
-      );
-      if (exists) {
-        return prev.map((f) =>
-          f.name.toLowerCase() === activeName.toLowerCase()
-            ? { ...f, isDonator: true }
-            : f
-        );
-      } else {
-        return [
-          {
-            name: activeName,
-            location: city ? `${city}, ${stateCode}` : "Brasil",
-            service: "Apoio financeiro",
-            type: "offer",
-            avatarEmoji: "💖",
-            isDonator: true,
-          },
-          ...prev,
-        ];
-      }
-    });
-
-    // Save badge to user achievements/profile if function exists
-    if (onSaveProgress) {
-      onSaveProgress({
-        isFounderBadge: true,
-        isDonatorBadge: true,
-      });
-    }
-  };
-
-  // Submit a new post into the Comunhão dos Santos
   const handlePublishPost = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTitle || !newDesc || !newAuthor || !newCity) {
-      showTemporaryToast("Por favor, preencha todos os campos para anunciar.");
-      return;
-    }
-
-    const emojisMap = {
-      necessidade: "📌",
-      oferta: "🎁",
-      oracao: "🙏",
-      cadeira_vazia: "🪑",
-    };
-
-    // Calculate dynamic cost of credits: posting a Needs consumes 2 credits, Offer adds 3, Cadeira Vazia is open, Prayer is free
+    if (!newTitle || !newDesc || !newAuthor || !newCity) { showTemporaryToast("Por favor, preencha todos os campos."); return; }
+    const emojisMap = { necessidade: "📌", oferta: "🎁", oracao: "🙏", cadeira_vazia: "🪑" };
     let cost = 0;
     if (newCategory === "necessidade") {
-      if (userCredits < 2) {
-        showTemporaryToast(
-          "Você precisa de pelo menos 2 créditos de mordomia para postar uma necessidade."
-        );
-        return;
-      }
+      if (userCredits < 2) { showTemporaryToast("Você precisa de pelo menos 2 créditos para postar uma necessidade."); return; }
       cost = -2;
-    } else if (newCategory === "oferta") {
-      cost = 3;
-    }
-
+    } else if (newCategory === "oferta") { cost = 3; }
     const newItem: MuralItem = {
-      id: Date.now().toString(),
-      category: newCategory,
-      author: newAuthor,
-      avatarEmoji: emojisMap[newCategory],
-      location: `${newCity}, ${newUF}`,
-      title: newTitle,
-      description: newDesc,
-      timestamp: "Agora mesmo",
-      counter:
-        newCategory === "oracao"
-          ? 0
-          : newCategory === "cadeira_vazia"
-          ? 0
-          : undefined,
+      id: Date.now().toString(), category: newCategory, author: newAuthor,
+      avatarEmoji: emojisMap[newCategory], location: `${newCity}, ${newUF}`,
+      title: newTitle, description: newDesc, timestamp: "Agora mesmo",
+      counter: newCategory === "oracao" ? 0 : newCategory === "cadeira_vazia" ? 0 : undefined,
       maxCounter: newCategory === "cadeira_vazia" ? 4 : undefined,
-      actionsTaken: [],
-      userInteracted: false,
+      actionsTaken: [], userInteracted: false,
     };
-
     const updatedMural = [newItem, ...muralItems];
     saveMuralToStorage(updatedMural);
-
-    // Apply credits calculation
     if (cost !== 0) {
-      setUserCredits((prev) => {
-        const next = prev + cost;
-        localStorage.setItem("despertar_user_credits", next.toString());
-        return next;
-      });
+      setUserCredits((prev) => { const next = prev + cost; localStorage.setItem("despertar_user_credits", next.toString()); return next; });
     }
-
-    showTemporaryToast(
-      `Anúncio publicado com sucesso no Mural de ${newCategory.replace(
-        "_",
-        " "
-      )}!`
-    );
-
-    // Reset form
-    setNewTitle("");
-    setNewDesc("");
-    setShowPublishForm(false);
+    showTemporaryToast(`Anúncio publicado no Mural!`);
+    setNewTitle(""); setNewDesc(""); setShowPublishForm(false);
   };
 
-  // Handle interacting with dynamic items
   const handleItemInteraction = (item: MuralItem) => {
-    const activeName =
-      name ||
-      (currentUser ? userProfile?.name || currentUser.displayName : "Você");
-
+    const activeName = name || (currentUser ? userProfile?.name || currentUser.displayName : "Você");
     const updated = muralItems.map((m) => {
       if (m.id === item.id) {
         if (m.userInteracted) {
-          // Uncommit
-          const nextActions = m.actionsTaken
-            ? m.actionsTaken.filter((a) => a !== activeName)
-            : [];
+          const nextActions = m.actionsTaken ? m.actionsTaken.filter((a) => a !== activeName) : [];
           let nextCounter = m.counter;
-          if (m.category === "oracao" && typeof m.counter === "number") {
-            nextCounter = Math.max(0, m.counter - 1);
-          } else if (
-            m.category === "cadeira_vazia" &&
-            typeof m.counter === "number"
-          ) {
-            nextCounter = Math.max(0, m.counter - 1);
-          }
-
-          return {
-            ...m,
-            userInteracted: false,
-            actionsTaken: nextActions,
-            counter: nextCounter,
-          };
+          if ((m.category === "oracao" || m.category === "cadeira_vazia") && typeof m.counter === "number") nextCounter = Math.max(0, m.counter - 1);
+          return { ...m, userInteracted: false, actionsTaken: nextActions, counter: nextCounter };
         } else {
-          // Commit
           const nextActions = [...(m.actionsTaken || []), activeName];
           let nextCounter = m.counter;
           let creditChange = 0;
-
-          if (m.category === "oracao" && typeof m.counter === "number") {
+          if (m.category === "oracao" && typeof m.counter === "number") { nextCounter = m.counter + 1; creditChange = 1; }
+          else if (m.category === "cadeira_vazia" && typeof m.counter === "number" && m.maxCounter) {
+            if (m.counter >= m.maxCounter) { showTemporaryToast("Esta mesa já está cheia!"); return m; }
             nextCounter = m.counter + 1;
-            creditChange = 1; // Assuming prayers grants 1 credit of brotherhood
-          } else if (
-            m.category === "cadeira_vazia" &&
-            typeof m.counter === "number" &&
-            m.maxCounter
-          ) {
-            if (m.counter >= m.maxCounter) {
-              showTemporaryToast("Sentimos muito, esta mesa já está cheia!");
-              return m;
-            }
-            nextCounter = m.counter + 1;
-          } else if (m.category === "necessidade") {
-            creditChange = 2; // Helping someone grants 2 credits of stewardship
-          }
-
-          if (creditChange > 0) {
-            setUserCredits((prev) => {
-              const next = prev + creditChange;
-              localStorage.setItem("despertar_user_credits", next.toString());
-              return next;
-            });
-          }
-
-          return {
-            ...m,
-            userInteracted: true,
-            actionsTaken: nextActions,
-            counter: nextCounter,
-          };
+          } else if (m.category === "necessidade") { creditChange = 2; }
+          if (creditChange > 0) { setUserCredits((prev) => { const next = prev + creditChange; localStorage.setItem("despertar_user_credits", next.toString()); return next; }); }
+          return { ...m, userInteracted: true, actionsTaken: nextActions, counter: nextCounter };
         }
       }
       return m;
     });
-
     saveMuralToStorage(updated);
-
-    if (item.userInteracted) {
-      showTemporaryToast(`Você removeu seu compromisso.`);
-    } else {
-      if (item.category === "oracao") {
-        showTemporaryToast(
-          `Que lindo! Você assumiu oração por ${item.author} esta semana! 🕯️`
-        );
-      } else if (item.category === "cadeira_vazia") {
-        showTemporaryToast(
-          `Cadeira reservada! Você se sentou à mesa com ${item.author} 🍲`
-        );
-      } else if (item.category === "necessidade") {
-        showTemporaryToast(
-          `Abundância! Você estendeu as mãos para ajudar ${item.author} (+2 créd.) 🤝`
-        );
-      } else {
-        showTemporaryToast(
-          `Seu interesse na oferta de ${item.author} foi registrado com amor!`
-        );
-      }
-    }
+    if (!item.userInteracted) {
+      if (item.category === "oracao") showTemporaryToast(`Você assumiu oração por ${item.author}! 🕯️`);
+      else if (item.category === "cadeira_vazia") showTemporaryToast(`Cadeira reservada com ${item.author}! 🍲`);
+      else if (item.category === "necessidade") showTemporaryToast(`Você estendeu as mãos para ${item.author} (+2 créditos)! 🤝`);
+      else showTemporaryToast(`Interesse registrado!`);
+    } else { showTemporaryToast("Compromisso removido."); }
   };
 
-  // Mock code PIX key
-  const mockPixKey =
-    "00020101021126580014br.gov.bcb.pix0136apoio@somosodespertar.org520400005303986540530.005802BR5925Somos O Despertar Co6009Sao Paulo62070503***6304BFAD";
-
-  // Counts for filters
-  const countCategory = (
-    cat: "necessidade" | "oferta" | "oracao" | "cadeira_vazia"
-  ) => {
-    return muralItems.filter((m) => m.category === cat).length;
-  };
+  // ─── LIVROS: dados da biblioteca de leitura ───────────────────────────────
+  const bibliotecaLivros = [
+    {
+      categoria: "Linguagem & Copywriting",
+      cor: "from-amber-950 to-stone-950",
+      badge: "bg-amber-500/15 text-amber-400 border-amber-500/25",
+      livros: [
+        { titulo: "Palavras Mágicas (Magic Words)", autor: "Jonah Berger", emoji: "✨", insight: "Como pequenas trocas de verbo mudam drasticamente a decisão do leitor. Ideal para botões de ação e mensagens de convite." },
+        { titulo: "StoryBrand", autor: "Donald Miller", emoji: "🗺️", insight: "O usuário é o herói. Você é apenas o guia. Se você se colocar como herói, ele perde o interesse — e não abre o app." },
+        { titulo: "The Adweek Copywriting Handbook", autor: "Joseph Sugarman", emoji: "🎯", insight: "A arte dos 'escorregadores mentais': uma primeira frase tão boa que obriga a leitura da segunda, até o botão de instalar." },
+        { titulo: "How to Write Copy That Sells", autor: "Ray Edwards", emoji: "📋", insight: "Estrutura prática para explicar benefícios — não funcionalidades. O que muda na vida de quem usa, não o que o produto faz." },
+      ],
+    },
+    {
+      categoria: "Persuasão & Negociação",
+      cor: "from-stone-950 to-slate-950",
+      badge: "bg-[#C08261]/15 text-[#DCAE6C] border-[#C08261]/25",
+      livros: [
+        { titulo: "As Armas da Persuasão 2.0", autor: "Robert Cialdini", emoji: "🔑", insight: "O 7º princípio inédito — Unidade — ensina a fazer o usuário sentir que o app faz parte da identidade dele, de um grupo exclusivo." },
+        { titulo: "Manual de Persuasão do FBI", autor: "Jack Schafer", emoji: "🤝", insight: "Como criar rapport instantâneo. Essencial para o onboarding: as primeiras telas precisam gerar confiança em menos de 90 segundos." },
+        { titulo: "Como Convencer Alguém em 90 Segundos", autor: "Nicholas Boothman", emoji: "⚡", insight: "Linguagem e tom moldam a primeira impressão. Como passar autoridade e simpatia no exato segundo em que o app abre." },
+        { titulo: "Never Split the Difference", autor: "Chris Voss", emoji: "🎙️", insight: "Rótulos emocionais mudam reações. Usado no app para escrever mensagens de erro que não irritam — e de renovação que não assustam." },
+      ],
+    },
+    {
+      categoria: "Indicação & Comunidade",
+      cor: "from-emerald-950 to-stone-950",
+      badge: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
+      livros: [
+        { titulo: "Influência e Persuasão (HBR)", autor: "Harvard Business Review", emoji: "🧠", insight: "Artigos científicos sobre como pedir favores e obter ajuda. Perfeito para mecânicas de 'Indique um irmão' no Despertar." },
+        { titulo: "Give and Take (Dar e Receber)", autor: "Adam Grant", emoji: "🌱", insight: "Por que as pessoas ajudam. Como criar um ecossistema onde o usuário sente prazer em convidar, comentar e participar." },
+        { titulo: "Presuasão", autor: "Robert Cialdini", emoji: "🎬", insight: "Não é o que você diz, é o que acontece antes. Como preparar o estado emocional certo para pedir uma avaliação na loja ou um convite." },
+      ],
+    },
+  ];
 
   return (
     <div
       id="igreja-primitiva-hub"
-      className="space-y-12 py-6 max-w-4xl mx-auto px-4 md:px-0"
+      className="space-y-10 py-6 max-w-4xl mx-auto px-4 md:px-0"
     >
-      {/* Dynamic Toast Popup */}
+      {/* Toast */}
       <AnimatePresence>
         {toastMsg && (
           <motion.div
@@ -744,7 +423,7 @@ export default function IgrejaPrimitiva({
         )}
       </AnimatePresence>
 
-      {/* INNER VIEW HEADER WITH PERSISTED METRICS */}
+      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-[#FAF8F5] border border-stone-200/60 p-6 rounded-3xl gap-6 shadow-xs text-left">
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
@@ -753,632 +432,220 @@ export default function IgrejaPrimitiva({
               O Santuário do Amor Prático
             </span>
           </div>
-          <h2 className="font-serif text-2xl md:text-3xl font-light text-stone-850">
-            A Comunhão dos Santos
-          </h2>
+          <h2 className="font-serif text-2xl md:text-3xl font-light text-stone-850">A Comunhão dos Santos</h2>
           <p className="text-stone-500 text-xs md:text-sm italic">
-            "Ninguém dizia que alguma coisa sua era exclusivamente sua, mas tudo
-            era comum entre eles." — Atos 4:32 Paráfrase
+            "Ninguém dizia que alguma coisa sua era exclusivamente sua, mas tudo era comum entre eles." — Atos 4:32
           </p>
         </div>
-
-        {/* Dynamic Credit Bank representation linked to user accounts */}
-        <div className="bg-[#white] border border-[#C08261]/25 p-4 rounded-2xl flex items-center space-x-4 shrink-0 shadow-sm w-full md:w-auto">
-          <div className="w-10 h-10 rounded-full bg-[#C08261]/10 flex items-center justify-center text-xl select-none">
-            🪙
-          </div>
+        <div className="border border-[#C08261]/25 p-4 rounded-2xl flex items-center space-x-4 shrink-0 shadow-sm w-full md:w-auto">
+          <div className="w-10 h-10 rounded-full bg-[#C08261]/10 flex items-center justify-center text-xl select-none">🪙</div>
           <div>
             <div className="flex items-center space-x-1 text-[10px] font-mono font-bold uppercase tracking-wider text-[#C08261]">
               <span>Seus Créditos de Mordomia</span>
-              <HelpCircle
-                size={11}
-                className="text-stone-400 group cursor-pointer"
-                title="Usados para pedir necessidades ou obtidos ajudando outros e orando."
-              />
+              <HelpCircle size={11} className="text-stone-400 cursor-pointer" title="Obtidos ajudando outros e orando." />
             </div>
-            <span className="font-serif text-2xl font-extrabold text-stone-900">
-              {userCredits}
-            </span>
-            <span className="text-stone-450 text-[10px] block mt-0.5 font-sans font-medium">
-              Virtuais e Inesgotáveis
-            </span>
+            <span className="font-serif text-2xl font-extrabold text-stone-900">{userCredits}</span>
+            <span className="text-stone-450 text-[10px] block mt-0.5 font-medium">Virtuais e Inesgotáveis</span>
           </div>
         </div>
       </div>
 
-      {/* CORE VIEW TABS SELECTOR */}
-      <div className="flex border-b border-stone-200 gap-6">
-        <button
-          id="tab-mural-comunhao"
-          onClick={() => setActiveTab("comunhao")}
-          className={`pb-4 text-sm font-semibold tracking-wide transition relative flex items-center gap-2 cursor-pointer ${
-            activeTab === "comunhao"
-              ? "text-stone-900 border-b-2 border-[#C08261]"
-              : "text-stone-400 hover:text-stone-600"
-          }`}
-        >
-          <Users size={16} />
-          <span>O Mural Vivo</span>
-          <span className="text-[10px] bg-stone-900 text-white px-1.5 py-0.5 rounded-full font-mono font-bold">
-            {muralItems.length}
-          </span>
-        </button>
-
-        <button
-          id="tab-chamado-pioneiro"
-          onClick={() => setActiveTab("chamado")}
-          className={`pb-4 text-sm font-semibold tracking-wide transition relative flex items-center gap-2 cursor-pointer ${
-            activeTab === "chamado"
-              ? "text-stone-900 border-b-2 border-[#C08261]"
-              : "text-stone-400 hover:text-stone-600"
-          }`}
-        >
-          <Flame size={15} />
-          <span>Nossa Visão Primitiva & Apoio</span>
-          <span className="text-[10px] bg-[#C08261] text-stone-100 px-1.5 py-0.5 rounded-full font-mono font-bold">
-            Pioneiro
-          </span>
-        </button>
-
-        <button
-          id="tab-cocriacao-pioneira"
-          onClick={() => setActiveTab("cocriacao")}
-          className={`pb-4 text-sm font-semibold tracking-wide transition relative flex items-center gap-2 cursor-pointer ${
-            activeTab === "cocriacao"
-              ? "text-stone-900 border-b-2 border-[#C08261]"
-              : "text-stone-400 hover:text-stone-600"
-          }`}
-        >
-          <Sparkles size={15} className="text-amber-500 animate-pulse" />
-          <span>💡 Centelhas Co-Criadas</span>
-          <span className="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-mono font-bold uppercase tracking-wider">
-            Fé Ativa
-          </span>
-        </button>
-
-        <button
-          id="tab-livros-despertar"
-          onClick={() => setActiveTab("livros")}
-          className={`pb-4 text-sm font-semibold tracking-wide transition relative flex items-center gap-2 cursor-pointer ${
-            activeTab === "livros"
-              ? "text-stone-900 border-b-2 border-[#C08261]"
-              : "text-stone-400 hover:text-stone-600"
-          }`}
-        >
-          <FileText size={15} className="text-[#C08261]" />
-          <span>📖 Os Livros</span>
-          <span className="text-[10px] bg-[#C08261] text-white px-2 py-0.5 rounded-full font-mono font-bold uppercase tracking-wider animate-pulse">
-            Apoiar
-          </span>
-        </button>
+      {/* Tabs */}
+      <div className="flex overflow-x-auto border-b border-stone-200 gap-1 md:gap-0 scrollbar-hide">
+        {[
+          { id: "comunhao", icon: <Users size={15} />, label: "O Mural Vivo", badge: muralItems.length.toString(), badgeCls: "bg-stone-900 text-white" },
+          { id: "chamado", icon: <Flame size={15} />, label: "Nossa Visão & Apoio", badge: "Pioneiro", badgeCls: "bg-[#C08261] text-white" },
+          { id: "cocriacao", icon: <Sparkles size={14} className="text-amber-500" />, label: "Centelhas", badge: "Fé Ativa", badgeCls: "bg-amber-500 text-white" },
+          { id: "livros", icon: <BookOpen size={15} className="text-[#C08261]" />, label: "Os Livros", badge: "Adquirir", badgeCls: "bg-[#C08261] text-white animate-pulse" },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            className={`pb-4 px-1 md:px-3 text-xs md:text-sm font-semibold tracking-wide transition relative flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 ${
+              activeTab === tab.id ? "text-stone-900 border-b-2 border-[#C08261]" : "text-stone-400 hover:text-stone-600"
+            }`}
+          >
+            {tab.icon}
+            <span>{tab.label}</span>
+            <span className={`text-[10px] ${tab.badgeCls} px-1.5 py-0.5 rounded-full font-mono font-bold`}>{tab.badge}</span>
+          </button>
+        ))}
       </div>
 
       <AnimatePresence mode="wait">
-        {/* TAB 1: INTERACTIVE COMUNHÃO DOS SANTOS WALLS */}
+        {/* TAB 1 — O MURAL VIVO */}
         {activeTab === "comunhao" && (
-          <motion.div
-            key="mural-walls"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="space-y-8 text-left"
-          >
-            {/* Painel do Sacerdócio Universal: O Chamado Primitivo */}
+          <motion.div key="mural-walls" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8 text-left">
+            {/* Conceito */}
             <div className="bg-stone-50 border border-stone-200/60 rounded-3xl p-6 md:p-8 space-y-6">
               <div className="space-y-2">
-                <span className="text-[10px] md:text-xs font-mono uppercase bg-[#C08261]/10 text-[#C08261] px-2.5 py-1 rounded-full font-bold inline-block">
-                  ⚡ O Ministério Primitivo
-                </span>
-                <h3 className="font-serif text-xl md:text-3xl font-light text-stone-850 tracking-tight leading-tight">
-                  Sacerdócio de Todos: Do Ouvinte Passivo para a Comunidade de Mesa
-                </h3>
+                <span className="text-[10px] font-mono uppercase bg-[#C08261]/10 text-[#C08261] px-2.5 py-1 rounded-full font-bold inline-block">⚡ O Ministério Primitivo</span>
+                <h3 className="font-serif text-xl md:text-3xl font-light text-stone-850 leading-tight">Sacerdócio de Todos: Do Ouvinte Passivo para a Comunidade de Mesa</h3>
                 <p className="text-stone-500 text-sm leading-relaxed max-w-2xl">
-                  O verdadeiro avivamento na história da Igreja não acontece por templos centralizados, mas pelo mover do Espírito Santo operando em cada coração sincero. A pergunta central da Igreja de Atos é: <strong className="text-stone-850 hover:text-[#C08261] transition font-semibold">"Desejamos apenas ser espectadores na casa de Deus ou parte integrante do Seu Corpo vivo?"</strong>
+                  O verdadeiro avivamento não acontece por templos centralizados, mas pelo mover do Espírito operando em cada coração sincero. A pergunta central de Atos é: <strong className="text-stone-850 font-semibold">"Queremos apenas ser espectadores ou parte integrante do Corpo vivo?"</strong>
                 </p>
               </div>
-
-              {/* Comparative Matrix (Religiosidade Passiva vs Sacerdócio Vivo) */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                {/* VELHO PODER CARD -> RELIGIOSIDADE PASSIVA */}
-                <div className="bg-white border text-stone-700 border-stone-200/80 p-5 rounded-2xl relative overflow-hidden flex flex-col justify-between">
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-2 text-stone-400 font-mono text-[10px] uppercase tracking-wider font-extrabold">
-                      <span>🏦 A Religiosidade de Consumo</span>
-                      <span className="bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded font-bold">Ritos de Palco</span>
-                    </div>
-                    <h4 className="font-serif text-lg font-bold text-stone-850">Estruturas Centralizadas</h4>
-                    <ul className="space-y-2 text-xs text-stone-500 list-disc list-inside">
-                      <li><strong>Ação concentrada:</strong> O sacerdócio e o serviço concentram-se em poucos nomes influentes ou profissionais da fé.</li>
-                      <li><strong>Espectadores da graça:</strong> A liturgia convida à passividade – as pessoas assistem ao invés de viverem em comunhão.</li>
-                      <li><strong>Paredes e templos isolados:</strong> Forte barreira de convívio fora do dia do culto; a fé se encerra no cronograma semanal.</li>
-                      <li className="list-none text-stone-400 italic py-1 border-t border-stone-100 mt-2">Foco: Programações pesadas e estéreis de consumo espiritual.</li>
-                    </ul>
-                  </div>
-                  <div className="text-[10.5px] font-medium text-stone-450 mt-4 font-mono uppercase border-l-2 border-stone-300 pl-2">
-                    O povo apenas obedece, assiste e consome.
-                  </div>
-                </div>
-
-                {/* NOVO PODER CARD -> SACERDÓCIO VIVO & DISTRIBUÍDO */}
-                <div className="bg-gradient-to-br from-stone-900 via-stone-950 to-black text-stone-100 border border-[#C08261]/25 p-5 rounded-2xl relative overflow-hidden flex flex-col justify-between">
-                  {/* Glowing light effect inside */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-b from-[#C08261]/15 to-transparent pointer-events-none rounded-full blur-3xl -mr-8 -mt-8 opacity-80" />
-                  
-                  <div className="space-y-3 relative z-10">
-                    <div className="flex items-center space-x-2 text-[#DCAE6C] font-mono text-[10px] uppercase tracking-wider font-extrabold">
-                      <span>🔥 O Sacerdócio Vivo</span>
-                      <span className="bg-[#C08261]/25 text-[#DCAE6C] px-1.5 py-0.5 rounded font-bold">Como Fogo Pentecostal</span>
-                    </div>
-                    <h4 className="font-serif text-lg font-bold text-[#DCAE6C]">O Movimento de Mesa</h4>
-                    <ul className="space-y-2 text-xs text-stone-300 list-disc list-inside">
-                      <li><strong>Dádiva que circula:</strong> O sacerdócio pertence a todos os crentes. Flui de lar em lar, de mesa em mesa diariamente.</li>
-                      <li><strong>Participação ativa:</strong> Co-criação de pão, de testemunhos, orações sinceras e acolhimento mútuo.</li>
-                      <li><strong>Comunidade orgânica:</strong> Qualquer discípulo pode iniciar uma mesa nos lares e espalhar a chama da Revelação.</li>
-                      <li className="list-none text-stone-400 italic py-1 border-t border-[#C59B63]/20 mt-2">Exemplos: A Igreja Primitiva do livro de Atos e redes orgânicas de compaixão.</li>
-                    </ul>
-                  </div>
-                  <div className="text-[10.5px] font-medium text-[#DCAE6C] mt-4 font-mono uppercase border-l-2 border-[#C08261] pl-2 relative z-10">
-                    Quanto mais gente participa, mais forte brilha a mesa.
-                  </div>
-                </div>
-              </div>
-
-              {/* Pilgrim Mindset Test (Interactive Quiz) */}
-              <div className="bg-white border border-stone-200/90 rounded-2xl p-5 md:p-6 text-left space-y-4">
+              {/* Quiz Primitivo */}
+              <div className="bg-white border border-stone-200/90 rounded-2xl p-5 space-y-4">
                 <div className="flex items-center space-x-2.5">
                   <span className="text-xl">🕯️</span>
                   <div>
-                    <span className="text-[9px] uppercase font-mono tracking-wider text-stone-400 font-extrabold">Teste de Consciência Primitiva</span>
-                    <h4 className="font-serif text-sm md:text-base font-medium text-stone-850">
-                      Como você deseja canalizar a luz de Deus em seu cotidiano?
-                    </h4>
+                    <span className="text-[9px] uppercase font-mono tracking-wider text-stone-400 font-extrabold">Teste de Consciência</span>
+                    <h4 className="font-serif text-sm md:text-base font-medium text-stone-850">Como você deseja canalizar a luz de Deus no seu cotidiano?</h4>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuizAnswer("old");
-                      showTemporaryToast("Interessante... Mas lembre-se: discípulos passivos esvaziam a efervescência da Igreja primitiva!");
-                    }}
-                    className={`p-3 border rounded-xl text-left cursor-pointer transition ${
-                      quizAnswer === "old"
-                        ? "border-amber-300 bg-amber-50/20 text-stone-800 font-medium"
-                        : "border-stone-200 bg-stone-50/50 hover:bg-stone-50 text-stone-600"
-                    }`}
-                  >
-                    <span className="text-xs font-serif block font-bold mb-1">⛪ Consumidor da fé</span>
-                    <span className="text-[10px] leading-relaxed block text-stone-500">
-                      Entrar passivamente nos templos murados, ouvir uma boa mensagem e delegar a obra espiritual para que outros gerenciem.
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuizAnswer("new");
-                      // Reward them with user credits for discovering!
-                      if (quizAnswer !== "new") {
-                        const nextCredits = userCredits + 10;
-                        setUserCredits(nextCredits);
-                        localStorage.setItem("despertar_user_credits", nextCredits.toString());
-                      }
-                      showTemporaryToast("Excelente! Você escolheu o Sacerdócio Vivo! +10 Créditos de Mordomia! ⚡🔥");
-                    }}
-                    className={`p-3 border rounded-xl text-left cursor-pointer transition ${
-                      quizAnswer === "new"
-                        ? "border-emerald-300 bg-emerald-50/30 text-stone-850 font-medium"
-                        : "border-stone-200 bg-stone-50/50 hover:bg-stone-50 text-stone-600"
-                    }`}
-                  >
-                    <span className="text-xs font-serif block font-bold text-stone-850 mb-1 flex items-center gap-1">
-                      <span>🔥 Condutor do Despertar</span>
-                      {quizAnswer === "new" && <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Ativo</span>}
-                    </span>
-                    <span className="text-[10px] leading-relaxed block text-stone-500">
-                      Sacerdócio de todos os crentes. Abrir a mesa de casa, co-criar o socorro e espalhar mensagens vivas sem depender de palcos intermediários.
-                    </span>
-                  </button>
-                </div>
-
-                <AnimatePresence mode="wait">
-                  {quizAnswer && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -5 }}
-                      className="p-4 rounded-xl text-xs font-sans border bg-stone-50 border-stone-150 text-stone-700 leading-relaxed"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {[
+                    { val: "old" as const, label: "Assistir a cultos e receber", desc: "Participar como ouvinte, receber ensinos e bençãos na estrutura tradicional.", icon: "🏛️" },
+                    { val: "new" as const, label: "Servir e ser servido reciprocamente", desc: "Abrir a mesa, oferecer dons, interceder, acolher — como na Igreja Primitiva.", icon: "🔥" },
+                  ].map((opt) => (
+                    <button
+                      key={opt.val}
+                      type="button"
+                      onClick={() => setQuizAnswer(opt.val)}
+                      className={`p-4 rounded-2xl border-2 text-left transition cursor-pointer ${quizAnswer === opt.val ? "border-[#C08261] bg-[#C08261]/5" : "border-stone-200 hover:border-stone-300"}`}
                     >
-                      {quizAnswer === "old" ? (
-                        <p>
-                          <strong>Reflexão para o Caminho:</strong> A passividade silenciosa limita os frutos do Reino de Deus — ela centraliza a ação litúrgica em poucas mãos profissionais e faz com que os santos se sintam apenas espectadores secundários. Mas Deus deseja reviver o sacerdócio ativo e real em cada um de nós! Que tal reacender sua mesa e partilhar a revelação no Secreto de forma dócil e ativa?
-                        </p>
-                      ) : (
-                        <p>
-                          <strong>Você ativou o Sacerdócio Universal de Atos!</strong> Exatamente! No princípio, a Igreja primitiva dependia do fluxo contínuo de afeto e testemunho que vertia das mesas habitadas (Atos 4:32). Nenhum membro guardava para si os recursos carismáticos ou espirituais; todos os faziam circular. Você acaba de receber mais <strong>+10 créditos virtuais de mordomia</strong> para espalhar gratidão, socorrer necessitados ou semear graça no painel abaixo!
-                        </p>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-lg">{opt.icon}</span>
+                        <span className="font-semibold text-stone-850 text-xs">{opt.label}</span>
+                      </div>
+                      <p className="text-stone-500 text-[11px] leading-relaxed">{opt.desc}</p>
+                    </button>
+                  ))}
+                </div>
+                {quizAnswer === "new" && (
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="bg-[#C08261]/5 border border-[#C08261]/20 p-4 rounded-xl text-sm text-stone-700 font-serif italic">
+                    "Você escolheu o caminho de Atos. O Mural Vivo abaixo é o seu espaço de missão — não de consumo." 🔥
+                  </motion.div>
+                )}
               </div>
             </div>
 
-            {/* ACTION CENTER BAR: FILTERS + PUBLIC BUTTON */}
-            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 bg-stone-50 border border-stone-200/50 p-4 rounded-2xl w-full">
-              {/* Filter pills box */}
-              <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto">
-                <span className="text-xs uppercase font-mono font-bold text-stone-400 mr-2">
-                  Filtrar:
-                </span>
-                {[
-                  { key: "todas", label: "Todos", emoji: "📋" },
-                  {
-                    key: "necessidade",
-                    label: "Necessidades",
-                    emoji: "📌",
-                    badge: countCategory("necessidade"),
-                  },
-                  {
-                    key: "oferta",
-                    label: "Ofertas",
-                    emoji: "🎁",
-                    badge: countCategory("oferta"),
-                  },
-                  {
-                    key: "oracao",
-                    label: "Orações",
-                    emoji: "🙏",
-                    badge: countCategory("oracao"),
-                  },
-                  {
-                    key: "cadeira_vazia",
-                    label: "Cadeira Vazia",
-                    emoji: "🪑",
-                    badge: countCategory("cadeira_vazia"),
-                  },
-                ].map((flt) => (
-                  <button
-                    key={flt.key}
-                    type="button"
-                    onClick={() => {
-                      // Simulating filter via inline states or toasts
-                      showTemporaryToast(`Filtrado por: ${flt.label}`);
-                    }}
-                    className="px-3.5 py-1.5 text-xs rounded-xl font-medium cursor-pointer transition bg-white border border-stone-200 hover:border-[#C08261] text-stone-600 flex items-center space-x-1"
-                  >
-                    <span>{flt.emoji}</span>
-                    <span>{flt.label}</span>
-                    {typeof flt.badge === "number" && (
-                      <span className="text-[10px] bg-stone-100 text-[#C08261] px-1.5 py-0.5 rounded font-mono font-bold">
-                        {flt.badge}
-                      </span>
-                    )}
-                  </button>
-                ))}
+            {/* Controles do Mural */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-serif text-lg font-bold text-stone-850">Mural de Comunhão</h3>
+                <p className="text-stone-400 text-xs">{muralItems.length} anúncios ativos de irmãos ao redor do Brasil</p>
               </div>
-
-              {/* Publish button triggers absolute card section */}
               <button
-                id="btn-publicar-chamado"
+                type="button"
                 onClick={() => setShowPublishForm(!showPublishForm)}
-                className="py-3 px-5 bg-stone-900 hover:bg-black text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-2 shrink-0 shadow-sm cursor-pointer"
+                className="py-3 px-5 bg-stone-900 hover:bg-black text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-2 cursor-pointer"
               >
                 <PlusCircle size={15} />
                 <span>Anunciar No Mural</span>
               </button>
             </div>
 
-            {/* GROWING SLIDE-DOWN OF THE PUBLISH ANNOUNCEMENT FORM */}
+            {/* Formulário publicação */}
             <AnimatePresence>
               {showPublishForm && (
                 <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
+                  initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
                   className="overflow-hidden bg-white border-2 border-[#C08261]/25 p-6 rounded-2xl space-y-5 shadow-lg max-w-xl mx-auto text-left"
                 >
                   <div className="flex justify-between items-center pb-2 border-b border-stone-100">
                     <h4 className="font-serif font-bold text-stone-850 flex items-center gap-1.5">
-                      <Plus size={18} className="text-[#C08261]" />
-                      <span>Anunciar nova Ação na Comunhão</span>
+                      <Plus size={18} className="text-[#C08261]" /> Anunciar nova Ação
                     </h4>
-                    <span className="text-[10px] uppercase font-mono text-stone-400 font-bold">
-                      Preencha com Respeito
-                    </span>
                   </div>
-
-                  <form
-                    onSubmit={handlePublishPost}
-                    className="space-y-4 text-xs md:text-sm"
-                  >
+                  <form onSubmit={handlePublishPost} className="space-y-4 text-xs md:text-sm">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Name input */}
                       <div className="space-y-1">
-                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
-                          Seu Nome / Família
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Ex: Família Soares"
-                          value={newAuthor}
-                          onChange={(e) => setNewAuthor(e.target.value)}
-                          required
-                          className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-900 focus:outline-hidden focus:border-[#C08261]"
-                        />
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Seu Nome</label>
+                        <input type="text" placeholder="Ex: Família Soares" value={newAuthor} onChange={(e) => setNewAuthor(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-900 focus:outline-none focus:border-[#C08261]" />
                       </div>
-
-                      {/* Location input */}
                       <div className="grid grid-cols-3 gap-2">
                         <div className="col-span-2 space-y-1">
-                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
-                            Sua Cidade
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Ex: São Paulo"
-                            value={newCity}
-                            onChange={(e) => setNewCity(e.target.value)}
-                            required
-                            className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-900 focus:outline-hidden focus:border-[#C08261]"
-                          />
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Cidade</label>
+                          <input type="text" placeholder="Ex: São Paulo" value={newCity} onChange={(e) => setNewCity(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-900 focus:outline-none focus:border-[#C08261]" />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
-                            UF
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="SP"
-                            maxLength={2}
-                            value={newUF}
-                            onChange={(e) =>
-                              setNewUF(e.target.value.toUpperCase())
-                            }
-                            required
-                            className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-900 text-center font-mono focus:outline-hidden focus:border-[#C08261]"
-                          />
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">UF</label>
+                          <input type="text" placeholder="SP" maxLength={2} value={newUF} onChange={(e) => setNewUF(e.target.value.toUpperCase())} required className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-center font-mono focus:outline-none focus:border-[#C08261]" />
                         </div>
                       </div>
                     </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                      {/* Category select block */}
                       <div className="md:col-span-5 space-y-1">
-                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block font-semibold">
-                          Categoria do Mural
-                        </label>
-                        <select
-                          value={newCategory}
-                          onChange={(e) =>
-                            setNewCategory(e.target.value as any)
-                          }
-                          className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-850 font-medium focus:outline-hidden focus:border-[#C08261]"
-                        >
-                          <option value="necessidade">
-                            📌 Necessidade (Gasta 2 cred.)
-                          </option>
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Categoria</label>
+                        <select value={newCategory} onChange={(e) => setNewCategory(e.target.value as any)} className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-850 focus:outline-none focus:border-[#C08261]">
+                          <option value="necessidade">📌 Necessidade (Gasta 2 cred.)</option>
                           <option value="oferta">🎁 Oferta (+3 cred.)</option>
-                          <option value="oracao">
-                            🙏 Pedido de Oração (Grátis)
-                          </option>
-                          <option value="cadeira_vazia">
-                            🪑 Cadeira Vazia (Grátis)
-                          </option>
+                          <option value="oracao">🙏 Pedido de Oração (Grátis)</option>
+                          <option value="cadeira_vazia">🪑 Cadeira Vazia (Grátis)</option>
                         </select>
                       </div>
-
-                      {/* Title input */}
                       <div className="md:col-span-7 space-y-1">
-                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block font-semibold">
-                          Título do Anúncio
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Resuma o pedido ou oferta de forma clara"
-                          value={newTitle}
-                          onChange={(e) => setNewTitle(e.target.value)}
-                          required
-                          className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-900 focus:outline-hidden focus:border-[#C08261]"
-                        />
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Título</label>
+                        <input type="text" placeholder="Resuma o pedido ou oferta" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-900 focus:outline-none focus:border-[#C08261]" />
                       </div>
                     </div>
-
-                    {/* Description text block */}
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block font-semibold">
-                        Detalhamento da Ação
-                      </label>
-                      <textarea
-                        rows={3}
-                        placeholder="Quais os detalhes? Como as pessoas podem te amparar ou usufruir?"
-                        value={newDesc}
-                        onChange={(e) => setNewDesc(e.target.value)}
-                        required
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-900 focus:outline-hidden focus:border-[#C08261]"
-                      />
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Detalhes</label>
+                      <textarea rows={3} placeholder="Quais os detalhes? Como as pessoas podem ajudar?" value={newDesc} onChange={(e) => setNewDesc(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-900 focus:outline-none focus:border-[#C08261]" />
                     </div>
-
-                    <span className="text-[10.5px] text-stone-450 block italic leading-relaxed">
-                      * O Despertar incentiva a confiança sincera. Abusos serão
-                      moderados fraternalmente pela mesa de anciãos mais
-                      próxima.
-                    </span>
-
                     <div className="flex gap-3 justify-end pt-2">
-                      <button
-                        type="button"
-                        onClick={() => setShowPublishForm(false)}
-                        className="py-2.5 px-4 bg-stone-100 hover:bg-stone-250 text-stone-600 rounded-xl text-xs font-semibold"
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        type="submit"
-                        className="py-2.5 px-6 bg-[#C08261] hover:bg-[#b07353] text-white text-xs font-bold rounded-xl shadow-md cursor-pointer"
-                      >
-                        Publicar Anúncio de Amor
-                      </button>
+                      <button type="button" onClick={() => setShowPublishForm(false)} className="py-2.5 px-4 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-xl text-xs font-semibold">Cancelar</button>
+                      <button type="submit" className="py-2.5 px-6 bg-[#C08261] hover:bg-[#b07353] text-white text-xs font-bold rounded-xl shadow-md cursor-pointer">Publicar Anúncio de Amor</button>
                     </div>
                   </form>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* MURAL ITEMS RESPONSIVE GRID LAYOUT */}
+            {/* Cards do Mural */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {muralItems.map((item) => {
-                // Color formatting matching specific categories
-                const categoryClasses = {
-                  necessidade: {
-                    bg: "bg-[#C08261]/5 border-[#C08261]/20",
-                    badge: "bg-[#C08261]/10 text-[#C08261]",
-                    label: "Necessidade 📌",
-                  },
-                  oferta: {
-                    bg: "bg-emerald-50/40 border-emerald-250/20",
-                    badge: "bg-emerald-100/40 text-emerald-800",
-                    label: "Oferta 🎁",
-                  },
-                  oracao: {
-                    bg: "bg-amber-50/30 border-amber-250/20",
-                    badge: "bg-amber-100/50 text-amber-900",
-                    label: "Pedido de Oração 🙏",
-                  },
-                  cadeira_vazia: {
-                    bg: "bg-stone-50 border-stone-200/50",
-                    badge:
-                      "bg-[#DCAE6C]/10 text-stone-800 border border-[#DCAE6C]/20",
-                    label: "Cadeira Vazia 🪑",
-                  },
+                const styles = {
+                  necessidade: { bg: "bg-[#C08261]/5 border-[#C08261]/20", badge: "bg-[#C08261]/10 text-[#C08261]", label: "Necessidade 📌" },
+                  oferta: { bg: "bg-emerald-50/40 border-emerald-200/20", badge: "bg-emerald-100/40 text-emerald-800", label: "Oferta 🎁" },
+                  oracao: { bg: "bg-amber-50/30 border-amber-200/20", badge: "bg-amber-100/50 text-amber-900", label: "Pedido de Oração 🙏" },
+                  cadeira_vazia: { bg: "bg-stone-50 border-stone-200/50", badge: "bg-[#DCAE6C]/10 text-stone-800 border border-[#DCAE6C]/20", label: "Cadeira Vazia 🪑" },
                 };
-
-                const styled =
-                  categoryClasses[item.category] || categoryClasses.necessidade;
-
+                const styled = styles[item.category] || styles.necessidade;
                 return (
-                  <div
-                    key={item.id}
-                    className={`p-6 rounded-3xl border shadow-xs transition hover:shadow-md hover:border-stone-300 flex flex-col justify-between space-y-4 ${styled.bg}`}
-                  >
+                  <div key={item.id} className={`p-6 rounded-3xl border shadow-xs transition hover:shadow-md hover:border-stone-300 flex flex-col justify-between space-y-4 ${styled.bg}`}>
                     <div className="space-y-3">
-                      {/* Section header: Badge category along with stamp metrics */}
                       <div className="flex justify-between items-center">
-                        <span
-                          className={`text-[10px] font-mono tracking-widest uppercase font-extrabold px-2.5 py-1 rounded ${styled.badge}`}
-                        >
-                          {styled.label}
-                        </span>
-                        <div className="flex items-center space-x-1.5 text-stone-400 font-mono text-[10px] uppercase font-semibold">
-                          <Clock size={11} />
-                          <span>{item.timestamp}</span>
+                        <span className={`text-[10px] font-mono tracking-widest uppercase font-extrabold px-2.5 py-1 rounded ${styled.badge}`}>{styled.label}</span>
+                        <div className="flex items-center space-x-1.5 text-stone-400 font-mono text-[10px]">
+                          <Clock size={11} /><span>{item.timestamp}</span>
                         </div>
                       </div>
-
-                      <h4 className="font-serif text-lg font-bold text-stone-900 leading-snug">
-                        {item.title}
-                      </h4>
-
-                      <p className="text-stone-600 text-sm leading-relaxed block">
-                        {item.description}
-                      </p>
+                      <h4 className="font-serif text-lg font-bold text-stone-900 leading-snug">{item.title}</h4>
+                      <p className="text-stone-600 text-sm leading-relaxed">{item.description}</p>
                     </div>
-
-                    {/* Metadata & Interactive claim actions */}
-                    <div className="space-y-4.5 pt-4 border-t border-stone-150 text-xs text-stone-500">
-                      {/* Author credentials */}
-                      <div className="flex items-center justify-between text-[11px] leading-tight">
+                    <div className="space-y-4 pt-4 border-t border-stone-150 text-xs text-stone-500">
+                      <div className="flex items-center justify-between text-[11px]">
                         <div className="flex items-center space-x-2">
-                          <span className="w-7 h-7 rounded-full bg-white border border-stone-200 flex items-center justify-center text-sm">
-                            {item.avatarEmoji}
-                          </span>
+                          <span className="w-7 h-7 rounded-full bg-white border border-stone-200 flex items-center justify-center text-sm">{item.avatarEmoji}</span>
                           <div>
-                            <span className="font-bold text-stone-800 block">
-                              {item.author}
-                            </span>
-                            <span className="text-[9.5px] uppercase font-mono text-stone-400 font-extrabold flex items-center gap-0.5">
-                              <MapPin size={9} /> {item.location}
-                            </span>
+                            <span className="font-bold text-stone-800 block">{item.author}</span>
+                            <span className="text-[9.5px] uppercase font-mono text-stone-400 font-extrabold flex items-center gap-0.5"><MapPin size={9} />{item.location}</span>
                           </div>
                         </div>
-
-                        {/* Interactive dynamic counters representation */}
-                        {item.category === "oracao" && (
-                          <span className="text-[#C08261] font-mono font-bold uppercase tracking-wider text-[10px] bg-[#C08261]/10 px-2 py-0.5 rounded-sm flex items-center gap-1">
-                            <Flame size={10} /> {item.counter} clamando
-                          </span>
-                        )}
-
-                        {item.category === "cadeira_vazia" && (
-                          <span className="text-stone-800 font-mono font-bold uppercase tracking-wider text-[10px] bg-stone-100 border px-2 py-0.5 rounded-sm flex items-center gap-1">
-                            <Coffee size={10} /> {item.counter}/
-                            {item.maxCounter} sentados
-                          </span>
-                        )}
+                        {item.category === "oracao" && <span className="text-[#C08261] font-mono font-bold uppercase text-[10px] bg-[#C08261]/10 px-2 py-0.5 rounded flex items-center gap-1"><Flame size={10} />{item.counter} clamando</span>}
+                        {item.category === "cadeira_vazia" && <span className="text-stone-800 font-mono font-bold text-[10px] bg-stone-100 border px-2 py-0.5 rounded flex items-center gap-1"><Coffee size={10} />{item.counter}/{item.maxCounter} sentados</span>}
                       </div>
-
-                      {/* Display users who joined or committed */}
                       {item.actionsTaken && item.actionsTaken.length > 0 && (
                         <div className="bg-white/60 p-2.5 rounded-xl text-[10.5px] text-stone-500 border border-stone-200 flex items-center gap-1.5 flex-wrap">
-                          <span className="font-bold text-stone-700">
-                            Abraços de amor:
-                          </span>
-                          {item.actionsTaken.map((ac, idx) => (
-                            <span
-                              key={idx}
-                              className="bg-stone-100 text-stone-650 px-1 rounded border-b border-stone-250"
-                            >
-                              {ac}
-                            </span>
-                          ))}
+                          <span className="font-bold text-stone-700">Abraços de amor:</span>
+                          {item.actionsTaken.map((ac, idx) => <span key={idx} className="bg-stone-100 text-stone-650 px-1 rounded">{ac}</span>)}
                         </div>
                       )}
-
-                      {/* CALL TO ACTION DYNAMIC BUTTON */}
                       <button
                         type="button"
                         onClick={() => handleItemInteraction(item)}
                         className={`w-full py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 cursor-pointer ${
-                          item.userInteracted
-                            ? "bg-emerald-900/10 border-0 text-emerald-800 font-extrabold hover:bg-emerald-100"
-                            : item.category === "oracao"
-                            ? "bg-stone-900 text-white hover:bg-black"
-                            : "bg-white border-2 border-stone-800 text-stone-900 hover:bg-stone-50"
+                          item.userInteracted ? "bg-emerald-900/10 text-emerald-800 hover:bg-emerald-100" : item.category === "oracao" ? "bg-stone-900 text-white hover:bg-black" : "bg-white border-2 border-stone-800 text-stone-900 hover:bg-stone-50"
                         }`}
                       >
-                        {item.userInteracted ? (
-                          <>
-                            <Check size={14} className="text-emerald-500" />
-                            <span>Compromisso Assumido!</span>
-                          </>
-                        ) : item.category === "oracao" ? (
-                          <>
-                            <Flame
-                              size={13}
-                              className="text-amber-300 animate-pulse fill-amber-400"
-                            />
-                            <span>Assumir Oração esta semana</span>
-                          </>
-                        ) : item.category === "cadeira_vazia" ? (
-                          <>
-                            <Coffee size={13} className="text-[#C08261]" />
-                            <span>Reservar Cadeira Vazia</span>
-                          </>
-                        ) : item.category === "necessidade" ? (
-                          <>
-                            <CheckCircle
-                              size={13}
-                              className="text-emerald-500"
-                            />
-                            <span>Estender as Mãos & Ajudar</span>
-                          </>
-                        ) : (
-                          <>
-                            <Heart size={13} className="text-rose-500" />
-                            <span>Interessar-me pela Oferta</span>
-                          </>
-                        )}
+                        {item.userInteracted ? <><Check size={14} className="text-emerald-500" /><span>Compromisso Assumido!</span></> :
+                          item.category === "oracao" ? <><Flame size={13} className="text-amber-300 animate-pulse" /><span>Assumir Oração esta semana</span></> :
+                          item.category === "cadeira_vazia" ? <><Coffee size={13} className="text-[#C08261]" /><span>Reservar Cadeira Vazia</span></> :
+                          item.category === "necessidade" ? <><CheckCircle size={13} className="text-emerald-500" /><span>Estender as Mãos & Ajudar</span></> :
+                          <><Heart size={13} className="text-rose-500" /><span>Interessar-me pela Oferta</span></>}
                       </button>
                     </div>
                   </div>
@@ -1386,290 +653,288 @@ export default function IgrejaPrimitiva({
               })}
             </div>
 
-            {/* END CARD: CADEIRA VAZIA INSPIRATION PROPOSAL */}
+            {/* Cadeira Vazia inspiração */}
             <div className="bg-[#FAF8F5]/80 border-2 border-dashed border-[#C08261]/25 rounded-3xl p-6 md:p-8 space-y-4 max-w-2xl mx-auto text-center">
-              <span className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-xl mx-auto select-none">
-                🪑
-              </span>
-              <h4 className="font-serif text-lg font-bold text-stone-850">
-                A Cadeira Vazia — Hospitalidade Real
-              </h4>
+              <span className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-xl mx-auto select-none">🪑</span>
+              <h4 className="font-serif text-lg font-bold text-stone-850">A Cadeira Vazia — Hospitalidade Real</h4>
               <p className="text-stone-550 text-xs md:text-sm leading-relaxed max-w-lg mx-auto">
-                Inspirado na teologia da mesa do Despertar, a "Cadeira Vazia" é um convite constante:{" "}
-                <em className="text-stone-850 font-serif">
-                  "Na sua mesa, há sempre uma cadeira vazia para um irmão que ainda não tem grupo local."
-                </em>{" "}
-                Faça do seu lar um tabernáculo físico de graça.
+                <em className="text-stone-850 font-serif">"Na sua mesa, há sempre uma cadeira vazia para um irmão que ainda não tem grupo local."</em> Faça do seu lar um tabernáculo físico de graça.
               </p>
             </div>
           </motion.div>
         )}
 
-        {/* TAB 3: CO-CREATION OF CENTELHAS (Sacerdócio Universal / Atos 4) */}
-        {activeTab === "cocriacao" && (
-          <motion.div
-            key="cocriacao-view"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="space-y-8 text-left"
-          >
-            {/* Call to action & concept block */}
-            <div className="bg-[#C08261]/5 border border-[#C08261]/15 p-6 rounded-3xl space-y-4">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-[#C08261]/10 flex items-center justify-center text-2xl shrink-0 select-none">
-                  💡
-                </div>
-                <div className="space-y-1">
-                  <h3 className="font-serif text-lg md:text-xl font-bold text-stone-850">
-                    Mesa de Semeação: Frutos de Edificação e Testemunho
-                  </h3>
-                  <p className="text-stone-650 text-xs md:text-sm leading-relaxed font-sans">
-                    Na religiosidade centralizada e passiva, apenas os grandes púlpitos determinam a vivência prática, restando para nós apenas assistir. Mas aqui no <strong>Despertar</strong>, o Espírito e a fé de Atos fluem de coração em coração através de mesas de comunhão. Você é parte ativa da edificação mútua do Corpo! Escolha uma das perguntas profundas abaixo, partilhe sua história real de forma sincera e faça com que a sua centelha de graça console, edifique e acenda outros corações.
-                  </p>
-                </div>
-              </div>
+        {/* TAB 2 — VISÃO & APOIO */}
+        {activeTab === "chamado" && (
+          <motion.div key="chamado-view" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-10 text-left">
+            <div className="text-center space-y-4 py-4">
+              <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 leading-tight">
+                A tecnologia como ponte<br />
+                <span className="font-semibold text-[#C08261]">para a comunhão primitiva.</span>
+              </h3>
+              <p className="text-stone-600 text-base leading-relaxed max-w-2xl mx-auto">
+                No século XXI, usamos a tecnologia não para afastar, mas para reatar. Nossos apps e materiais servem como ponte para conectar vidas, mesas e corações, restaurando o pão partido em cada lar.
+              </p>
+            </div>
 
-              <div className="flex flex-wrap gap-2 text-xs pt-1">
-                <span className="bg-white border border-stone-200 px-3 py-1 rounded-full text-stone-500 font-mono">
-                  🔥 +5 Créditos por Semeação
-                </span>
-                <span className="bg-white border border-stone-200 px-3 py-1 rounded-full text-stone-500 font-mono">
-                  ❤️ +1 Crédito por Concordar
-                </span>
-                <span className="bg-white border border-stone-200 px-3 py-1 rounded-full text-stone-500 font-mono">
-                  📱 Livre Compartilhamento
-                </span>
+            <hr className="border-stone-150" />
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+              <div className="md:col-span-4 space-y-2">
+                <span className="text-xs font-mono uppercase tracking-widest text-[#C08261] font-bold block">O Fardo Silencioso</span>
+                <h4 className="font-serif text-2xl font-light text-stone-850">Comunhão de Domingo a Domingo</h4>
+              </div>
+              <div className="md:col-span-8 space-y-5">
+                <p className="text-stone-650 text-sm md:text-base leading-relaxed">A maioria das pessoas vai à igreja no domingo e não compartilha uma conversa sincera com ninguém até o próximo culto. Há uma barreira invisível para expor fragilidade ou pedir amparo.</p>
+                <blockquote className="border-l-4 border-[#C08261] pl-5 italic text-stone-700 font-serif bg-orange-50/20 py-2.5 rounded-r-2xl pr-3 text-sm">
+                  "Não deixemos de reunir-nos, como alguns têm por costume; pelo contrário, encorajemo-nos uns aos outros."
+                  <cite className="font-mono text-[10px] text-[#C08261] block mt-2 not-italic font-bold">— Hebreus 10:25</cite>
+                </blockquote>
               </div>
             </div>
 
-            {/* Main Interactive Form section */}
+            <hr className="border-stone-150" />
+
+            {/* Bloco de Apoio (compra de livros — redireciona para aba livros) */}
+            <div id="donation-block" className="bg-gradient-to-br from-[#1E1C1A] via-[#121110] to-[#080807] text-white rounded-3xl p-6 md:p-10 border border-[#DCAE6C]/25 shadow-2xl space-y-6">
+              <div className="space-y-3 max-w-2xl">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#DCAE6C]/10 border border-[#DCAE6C]/20 rounded-full text-[10px] font-mono text-[#DCAE6C] font-bold uppercase tracking-wider">
+                  <Gift size={11} className="animate-pulse" /> Altar de Generosidade
+                </span>
+                <h3 className="font-serif text-2xl md:text-3xl font-light text-stone-100 leading-tight">
+                  Sustente este movimento.<br />
+                  <span className="font-bold text-[#DCAE6C]">Adquira um dos livros.</span>
+                </h3>
+                <p className="text-stone-300 text-sm leading-relaxed">
+                  O ecossistema do Despertar é gratuito e sem patrocinadores. A forma mais concreta de manter viva esta chama é adquirindo um dos livros — cada compra financia servidores, manutenção e o alcance de novos lares.
+                </p>
+              </div>
+
+              {/* Progress */}
+              <div className="bg-[#181716] p-5 rounded-2xl border border-stone-800 space-y-3">
+                <div className="flex justify-between items-center text-xs flex-wrap gap-2 text-stone-400">
+                  <span className="flex items-center gap-1.5 text-stone-200 font-semibold"><TrendingUp size={14} className="text-[#DCAE6C]" /> Fundo de Infraestrutura</span>
+                  <span className="font-mono text-[#DCAE6C] font-bold"><strong>25% Concluído</strong> (R$ 1.247 / R$ 5.000)</span>
+                </div>
+                <div className="w-full bg-stone-900 rounded-full h-2 overflow-hidden border border-stone-800">
+                  <div className="bg-gradient-to-r from-[#C28463] to-[#DCAE6C] h-2 rounded-full" style={{ width: "25%" }} />
+                </div>
+                <span className="text-[10px] font-mono text-stone-500 block">Faltam R$ 3.753 para a personificação legal e licenças LGPD.</span>
+              </div>
+
+              {/* CTA que leva para aba livros */}
+              <div className="flex flex-col md:flex-row gap-4 items-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("livros")}
+                  className="w-full md:w-auto py-4 px-8 bg-gradient-to-r from-[#C28463] to-[#DCAE6C] hover:from-[#b07353] text-stone-950 font-black uppercase tracking-wider rounded-xl transition shadow-xl cursor-pointer flex items-center justify-center gap-2 text-sm"
+                >
+                  <BookOpen size={16} />
+                  Ver os Livros e Adquirir
+                  <ArrowRight size={14} />
+                </button>
+                <a
+                  href="mailto:somosodespertar@gmail.com?subject=Apoio Voluntário — Movimento Despertar"
+                  className="text-[#DCAE6C] underline underline-offset-4 text-sm font-serif hover:text-white transition"
+                >
+                  Ou envie uma semente voluntária por e-mail
+                </a>
+              </div>
+            </div>
+
+            <hr className="border-stone-150" />
+
+            {/* Transparência */}
+            <div className="bg-[#FAF8F5]/90 border border-stone-200/80 p-6 md:p-8 rounded-3xl space-y-6">
+              <div className="flex items-center space-x-3.5 border-b border-stone-200/80 pb-4">
+                <div className="w-11 h-11 rounded-full bg-stone-100 flex items-center justify-center border border-stone-200 shadow-sm">
+                  <ShieldCheck size={20} className="text-[#C08261]" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-bold block">Pacto de Confiança</span>
+                  <h4 className="font-serif text-lg font-bold text-stone-850">Segurança & Transparência LGPD</h4>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                {[
+                  { icon: <CheckCircle size={15} className="text-[#C08261]" />, title: "Arquitetura Limpa", desc: "Todas as ações são salvas exclusivamente no seu próprio navegador (LocalStorage). Nenhum dado pessoal é exposto sem sua autorização." },
+                  { icon: <FileText size={15} className="text-[#C08261]" />, title: "Propósito do Apoio", desc: "O valor de cada livro adquirido via Kiwify é inteiramente destinado a custear infraestrutura, jurídico e conformidade legal." },
+                  { icon: <Shield size={15} className="text-[#C08261]" />, title: "Blindagem LGPD", desc: "Seus dados nunca serão vendidos. Você tem direito integral à exclusão de qualquer postagem. Ecossistema livre de cookies de rastreamento." },
+                ].map((item) => (
+                  <div key={item.title} className="space-y-2">
+                    <span className="flex items-center gap-1.5 text-stone-850 font-bold font-serif text-xs">{item.icon} {item.title}</span>
+                    <p className="text-stone-500 text-xs leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <hr className="border-stone-150" />
+
+            {/* Registro de Fundador */}
+            <div id="sejaexclusivo-form" className="bg-[#FAF8F5]/80 border border-stone-200/60 p-8 rounded-3xl text-center space-y-6 max-w-2xl mx-auto shadow-xs">
+              <div className="space-y-3">
+                <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-extrabold">Seja um Pioneiro</span>
+                <h4 className="font-serif text-2xl md:text-3xl font-light text-stone-850 max-w-lg mx-auto">Você acredita que a igreja ainda pode ser tudo o que ela já foi um dia?</h4>
+                <p className="text-stone-600 text-xs md:text-sm leading-relaxed max-w-md mx-auto">Registre-se como co-fundador pioneiro e ganhe <strong className="text-stone-900">12 créditos de mordomia</strong> para estrear os serviços no lançamento.</p>
+              </div>
+              {isRegistered ? (
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-8 bg-[#C08261]/10 rounded-2xl border-2 border-dashed border-[#C08261] max-w-lg mx-auto space-y-3">
+                  <Award size={48} className="text-[#C08261] mx-auto animate-bounce" />
+                  <h5 className="font-serif text-lg font-bold text-stone-800">Inscrição de Co-Fundador Registrada!</h5>
+                  <p className="text-stone-650 text-xs leading-relaxed">Você já está no rol oficial! Enviaremos atualizações e chaves de acesso no seu e-mail.</p>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleRegisterFounder} className="max-w-xl mx-auto space-y-5 text-left bg-white p-6 rounded-2xl border border-stone-200/80 shadow-md text-xs">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Como deseja ser chamado?</label>
+                      <input type="text" placeholder="Nome completo ou social" value={name} onChange={(e) => setName(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:border-[#C08261]" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Seu Melhor E-mail</label>
+                      <input type="email" placeholder="exemplo@igreja.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:border-[#C08261]" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="md:col-span-2 space-y-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Cidade</label>
+                      <input type="text" placeholder="Ex: Curitiba" value={city} onChange={(e) => setCity(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:border-[#C08261]" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">UF</label>
+                      <input type="text" placeholder="PR" maxLength={2} value={stateCode} onChange={(e) => setStateCode(e.target.value.toUpperCase())} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-center font-mono focus:outline-none focus:border-[#C08261]" />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-6 text-xs font-semibold text-stone-650">
+                      <label className="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="founder_type" checked={interactionType === "offer"} onChange={() => setInteractionType("offer")} /><span>Quero Servir</span></label>
+                      <label className="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="founder_type" checked={interactionType === "receive"} onChange={() => setInteractionType("receive")} /><span>Preciso de Acolhimento</span></label>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Ministério / foco</label>
+                      <select value={chosenService} onChange={(e) => setChosenService(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-[#C08261]">
+                        <option value="Oração">Intercessão de Oração 🙏</option>
+                        <option value="Discipulado">Discipulado do Reino 👣</option>
+                        <option value="Aconselhamento">Aconselhamento e Apoio 👩‍⚕️</option>
+                        <option value="Ensino bíblico">Exposição da Escritura 📖</option>
+                        <option value="Louvor ao vivo">Louvor e Canção em Casa 🎸</option>
+                        <option value="Mesa Aberta">Acolher na Cadeira Vazia 🍲</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="submit" className="w-full py-4 bg-stone-900 text-stone-100 hover:bg-black uppercase tracking-wider font-extrabold rounded-xl transition cursor-pointer">Registrar-se como Co-Fundador Pioneiro</button>
+                </form>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* TAB 3 — CENTELHAS CO-CRIADAS */}
+        {activeTab === "cocriacao" && (
+          <motion.div key="cocriacao-view" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8 text-left">
+            <div className="bg-[#C08261]/5 border border-[#C08261]/15 p-6 rounded-3xl space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-[#C08261]/10 flex items-center justify-center text-2xl shrink-0">💡</div>
+                <div className="space-y-1">
+                  <h3 className="font-serif text-lg md:text-xl font-bold text-stone-850">Mesa de Semeação: Frutos de Edificação</h3>
+                  <p className="text-stone-650 text-xs md:text-sm leading-relaxed">Aqui no Despertar, o Espírito flui de coração em coração. Escolha uma pergunta, partilhe sua história real e deixe sua centelha acender outros corações.</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 text-xs">
+                <span className="bg-white border border-stone-200 px-3 py-1 rounded-full text-stone-500 font-mono">🔥 +5 Créditos por Semeação</span>
+                <span className="bg-white border border-stone-200 px-3 py-1 rounded-full text-stone-500 font-mono">❤️ +1 Crédito por Concordar</span>
+                <span className="bg-white border border-stone-200 px-3 py-1 rounded-full text-stone-500 font-mono">📱 Livre Compartilhamento</span>
+              </div>
+            </div>
+
             <div className="bg-white border border-stone-200 p-6 rounded-3xl grid grid-cols-1 lg:grid-cols-5 gap-8">
-              {/* Form Side */}
               <div className="lg:col-span-3 space-y-5">
                 <h4 className="font-serif font-bold text-stone-850 text-base border-b border-stone-100 pb-2.5 flex items-center gap-1.5">
-                  <Sparkles size={16} className="text-amber-500" />
-                  <span>Derrame Sua Centelha na Mesa</span>
+                  <Sparkles size={16} className="text-amber-500" /> Derrame Sua Centelha na Mesa
                 </h4>
-
                 <form onSubmit={handlePublishCentelha} className="space-y-4">
-                  {/* Select interactive question prompt */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
-                      Selecione a Pergunta do Dia
-                    </label>
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">Selecione a Pergunta do Dia</label>
                     <div className="grid grid-cols-1 gap-2">
-                      {[
-                        "Qual foi a batalha que ninguém viu você vencer?",
-                        "Ninguém deveria enfrentar seus dias sozinho. O que você diria para alguém hoje?",
-                        "Em qual momento desta semana você sentiu o sopro da graça?",
-                      ].map((promptText) => (
-                        <button
-                          key={promptText}
-                          type="button"
-                          onClick={() => setSelectedPrompt(promptText)}
-                          className={`p-3 border rounded-xl text-left cursor-pointer text-xs transition ${
-                            selectedPrompt === promptText
-                              ? "border-[#C08261] bg-[#C08261]/5 text-stone-850 font-medium"
-                              : "border-stone-150 bg-stone-50/50 text-stone-500 hover:bg-stone-50"
-                          }`}
-                        >
-                          {promptText}
-                        </button>
+                      {["Qual foi a batalha que ninguém viu você vencer?", "Ninguém deveria enfrentar seus dias sozinho. O que você diria para alguém hoje?", "Em qual momento desta semana você sentiu o sopro da graça?"].map((promptText) => (
+                        <button key={promptText} type="button" onClick={() => setSelectedPrompt(promptText)} className={`p-3 border rounded-xl text-left cursor-pointer text-xs transition ${selectedPrompt === promptText ? "border-[#C08261] bg-[#C08261]/5 text-stone-850 font-medium" : "border-stone-150 bg-stone-50/50 text-stone-500 hover:bg-stone-50"}`}>{promptText}</button>
                       ))}
                     </div>
                   </div>
-
-                  {/* Message body input */}
-                  <div className="space-y-1.1">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
-                      Sua Resposta Sincera (Faça vibrar a alma de quem lê) *
-                    </label>
-                    <textarea
-                      rows={4}
-                      value={newCentelhaContent}
-                      onChange={(e) => setNewCentelhaContent(e.target.value)}
-                      placeholder="Derrame sua inspiração aqui, em poucas frases sinceras..."
-                      maxLength={320}
-                      className="w-full bg-stone-50/75 border border-stone-200 rounded-2xl p-4 text-xs md:text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C08261] transition"
-                    />
-                    <div className="flex justify-between items-center text-[10px] text-stone-400 pt-1 font-mono">
-                      <span>* Máximo de 320 caracteres para caber com elegância nos cards.</span>
-                      <span>{newCentelhaContent.length}/320</span>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">Sua Resposta Sincera *</label>
+                    <textarea rows={4} value={newCentelhaContent} onChange={(e) => setNewCentelhaContent(e.target.value)} placeholder="Derrame o seu coração aqui..." className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C08261] transition" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">Seu Nome</label>
+                      <input type="text" value={newCentelhaAuthor} onChange={(e) => setNewCentelhaAuthor(e.target.value)} placeholder={userProfile?.name || "Opcional"} maxLength={18} className="w-full bg-stone-50/75 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#C08261] transition" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">Cidade / UF</label>
+                      <input type="text" value={newCentelhaLocation} onChange={(e) => setNewCentelhaLocation(e.target.value)} placeholder={userProfile?.city || "Opcional"} maxLength={24} className="w-full bg-stone-50/75 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#C08261] transition" />
                     </div>
                   </div>
-
-                  {/* Profile parameters (Frictionless / Fast) */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
-                        Assinar como (Nome)
-                      </label>
-                      <input
-                        type="text"
-                        value={newCentelhaAuthor}
-                        onChange={(e) => setNewCentelhaAuthor(e.target.value)}
-                        placeholder={userProfile?.name || "Opcional (Ex: Lucas R.)"}
-                        maxLength={18}
-                        className="w-full bg-stone-50/75 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C08261] transition"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-extrabold block">
-                        Cidade / UF
-                      </label>
-                      <input
-                        type="text"
-                        value={newCentelhaLocation}
-                        onChange={(e) => setNewCentelhaLocation(e.target.value)}
-                        placeholder={userProfile?.city || "Opcional (Ex: Recife, PE)"}
-                        maxLength={24}
-                        className="w-full bg-stone-50/75 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C08261] transition"
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-3 bg-stone-900 hover:bg-black text-white text-xs font-mono uppercase tracking-wider font-bold rounded-2xl transition flex items-center justify-center space-x-2"
-                  >
-                    <span>🕯️ Ecoar Minha Chama na Mesa (+5 Créditos)</span>
+                  <button type="submit" className="w-full py-3 bg-stone-900 hover:bg-black text-white text-xs font-mono uppercase tracking-wider font-bold rounded-2xl transition flex items-center justify-center gap-2">
+                    🕯️ Ecoar Minha Chama na Mesa (+5 Créditos)
                   </button>
                 </form>
               </div>
-
-              {/* Preview Side */}
               <div className="lg:col-span-2 flex flex-col justify-between bg-stone-50/50 border border-stone-150 p-5 rounded-2xl text-left min-h-[300px]">
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[9px] font-mono uppercase bg-amber-50 text-[#8C6239] border border-amber-200/50 px-2.5 py-0.5 rounded-full font-bold">
-                      Visualização do Card de Identidade
-                    </span>
-                    <span className="text-sm">🔥</span>
-                  </div>
-
-                  {/* Card Content representation */}
+                  <span className="text-[9px] font-mono uppercase bg-amber-50 text-[#8C6239] border border-amber-200/50 px-2.5 py-0.5 rounded-full font-bold">Visualização do Card</span>
                   <div className="bg-gradient-to-br from-stone-900 via-stone-950 to-black text-stone-100 p-6 rounded-2xl relative shadow-md overflow-hidden flex flex-col justify-between h-[230px] border border-stone-800">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#C08261]/10 rounded-full blur-2xl pointer-events-none" />
                     <div className="space-y-3 relative z-10">
-                      <p className="text-[9px] font-mono uppercase tracking-widest text-[#DCAE6C]">
-                        {selectedPrompt}
-                      </p>
-                      <p className="font-serif text-xs leading-normal italic text-stone-200">
-                        "{newCentelhaContent.trim() || "Derrame o seu coração no formulário ao lado para moldar o seu card de identidade espiritual compartilhável..."}"
-                      </p>
+                      <p className="text-[9px] font-mono uppercase tracking-widest text-[#DCAE6C]">{selectedPrompt}</p>
+                      <p className="font-serif text-xs leading-normal italic text-stone-200">"{newCentelhaContent.trim() || "Sua resposta moldará este card compartilhável..."}"</p>
                     </div>
-
                     <div className="border-t border-stone-800 pt-3 flex justify-between items-center relative z-10">
-                      <div className="space-y-0.5">
-                        <cite className="text-[10px] font-serif not-italic font-bold text-stone-100 block">
-                          {newCentelhaAuthor.trim() || userProfile?.name || "Um Peregrino Sincero"}
-                        </cite>
-                        <span className="text-[8px] font-mono uppercase tracking-wider text-stone-450 block">
-                          📍 {newCentelhaLocation.trim() || userProfile?.city || "Brasil"}
-                        </span>
+                      <div>
+                        <cite className="text-[10px] font-serif not-italic font-bold text-stone-100 block">{newCentelhaAuthor.trim() || userProfile?.name || "Um Peregrino Sincero"}</cite>
+                        <span className="text-[8px] font-mono uppercase tracking-wider text-stone-450 block">📍 {newCentelhaLocation.trim() || userProfile?.city || "Brasil"}</span>
                       </div>
-                      <span className="text-[8px] font-mono border border-[#C08261]/40 px-2 py-0.5 rounded text-[#DCAE6C] font-bold">
-                        SOMOS O DESPERTAR
-                      </span>
+                      <span className="text-[8px] font-mono border border-[#C08261]/40 px-2 py-0.5 rounded text-[#DCAE6C] font-bold">SOMOS O DESPERTAR</span>
                     </div>
                   </div>
                 </div>
-
-                <div className="pt-4 text-center">
-                  <p className="text-[10px] text-stone-400 font-serif leading-relaxed">
-                    Sua assinatura (identidade) se torna um farol de esperança. Esse card representa quem você é em Deus e é estruturado especificamente para espalhar convites no WhatsApp.
-                  </p>
-                </div>
+                <p className="pt-4 text-[10px] text-stone-400 font-serif leading-relaxed text-center">Estruturado para espalhar convites no WhatsApp.</p>
               </div>
             </div>
 
-            {/* Commmunity Centelhas list */}
             <div className="space-y-4">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                <div className="space-y-0.5">
-                  <h4 className="font-serif text-lg font-bold text-stone-850">
-                    Mesa Redonda das Centelhas de Graça
-                  </h4>
-                  <p className="text-stone-500 text-xs">
-                    Testemunhos ativos e respostas dos despertar-peregrinos por todo o Brasil. Respostas reais, nada de robôs.
-                  </p>
+                <div>
+                  <h4 className="font-serif text-lg font-bold text-stone-850">Mesa Redonda das Centelhas</h4>
+                  <p className="text-stone-500 text-xs">Testemunhos ativos de peregrinos por todo o Brasil.</p>
                 </div>
-                <div className="flex items-center space-x-1 font-mono text-[10px] uppercase font-bold text-[#C08261] bg-[#C08261]/10 px-3 py-1 rounded-full">
-                  <span>🕯️ {centelhas.length} Centelhas Vivas Circulando</span>
+                <div className="flex items-center font-mono text-[10px] uppercase font-bold text-[#C08261] bg-[#C08261]/10 px-3 py-1 rounded-full">
+                  🕯️ {centelhas.length} Centelhas Vivas
                 </div>
               </div>
-
-              {/* Centelha list grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <AnimatePresence mode="popLayout">
                   {centelhas.map((cent) => (
-                    <motion.div
-                      key={cent.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                      className="bg-[#FAF8F5] border border-stone-200/60 p-5 rounded-2xl flex flex-col justify-between h-[280px] hover:border-[#C08261]/40 transition shadow-xs hover:shadow-md"
-                    >
+                    <motion.div key={cent.id} layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ type: "spring", stiffness: 400, damping: 30 }} className="bg-[#FAF8F5] border border-stone-200/60 p-5 rounded-2xl flex flex-col justify-between h-[280px] hover:border-[#C08261]/40 transition shadow-xs hover:shadow-md">
                       <div className="space-y-4 text-left">
-                        {/* Prompt title */}
                         <div className="flex justify-between items-start">
-                          <span className="text-[8px] font-mono uppercase bg-stone-100 text-[#C08261] px-2 py-0.5 rounded font-extrabold max-w-[85%] truncate">
-                            {cent.prompt}
-                          </span>
+                          <span className="text-[8px] font-mono uppercase bg-stone-100 text-[#C08261] px-2 py-0.5 rounded font-extrabold max-w-[85%] truncate">{cent.prompt}</span>
                           <span className="text-xs">🕊️</span>
                         </div>
-                        {/* Content text */}
-                        <p className="font-serif text-xs md:text-sm text-stone-850 leading-relaxed italic line-clamp-6">
-                          "{cent.content}"
-                        </p>
+                        <p className="font-serif text-xs md:text-sm text-stone-850 leading-relaxed italic line-clamp-6">"{cent.content}"</p>
                       </div>
-
-                      {/* Footer signatures and actions */}
                       <div className="border-t border-stone-200/50 pt-3 flex justify-between items-center">
-                        <div className="space-y-0.5">
-                          <span className="text-[10px] font-bold text-stone-900 block font-serif">
-                            {cent.author}
-                          </span>
-                          <span className="text-[9px] font-mono text-stone-450 block">
-                            {cent.location}
-                          </span>
+                        <div>
+                          <span className="text-[10px] font-bold text-stone-900 block font-serif">{cent.author}</span>
+                          <span className="text-[9px] font-mono text-stone-450 block">{cent.location}</span>
                         </div>
-
-                        {/* Actions: Align with Novo Poder (Amém vote + WhatsApp share text) */}
                         <div className="flex items-center space-x-1.5">
-                          {/* Vote action */}
-                          <button
-                            type="button"
-                            onClick={() => handleVoteCentelha(cent.id)}
-                            className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs cursor-pointer transition ${
-                              hasVotedPost[cent.id] || cent.voted
-                                ? "bg-emerald-50 text-emerald-700 font-extrabold border border-emerald-200"
-                                : "bg-white hover:bg-stone-100 text-stone-550 border border-stone-200"
-                            }`}
-                          >
+                          <button type="button" onClick={() => handleVoteCentelha(cent.id)} className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs cursor-pointer transition ${hasVotedPost[cent.id] || cent.voted ? "bg-emerald-50 text-emerald-700 font-extrabold border border-emerald-200" : "bg-white hover:bg-stone-100 text-stone-550 border border-stone-200"}`}>
                             <Heart size={11} className={hasVotedPost[cent.id] || cent.voted ? "fill-emerald-700 text-emerald-700" : ""} />
                             <span>{cent.votes}</span>
                           </button>
-
-                          {/* Share textual card on WhatsApp */}
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const shareText = `*O DESPERTAR — CENTELHA VIVA* 🕯️\n\n_"${cent.content}"_\n\n*Assinado por:* ${cent.author} (${cent.location})\n*Pergunta:* ${cent.prompt}\n\nouça a voz de Deus. Caminhe em mesa conosco: https://somosodespertar.com.br`;
-                              try {
-                                navigator.clipboard.writeText(shareText);
-                                showTemporaryToast("Centelha copiada! Compartilhe no seu grupo do WhatsApp! 🕊️📲");
-                              } catch (e) {
-                                showTemporaryToast("Copiado com sucesso!");
-                              }
-                            }}
-                            className="p-1.5 rounded-lg bg-white border border-stone-200 hover:bg-stone-50 hover:border-[#C08261] text-stone-550 cursor-pointer transition text-xs"
-                            title="Compartilhar no WhatsApp"
-                          >
+                          <button type="button" onClick={() => { const shareText = `*O DESPERTAR — CENTELHA VIVA* 🕯️\n\n_"${cent.content}"_\n\n*${cent.author}* (${cent.location})\n\nsomosodespertar.com.br`; try { navigator.clipboard.writeText(shareText); showTemporaryToast("Centelha copiada! 🕊️📲"); } catch (e) { showTemporaryToast("Copiado!"); } }} className="p-1.5 rounded-lg bg-white border border-stone-200 hover:bg-stone-50 hover:border-[#C08261] text-stone-550 cursor-pointer transition">
                             <Share2 size={11} />
                           </button>
                         </div>
@@ -1682,1168 +947,16 @@ export default function IgrejaPrimitiva({
           </motion.div>
         )}
 
-        {/* TAB 2: ORIGINAL PIONEER CALL & DONATION ENGINE */}
-        {activeTab === "chamado" && (
-          <motion.div
-            key="chamado-view"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="space-y-12 text-left"
-          >
-            {/* INGRESS HERO TEXTS */}
-            <div className="text-center space-y-5 py-4">
-              <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 leading-tight">
-                A tecnologia como ponte para a comunhão primitiva. <br />
-                <span className="font-serif font-semibold text-[#C08261]">
-                  Conectando vidas, mesas e corações a Deus.
-                </span>
-              </h3>
-              <p className="text-stone-600 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
-                No século XXI, usamos a tecnologia não para afastar as pessoas, mas para reatar nossa união. Nossos aplicativos, materiais exclusivos e rico conteúdo no site servem como uma ponte bendita para nos conectar mais uns com os outros e com o Pai, restaurando o pão partido em cada lar.
-              </p>
-            </div>
-
-            <hr className="border-stone-150" />
-
-            {/* SECTION 1: O PROBLEMA IN THE KINGDOM */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-              <div className="md:col-span-4 space-y-2">
-                <span className="text-[10px] md:text-xs font-mono uppercase tracking-widest text-[#C08261] font-bold block">
-                  O Fardo Silencioso
-                </span>
-                <h4 className="font-serif text-2xl md:text-3xl font-light text-stone-850">
-                  Comunhão de Domingo a Domingo
-                </h4>
-              </div>
-
-              <div className="md:col-span-8 space-y-6">
-                <p className="text-stone-650 text-sm md:text-base leading-relaxed">
-                  A maioria das pessoas vai à igreja no domingo e não
-                  compartilha uma conversa sincera com ninguém até o próximo
-                  culto. Há uma barreira invisível para expor fragilidade ou
-                  pedir amparo sem que pareça constrangedor demais para as
-                  estruturas modernas.
-                </p>
-                <blockquote className="border-l-4 border-[#C08261] pl-5 italic text-stone-700 font-serif bg-orange-50/20 py-2.5 rounded-r-2xl pr-3 text-sm md:text-base">
-                  "Não deixemos de reunir-nos, como alguns têm por costume; pelo
-                  contrário, encorajemo-nos uns aos outros."
-                  <cite className="font-mono text-[10px] text-[#C08261] block mt-2 not-italic font-bold">
-                    — Hebreus 10:25
-                  </cite>
-                </blockquote>
-              </div>
-            </div>
-
-            <hr className="border-stone-150" />
-
-            {/* SECTION 2: A VISÃO DO DESPERTAR */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-              <div className="md:col-span-4 space-y-2">
-                <span className="text-[10px] md:text-xs font-mono uppercase tracking-widest text-[#C08261] font-bold block">
-                  A Restauração
-                </span>
-                <h4 className="font-serif text-2xl md:text-3xl font-light text-stone-850">
-                  Estamos restaurando uma prática secular.
-                </h4>
-              </div>
-
-              <div className="md:col-span-8 space-y-5">
-                <div className="bg-stone-50 border border-stone-200/50 rounded-3xl p-6 text-stone-650 text-xs md:text-sm leading-relaxed space-y-4">
-                  <p>
-                    Durante os primeiros três séculos, a igreja crescia em{" "}
-                    <strong className="text-stone-900 font-bold">
-                      casas abertas
-                    </strong>
-                    . Todos serviam e eram servidos reciprocamente. A Bíblia do
-                    Despertar é essa busca sincera de transpor essa economia da
-                    graça e serviço descentralizados para o ambiente digital mas
-                    preservando a pureza humana da comunhão verdadeira.
-                  </p>
-                  <p className="font-medium text-stone-850">
-                    O ecossistema é gratuito, livre de patrocinadores
-                    comerciales. É sustentado puramente pela mordomia dos
-                    co-fundadores pioneiros que acreditam no regresso ao
-                    Evangelho simples.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <hr className="border-stone-150" />
-
-            {/* INTERACTIVE DONATIONS AND GENEROSITY PIX BOX - NOW ABACATPAY BOOK SPONSORSHIP */}
-            <div
-              id="donation-block"
-              className="bg-gradient-to-br from-[#1E1C1A] via-[#121110] to-[#080807] text-white rounded-3xl p-6 md:p-10 border border-[#DCAE6C]/25 shadow-2xl relative space-y-8"
-            >
-              {/* Header block */}
-              <div className="space-y-4 max-w-3xl text-left">
-                <span className="inline-flex items-center space-x-1 px-3 py-1 bg-[#DCAE6C]/10 border border-[#DCAE6C]/20 rounded-full text-[10px] font-mono text-[#DCAE6C] font-semibold uppercase tracking-wider font-bold">
-                  <Gift size={11} className="text-amber-250 animate-pulse" />{" "}
-                  <span>Altar de Generosidade & Livro Oficial</span>
-                </span>
-                <h3 className="font-serif text-2xl md:text-3xl font-light text-stone-100 leading-tight">
-                  Seja um Patrocinador e Adquira <br />
-                  <span className="font-serif font-bold text-[#DCAE6C]">
-                    "O Despertar"
-                  </span>
-                </h3>
-                <p className="text-stone-300 text-xs md:text-sm leading-relaxed">
-                  Para construirmos um ecossistema digital que seja
-                  simultaneamente robusto, fluido e 100% focado no calor humano,
-                  precisamos vencer barreiras de servidores soberanos e
-                  conformidades jurídicas. Ao adquirir nosso livro oficial via{" "}
-                  <strong className="text-white font-bold">Kiwify</strong>,
-                  seu patrocínio financia diretamente este lançamento nacional e
-                  a regularização jurídica de nossas ações de caridade.
-                </p>
-              </div>
-
-              {/* Progress Tracker Widget */}
-              <div className="bg-[#181716] p-5 rounded-2xl border border-stone-800 space-y-3.5 text-left">
-                <div className="flex justify-between items-center text-xs flex-wrap gap-2 text-stone-400">
-                  <span className="flex items-center gap-1.5 text-stone-200 font-semibold font-serif font-bold">
-                    <TrendingUp size={14} className="text-[#DCAE6C]" />
-                    <span>
-                      Fundo de Registro Civil & Infraestrutura Criptografada
-                    </span>
-                  </span>
-                  <span className="font-mono text-[#DCAE6C] text-xs font-bold">
-                    <strong>25% Concluído</strong> (R$ 1.247 / R$ 5.000)
-                  </span>
-                </div>
-                <div className="w-full bg-stone-900 rounded-full h-2 overflow-hidden border border-stone-800">
-                  <div
-                    className="bg-gradient-to-r from-[#C28463] to-[#DCAE6C] h-2 rounded-full"
-                    style={{ width: "25%" }}
-                  />
-                </div>
-                <span className="text-[10px] font-mono text-stone-500 block">
-                  Faltam apenas R$ {5000 - 1247} para darmos entrada na personificação
-                  legal da comunidade e licenças LGPD.
-                </span>
-              </div>
-
-              {/* Layout: Book Visual (Left) & AbacatPay Stepper (Right) */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pt-2">
-                <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 bg-stone-950/40 rounded-3xl border border-stone-850 text-center">
-                  {/* REAL BOOK COVER OF O DESPERTAR OR SECURE CSS BACKUP */}
-                  {selectedBookTier === "book_despertar" || selectedBookTier === "book_devocionais" ? (
-                    <img
-                      id="real-book-cover"
-                      src={bookCoverImg}
-                      alt="Capa O Despertar"
-                      className="w-44 h-64 md:w-48 md:h-72 object-cover rounded-r-xl rounded-l-md shadow-[10px_15px_30px_rgba(0,0,0,0.8)] border-l-8 border-stone-950 transition-all duration-500 hover:scale-[1.03] select-none"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <div className={`relative w-44 h-64 md:w-48 md:h-72 rounded-r-xl rounded-l-md shadow-[10px_15px_30px_rgba(0,0,0,0.7)] border-l-8 border-stone-950 transition-all duration-500 hover:scale-[1.03] flex flex-col justify-between p-5 text-left ${
-                      selectedBookTier === "book_devocionais"
-                        ? "bg-gradient-to-br from-[#1B2936] via-[#101921] to-[#060A0D]"
-                        : selectedBookTier === "prayer"
-                        ? "bg-gradient-to-br from-[#122A1E] via-[#0B1A13] to-[#040A07]"
-                        : "bg-gradient-to-br from-[#2E1E17] via-[#1F140F] to-[#0A0705]"
-                    }`}>
-                      {/* Spine highlight glow */}
-                      <div className="absolute inset-y-0 left-0 w-1.5 bg-white/10" />
-
-                      {/* Gold corners */}
-                      <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-[#DCAE6C]/40" />
-                      <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#DCAE6C]/40" />
-
-                      <div className="space-y-1.5">
-                        <span className="text-[8.5px] uppercase font-mono tracking-widest text-[#DCAE6C]/85 block font-bold">
-                          {selectedBookTier === "prayer" ? "REDE DE INTERCESSÃO" : "LIVRO OFICIAL"}
-                        </span>
-                        <h4 className="font-serif text-lg md:text-xl font-bold tracking-tight text-stone-100 leading-tight">
-                          {selectedBookTier === "prayer" ? "ORANTES" : "O DESPERTAR"}
-                        </h4>
-                        <p className="text-[7.5px] font-sans text-stone-400 font-extralight tracking-wide leading-tight uppercase">
-                          {selectedBookTier === "book_devocionais"
-                            ? "DEVOCIONAIS DIÁRIOS PARA DESPERTAR"
-                            : selectedBookTier === "prayer"
-                            ? "CORRENTE DE ORAÇÃO ATIVA"
-                            : "A GERAÇÃO QUE VOLTOU A OUVIR A VOZ DE DEUS"}
-                        </p>
-                      </div>
-
-                      {/* Central artistic sunburst & icon */}
-                      <div className="my-auto flex flex-col items-center justify-center opacity-85 select-none py-2">
-                        <div className="relative w-14 h-14 bg-gradient-to-t from-[#C08261]/25 to-amber-200/5 rounded-full flex items-center justify-center border border-[#DCAE6C]/25">
-                          {selectedBookTier === "book_devocionais" ? (
-                            <Heart
-                              size={20}
-                              className="text-[#DCAE6C] fill-[#DCAE6C]/20"
-                            />
-                          ) : selectedBookTier === "prayer" ? (
-                            <ShieldCheck
-                              size={20}
-                              className="text-emerald-400 fill-emerald-500/20"
-                            />
-                          ) : (
-                            <Flame
-                              size={20}
-                              className="text-[#DCAE6C] fill-[#DCAE6C]/20"
-                            />
-                          )}
-                          <div className="absolute -top-1 w-1 h-3 bg-[#DCAE6C] rounded-full" />
-                          <div className="absolute -bottom-1 w-1 h-3 bg-[#DCAE6C] rounded-full" />
-                          <div className="absolute -left-1 w-3 h-1 bg-[#DCAE6C] rounded-full" />
-                          <div className="absolute -right-1 w-3 h-1 bg-[#DCAE6C] rounded-full" />
-                        </div>
-                      </div>
-
-                      <div className="border-t border-[#DCAE6C]/25 pt-1.5 flex justify-between items-center text-[7.5px] font-mono text-stone-400">
-                        <span>SOMOS O DESPERTAR</span>
-                        <span className="text-[#DCAE6C] font-semibold">
-                          2026 ED.
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  <p className="mt-5 text-xs text-stone-300 font-serif leading-relaxed max-w-[240px] min-h-[50px] flex items-center justify-center">
-                    {selectedBookTier === "book_devocionais"
-                      ? '"Preencha suas manhãs com quietude e propósitos inalienáveis: textos diários sobre fé genuína."'
-                      : selectedBookTier === "prayer"
-                      ? '"A oração em união move pontes intransponíveis. Participe e ajude o movimento através da intercessão voluntária."'
-                      : '"A geração que voltou a ouvir a voz de Deus. Em uma época de distrações, este livro é um convite para ouvir o Pai e encontrar propósito."'}
-                  </p>
-
-                  <div className="mt-3 flex items-center gap-1 px-3 py-1.5 bg-stone-900/60 rounded-xl border border-stone-800 text-[10.5px] text-[#DCAE6C] font-mono font-bold">
-                    <span>⭐⭐⭐⭐⭐</span>
-                    <span className="text-white ml-1 font-bold">
-                      5.0 (200+ avaliações)
-                    </span>
-                  </div>
-                </div>
-
-                {/* ABACATPAY STEPPER ENGINE */}
-                <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
-                  {abacatStep === "select" && (
-                    <div className="space-y-4">
-                      <div className="space-y-1 text-left">
-                        <label className="text-[11px] font-mono uppercase tracking-widest text-[#DCAE6C] font-extrabold block">
-                          Abra espaço na sua mesa para este chamado:
-                        </label>
-                        <p className="text-[10.5px] text-stone-400 leading-relaxed font-sans">
-                          Não comercializamos livros; semeamos instrumentos de comunhão e restauração do altar do lar. Ao equipar sua casa com nossas obras, você ampara voluntariamente todo este ecossistema digital para milhares de outras famílias.
-                        </p>
-                      </div>
-
-                      <div className="space-y-2.5">
-                        {/* Option 1: E-book Oficial "O Despertar" */}
-                        <div
-                          onClick={() => setSelectedBookTier("book_despertar")}
-                          className={`p-4 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 text-left relative ${
-                            selectedBookTier === "book_despertar"
-                              ? "bg-stone-900/60 border-[#DCAE6C] text-white shadow-xl"
-                              : "bg-[#181716] border-stone-850 text-stone-300 hover:border-stone-800 hover:bg-stone-900/50"
-                          }`}
-                        >
-                          <div className="absolute top-2 right-4 bg-emerald-600/10 text-emerald-400 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase tracking-wider">
-                            Escolha Unânime ✨
-                          </div>
-                          <div className="flex items-start gap-3 col-span-2">
-                            <span className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center text-base shrink-0 border border-[#DCAE6C]/30 text-[#DCAE6C]">
-                              📔
-                            </span>
-                            <div>
-                              <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1 text-[#DCAE6C]">
-                                E-book "O Despertar" — Geração que Ouve Deus
-                              </div>
-                              <span className="text-[9px] bg-amber-500/10 text-stone-300 font-mono px-1.5 py-0.5 rounded uppercase font-bold">
-                                Livro + Movimento Oficial
-                              </span>
-                              <p className="text-[11px] text-stone-400 mt-1 leading-relaxed max-w-sm">
-                                O Despertar: A geração que voltou a ouvir a voz de Deus. Em uma época de distrações, ansiedade e vazio espiritual, este livro é um convite para ouvir o Pai, encontrar propósito e viver uma fé autêntica. Mais do que páginas, é o início de um movimento transformador. Libera 12 créditos.
-                              </p>
-                              <div className="mt-1.5 flex items-center gap-1.5">
-                                <span className="text-[9px] font-mono text-stone-500 font-bold">Kiwify ID:</span>
-                                <code className="text-[8px] bg-stone-950 px-1 py-0.5 rounded font-mono text-[#DCAE6C] border border-[#DCAE6C]/10 select-all font-bold">
-                                  JRqrznH
-                                </code>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-right shrink-0 self-center">
-                            <span className="font-mono text-xs text-stone-450 block line-through">
-                              R$ 34,90
-                            </span>
-                            <span className="font-mono text-sm font-black text-[#DCAE6C]">
-                              R$ 24,90
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Option 2: E-book "Devocionais Diários" */}
-                        <div
-                          onClick={() => setSelectedBookTier("book_devocionais")}
-                          className={`p-4 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 text-left relative ${
-                            selectedBookTier === "book_devocionais"
-                              ? "bg-stone-900/60 border-[#DCAE6C] text-white shadow-xl"
-                              : "bg-[#181716] border-stone-850 text-stone-300 hover:border-stone-800 hover:bg-stone-900/50"
-                          }`}
-                        >
-                          <div className="absolute top-2 right-4 bg-[#C08261]/10 text-[#C08261] font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border border-[#C08261]/20 uppercase tracking-wider">
-                            Aliança de Manhã ⛅
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <span className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center text-base shrink-0 border border-[#DCAE6C]/30 text-[#DCAE6C]">
-                              🙏
-                            </span>
-                            <div>
-                              <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1 text-[#DCAE6C]">
-                                O Despertar — Devocional Diário
-                              </div>
-                              <span className="text-[9px] bg-amber-500/10 text-stone-300 font-mono px-1.5 py-0.5 rounded uppercase font-bold">
-                                Devocionais Diários
-                              </span>
-                              <p className="text-[11px] text-stone-400 mt-1 leading-relaxed max-w-sm">
-                                Poucos minutos por dia podem mudar uma vida inteira. O Despertar — Devocional reúne reflexões inspiradoras, versículos, orações e desafios práticos para ajudar você a fortalecer sua fé, ouvir Deus com mais clareza e caminhar diariamente em direção ao propósito para o qual foi criado.
-                              </p>
-                              <div className="mt-1.5 flex items-center gap-1.5">
-                                <span className="text-[9px] font-mono text-stone-500 font-bold">Kiwify ID:</span>
-                                <code className="text-[8px] bg-stone-950 px-1 py-0.5 rounded font-mono text-[#DCAE6C] border border-[#DCAE6C]/10 select-all font-bold">
-                                  X23KvCQ
-                                </code>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-right shrink-0 self-center">
-                            <span className="font-mono text-xs text-stone-450 block line-through">
-                              R$ 39,90
-                            </span>
-                            <span className="font-mono text-sm font-black text-[#DCAE6C]">
-                              R$ 27,90
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Option 3: Compromisso de Intercessão (Orar pelo Movimento) */}
-                        <div
-                          onClick={() => setSelectedBookTier("prayer")}
-                          className={`p-4 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 text-left relative ${
-                            selectedBookTier === "prayer"
-                              ? "bg-emerald-950/20 border-emerald-600 text-white shadow-lg"
-                              : "bg-[#181716] border-stone-850 text-stone-300 hover:border-stone-800 hover:bg-stone-900/50"
-                          }`}
-                        >
-                          <div className="absolute top-2 right-4 bg-emerald-600/10 text-emerald-400 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase tracking-wider animate-pulse">
-                            Armadura do Reino
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <span className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center text-base shrink-0 border border-emerald-500/30 text-emerald-400">
-                              🛡️
-                            </span>
-                            <div>
-                              <div className="font-bold font-serif text-sm flex items-center gap-1.5 pt-1 text-[#DCAE6C]">
-                                Intercessão Pura & Aliança de Mesa
-                              </div>
-                              <p className="text-[11px] text-stone-400 mt-1 leading-relaxed max-w-sm">
-                                Se seu momento material não lhe permite plantar sementes financeiras, apoie com seu tempo sagrado. Seus joelhos no chão sustentam este local sem vaidades. Ganhe registro local e + 5 créditos honorários.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right shrink-0 self-center font-mono">
-                            <span className="text-xs font-black text-emerald-400 uppercase tracking-wider block font-bold">
-                              Guarda de Fé
-                            </span>
-                            <span className="text-[10px] text-emerald-500 block">
-                              Compromisso
-                            </span>
-                          </div>
-                        </div>
-
-
-
-                        {/* Option 6: Custom Support */}
-                        <div
-                          onClick={() => setSelectedBookTier("custom")}
-                          className={`p-3.5 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 text-left ${
-                            selectedBookTier === "custom"
-                              ? "bg-stone-900/60 border-[#DCAE6C] text-white shadow-lg"
-                              : "bg-[#181716] border-stone-850 text-stone-300 hover:border-stone-800 hover:bg-stone-900/50"
-                          }`}
-                        >
-                          <div className="flex items-start gap-3">
-                            <span className="w-8 h-8 rounded-full bg-[#1c1a19] flex items-center justify-center text-base shrink-0 border border-stone-800 text-stone-400">
-                              💖
-                            </span>
-                            <div>
-                              <div className="font-serif text-sm font-bold pt-0.5 text-stone-200">
-                                Semente de Expansão Voluntária Livre
-                              </div>
-                              <p className="text-[11px] text-stone-400 mt-0.5 leading-relaxed font-sans">
-                                Sinta-se guiado pela generosidade para além das páginas, impulsionando a segurança, registros legais e manutenção livre do app. Entre em contato direto pelo e-mail <strong className="text-[#DCAE6C] select-all">somosodespertar@gmail.com</strong>.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="shrink-0 flex items-center self-center">
-                            <span className="font-mono text-xs text-[#DCAE6C] font-bold">
-                              E-mail Direto
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Purchase Target Selection (Only if buying an E-book) */}
-                      {(selectedBookTier === "book_despertar" || selectedBookTier === "book_devocionais") && (
-                        <div className="p-4 rounded-2xl bg-[#0e0d0c] border border-stone-800 space-y-3 text-left mt-3">
-                          <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400 font-bold block">
-                            Opção de Recepção do E-book:
-                          </span>
-                          <div className="grid grid-cols-2 gap-2.5">
-                            <button
-                              type="button"
-                              onClick={() => setPurchaseMode("self")}
-                              className={`py-2.5 px-3 rounded-xl border text-xs font-semibold font-serif transition flex items-center justify-center space-x-1.5 shrink-0 ${
-                                purchaseMode === "self"
-                                  ? "bg-[#DCAE6C]/15 border-[#DCAE6C] text-[#DCAE6C] font-bold"
-                                  : "bg-[#181716] border-stone-850 text-stone-400 hover:border-stone-800"
-                              }`}
-                            >
-                              <span>📥 Pegar o Meu Agora</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setPurchaseMode("gift")}
-                              className={`py-2.5 px-3 rounded-xl border text-xs font-semibold font-serif transition flex items-center justify-center space-x-1.5 shrink-0 ${
-                                purchaseMode === "gift"
-                                  ? "bg-[#DCAE6C]/15 border-[#DCAE6C] text-[#DCAE6C] font-bold"
-                                  : "bg-[#181716] border-stone-850 text-stone-400 hover:border-stone-800"
-                              }`}
-                            >
-                              <span>🎁 Enviar para Alguém (Presentear)</span>
-                            </button>
-                          </div>
-                          {purchaseMode === "gift" && (
-                            <div className="pt-2 grid grid-cols-1 md:grid-cols-2 gap-2.5 animate-fadeIn">
-                              <div className="space-y-1">
-                                <label className="text-[9px] font-mono text-stone-500 uppercase block font-bold">Nome de quem recebe</label>
-                                <input
-                                  type="text"
-                                  placeholder="Ex: Irma Maria de Souza"
-                                  value={giftName}
-                                  onChange={(e) => setGiftName(e.target.value)}
-                                  className="w-full bg-stone-950 border border-stone-800 rounded-xl py-1.5 px-3 text-xs text-stone-200 focus:outline-hidden focus:border-[#DCAE6C]"
-                                />
-                              </div>
-                              <div className="space-y-1">
-                                <label className="text-[9px] font-mono text-stone-500 uppercase block font-bold">E-mail para entrega</label>
-                                <input
-                                  type="email"
-                                  placeholder="Ex: maria@igreja.com"
-                                  value={giftEmail}
-                                  onChange={(e) => setGiftEmail(e.target.value)}
-                                  className="w-full bg-stone-950 border border-stone-800 rounded-xl py-1.5 px-3 text-xs text-stone-200 focus:outline-hidden focus:border-[#DCAE6C]"
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Commit to Prayer Option Description */}
-                      {selectedBookTier === "prayer" && (
-                        <div className="p-4 rounded-2xl bg-[#0e0d0c] border border-emerald-900/35 space-y-3 text-left mt-3 animate-fadeIn">
-                          <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold block">
-                            Seu compromisso intercessor:
-                          </span>
-                          <p className="text-[11px] text-stone-300 leading-relaxed font-sans">
-                            Pedimos que interceda pelo Despertar semanalmente na sua mesa de oração. Sinta-se livre para registrar seu pedido ou intenção abaixo, para que também clamemos por você:
-                          </p>
-                          <textarea
-                            rows={2}
-                            placeholder="Ex: Clamo para que haja restauração dos casamentos em minha cidade e sabedoria aos líderes do ministério."
-                            value={prayerIntention}
-                            onChange={(e) => setPrayerIntention(e.target.value)}
-                            className="w-full bg-stone-950 border border-stone-800 rounded-xl py-2 px-3 text-xs text-stone-200 focus:outline-hidden focus:border-emerald-600 animate-fadeIn"
-                          />
-                        </div>
-                      )}
-
-                      {/* Custom Support Option Description */}
-                      {selectedBookTier === "custom" && (
-                        <div className="p-4 rounded-2xl bg-[#0e0d0c] border border-stone-800 space-y-3 text-left mt-3 animate-fadeIn">
-                          <span className="text-[10px] font-mono uppercase tracking-widest text-[#DCAE6C] font-bold block">
-                            Como enviar sua contribuição:
-                          </span>
-                          <p className="text-[11px] text-stone-300 leading-relaxed font-sans">
-                            Para semear qualquer apoio voluntário customizado ou estabelecer novas parcerias de infraestrutura para o movimento, envie um e-mail diretamente para:
-                          </p>
-                          <div className="p-3 bg-stone-950 rounded-xl border border-stone-850 flex items-center justify-between gap-2.5">
-                            <span className="font-mono text-xs text-[#DCAE6C] select-all font-bold">
-                              somosodespertar@gmail.com
-                            </span>
-                            <a
-                              href="mailto:somosodespertar@gmail.com?subject=Semente de Expansão Voluntária Livre - Movimento Despertar"
-                              className="text-[10px] uppercase font-mono px-2.5 py-1.5 bg-[#C08261] text-stone-100 rounded-lg font-bold hover:bg-[#b07353] transition"
-                            >
-                              Escrever E-mail
-                            </a>
-                          </div>
-                        </div>
-                      )}
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (selectedBookTier === "prayer") {
-                            setUserCredits((p) => p + 5);
-                            setConfirmedDonation(true);
-                            setAbacatStep("success");
-                            
-                            const activeName = "Intercessor Primordial";
-                            setFundadores((prev) => [
-                              {
-                                name: activeName,
-                                location: "Brasil",
-                                service: "Intercessor do Desígnio 🛡️",
-                                type: "offer",
-                                avatarEmoji: "🙏",
-                                isDonator: false,
-                              },
-                              ...prev,
-                            ]);
-
-                            const newMuralId = (muralItems.length + 1).toString();
-                            const newMuralItem: MuralItem = {
-                              id: newMuralId,
-                              category: "oracao",
-                              author: activeName,
-                              avatarEmoji: "🙏",
-                              location: "Brasil",
-                              title: "Corrente de Oração Ativa",
-                              description: prayerIntention || "Comprometeu-se a orar semanalmente pela pureza dos ministérios e expansão do Reino nas mesas.",
-                              timestamp: "Agora mesmo",
-                              actionsTaken: [],
-                              userInteracted: false,
-                              counter: 1,
-                            };
-                            setMuralItems((prev) => [newMuralItem, ...prev]);
-
-                            if (onSaveProgress) {
-                              onSaveProgress({
-                                hasBookSponsor: false,
-                                isIntercessor: true,
-                                sponsorBookTier: "prayer",
-                                awardedCredits: 5,
-                              });
-                            }
-
-                            showTemporaryToast("Que bênção! Seu compromisso de oração foi registrado no Altar.");
-                          } else if (selectedBookTier === "custom") {
-                            window.location.href = "mailto:somosodespertar@gmail.com?subject=Semente de Expansão Voluntária Livre - Movimento Despertar";
-                            showTemporaryToast("Abrindo seu aplicativo de e-mail para contato direto!");
-                          } else {
-                            setAbacatStep("qr");
-                          }
-                        }}
-                        className="w-full py-4 bg-[#C08261] hover:bg-[#b07353] text-stone-100 font-bold uppercase tracking-wider rounded-xl transition shadow-lg cursor-pointer flex items-center justify-center space-x-2 font-bold"
-                      >
-                        <span>
-                          {selectedBookTier === "custom"
-                            ? "Entrar em Contato por E-mail ✉️"
-                            : "Prosseguir"}
-                        </span>
-                        {selectedBookTier !== "custom" && <ArrowRight size={14} />}
-                      </button>
-                    </div>
-                  )}
-
-                   {abacatStep === "qr" && (
-                    <div className="space-y-5 flex flex-col items-center justify-center text-center">
-                      <div className="w-full flex justify-between items-center pb-2 border-b border-stone-800 text-left">
-                        <span className="text-[10px] uppercase font-mono text-[#DCAE6C] font-extrabold tracking-widest flex items-center gap-1.5 font-bold">
-                          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shrink-0" />{" "}
-                          Checkout Oficial Kiwify
-                        </span>
-                        <button
-                          onClick={() => setAbacatStep("select")}
-                          className="font-mono text-[10px] uppercase text-stone-400 hover:text-white font-bold"
-                        >
-                          ← Alterar Pacote
-                        </button>
-                      </div>
-
-                      <div className="p-4 bg-stone-900/40 rounded-2xl border border-stone-800 text-left space-y-2 max-w-lg w-full">
-                        <div className="flex items-center space-x-2 text-[#DCAE6C] font-serif text-sm font-bold">
-                          <span>📦 Pacote Selecionado:</span>
-                          <span className="text-white">
-                            {selectedBookTier === "book_despertar"
-                              ? 'E-book "O Despertar" (PDF + EPub)'
-                              : selectedBookTier === "book_devocionais"
-                              ? 'E-book "Devocionais Diários"'
-                              : selectedBookTier === "custom"
-                              ? `Apoio Voluntário Customizado`
-                              : "Patrocínio Especial"}
-                          </span>
-                        </div>
-                        <div className="text-xs text-stone-400 leading-relaxed font-sans">
-                          ✨ Os seus dados de faturamento e e-mail para envio serão preenchidos uma única vez diretamente na tela segura de pagamento do Kiwify.
-                        </div>
-                        <div className="text-xs text-stone-400 leading-relaxed font-sans pt-1">
-                          Valor total: <span className="text-[#DCAE6C] font-bold font-mono">R$ {
-                            selectedBookTier === "book_despertar"
-                              ? "24,90"
-                              : selectedBookTier === "book_devocionais"
-                              ? "27,90"
-                              : selectedBookTier === "custom"
-                              ? parseFloat(customBookValue).toFixed(2)
-                              : "24,90"
-                          }</span>
-                        </div>
-                      </div>
-
-                      <div className="w-full space-y-4">
-                        <p className="text-stone-300 text-xs md:text-sm leading-relaxed font-sans text-left">
-                          O link seguro para realizar o pagamento via <strong className="text-stone-100">Pix, Cartão ou Boleto</strong> com entrega e liberação automática do e-book foi disponibilizado.
-                        </p>
-                        
-                        <a
-                          href={
-                            selectedBookTier === "book_devocionais"
-                              ? linkDevocionais
-                              : linkDespertar
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full py-4.5 bg-gradient-to-r from-[#C28463] to-[#DCAE6C] hover:from-[#b07353] text-stone-950 font-black uppercase tracking-wider rounded-xl transition shadow-xl cursor-pointer flex items-center justify-center space-x-2 w-full animate-pulse hover:animate-none font-bold text-center text-sm md:text-base border border-amber-350/20"
-                        >
-                          <span>Ir para Pagamento Seguro 💳</span>
-                          <span className="text-stone-950 font-sans font-bold">→</span>
-                        </a>
-
-                        {/* Hidden/collapsed API config to update payment gateway links */}
-                        <div className="pt-2 text-center">
-                          <details className="inline-block text-left opacity-15 hover:opacity-100 transition-opacity duration-300">
-                            <summary className="text-[9px] text-stone-550 font-mono cursor-pointer list-none flex items-center justify-center">
-                              <span>⚙️ Configurar Links de Pagamento</span>
-                            </summary>
-                            <div className="mt-3 p-3 bg-stone-950 rounded-xl border border-stone-850 text-left space-y-2 mt-2 w-72 max-w-sm absolute left-1/2 transform -translate-x-1/2 z-50 shadow-2xl">
-                              <p className="text-stone-400 text-[9px] leading-relaxed font-sans">
-                                Insira os links reais do Kiwify:
-                              </p>
-                              <div className="space-y-2.5 pt-1 font-sans text-[10px]">
-                                <div>
-                                  <label className="text-stone-500 text-[9px] uppercase font-mono block mb-1">O Despertar (Link Único)</label>
-                                  <input
-                                    type="text"
-                                    value={linkDespertar}
-                                    onChange={(e) => {
-                                      setLinkDespertar(e.target.value);
-                                      localStorage.setItem("kiwify_link_despertar", e.target.value);
-                                    }}
-                                    className="w-full bg-stone-900 border border-stone-800 rounded-lg px-2 py-1 text-stone-305 font-mono focus:outline-none focus:border-[#C28463]"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="text-[#DCAE6C] text-[9px] uppercase font-mono block mb-1">Devocionais (Link Único)</label>
-                                  <input
-                                    type="text"
-                                    value={linkDevocionais}
-                                    onChange={(e) => {
-                                      setLinkDevocionais(e.target.value);
-                                      localStorage.setItem("kiwify_link_devocionais", e.target.value);
-                                    }}
-                                    className="w-full bg-stone-900 border border-stone-800 rounded-lg px-2 py-1 text-stone-305 font-mono focus:outline-none focus:border-[#C28463]"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </details>
-                        </div>
-                      </div>
-
-                      <div className="pt-5 border-t border-stone-850 w-full space-y-3">
-                        <div className="text-stone-400 text-[10px] font-mono uppercase tracking-wider font-bold">
-                          Já realizou a sua contribuição oficial?
-                        </div>
-                        
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const activeName = donatorName || name || "Patrocinador";
-                            const rewardCredits =
-                              selectedBookTier === "book_despertar"
-                                ? 12
-                                : selectedBookTier === "book_devocionais"
-                                ? 10
-                                : selectedBookTier === "physical"
-                                ? 30
-                                : selectedBookTier === "kit"
-                                ? 60
-                                : selectedBookTier === "prayer"
-                                ? 5
-                                : Math.floor((parseFloat(customBookValue) || 10) * 0.45);
-                            setUserCredits((p) => p + rewardCredits);
-                            setConfirmedDonation(true);
-                            setAbacatStep("success");
-
-                            setFundadores((prev) => [
-                              {
-                                name: activeName,
-                                location: city
-                                  ? `${city}, ${stateCode}`
-                                  : "Brasil",
-                                service:
-                                  purchaseMode === "gift" && (selectedBookTier === "book_despertar" || selectedBookTier === "book_devocionais")
-                                    ? `Semeador 🎁 (Presenteou ${giftName})`
-                                    : selectedBookTier === "book_despertar"
-                                    ? "Patrocinador do Despertar 📕"
-                                    : selectedBookTier === "book_devocionais"
-                                    ? "Semeador Devocional 🙏"
-                                    : selectedBookTier === "physical"
-                                    ? "Patrocinador Físico 📘"
-                                    : selectedBookTier === "kit"
-                                    ? "Co-Fundador de Altar ✨"
-                                    : "Patrocinador Generoso 💖",
-                                type: "offer",
-                                avatarEmoji: purchaseMode === "gift" ? "🎁" : "👑",
-                                isDonator: true,
-                              },
-                              ...prev,
-                            ]);
-
-                            if (purchaseMode === "gift" && giftName) {
-                              const giftPostId = (muralItems.length + 1).toString();
-                              const giftMuralItem: MuralItem = {
-                                id: giftPostId,
-                                category: "oferta",
-                                author: activeName,
-                                avatarEmoji: "🎁",
-                                location: city ? `${city}, ${stateCode}` : "Brasil",
-                                title: "Presente de Altar Semeado",
-                                description: `Semeou o E-book "${selectedBookTier === 'book_despertar' ? 'O Despertar' : 'Devocionais Diários'}" de presente direto para o coração de ${giftName} (${giftEmail || 'E-mail cadastrado'}). Que este amor contagie mais lives!`,
-                                timestamp: "Agora mesmo",
-                                actionsTaken: [],
-                                userInteracted: false,
-                                counter: 1,
-                              };
-                              setMuralItems((prev) => [giftMuralItem, ...prev]);
-                            }
-
-                            if (onSaveProgress) {
-                              onSaveProgress({
-                                hasBookSponsor: selectedBookTier !== "prayer",
-                                verifyDonator: selectedBookTier !== "prayer",
-                                sponsorBookTier: selectedBookTier,
-                                awardedCredits: rewardCredits,
-                                giftingRecipient: purchaseMode === "gift" ? giftName : "",
-                              });
-                            }
-
-                            showTemporaryToast(
-                              purchaseMode === "gift"
-                                ? `Sua doação foi confirmada! O E-book de presente foi enviado com sucesso para ${giftName}! +${rewardCredits} créditos.`
-                                : `Obrigado pelo seu patrocínio via Kiwify! +${rewardCredits} créditos de Mordomia gerados com amor!`
-                            );
-                          }}
-                          className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-black uppercase tracking-wider rounded-xl transition shadow-lg cursor-pointer flex items-center justify-center space-x-2 font-bold"
-                        >
-                          <CheckCircle size={15} />
-                          <span>Já Paguei • Liberar Meus Créditos de Mordomia 👑</span>
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {abacatStep === "success" && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="p-6 bg-emerald-950/20 border-2 border-dashed border-emerald-500/40 rounded-2xl text-center space-y-4 max-w-lg mx-auto"
-                    >
-                      <Award
-                        size={48}
-                        className="text-[#DCAE6C] mx-auto animate-bounce mt-2"
-                      />
-                      <h4 className="font-serif text-lg font-bold text-white">
-                        {selectedBookTier === "prayer"
-                          ? "Compromisso de Intercessão Ativo! 🙏"
-                          : "Transação Confirmada no Kiwify!"}
-                      </h4>
-                      <p className="text-stone-300 text-xs leading-relaxed font-sans">
-                        {selectedBookTier === "prayer"
-                          ? "Agradecemos profundamente. Suas orações alimentam a chama do Despertar. Registramos seu compromisso no altar de oração contínuo da comunidade."
-                          : "Que abundância! Seu apoio via Kiwify foi confirmado com sucesso pelo ecossistema financeiro. Registramos o seu nome no rol oficial dos Co-Fundadores Pioneiros."}
-                      </p>
-
-                      <div className="bg-stone-900/60 p-3 rounded-xl border border-stone-850 text-left text-[11px] text-stone-400 space-y-1.5 max-w-sm mx-auto font-mono">
-                        <div className="flex justify-between">
-                          <span className="text-stone-500 font-bold">
-                            Comprovante:
-                          </span>{" "}
-                          <span className="text-stone-200">
-                            {selectedBookTier === "prayer" ? "PRYR-ORACAO-2026" : "ABCT-2026-681923"}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-stone-500 font-bold">
-                            Destinatário:
-                          </span>{" "}
-                          <span className="text-stone-200">
-                            Somos o Despertar Ltda
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-stone-500 font-bold">
-                            Pacote Ativo:
-                          </span>{" "}
-                          <span className="text-[#DCAE6C] font-bold">
-                            {selectedBookTier === "book_despertar"
-                              ? `Edição Digital O Despertar ${purchaseMode === "gift" ? "🎁 (Presente)" : "📥 (Pessoal)"}`
-                              : selectedBookTier === "book_devocionais"
-                              ? `Edição Digital Devocionais ${purchaseMode === "gift" ? "🎁 (Presente)" : "📥 (Pessoal)"}`
-                              : selectedBookTier === "physical"
-                              ? "Livro Impresso"
-                              : selectedBookTier === "kit"
-                              ? "Kit Co-Fundador"
-                              : selectedBookTier === "prayer"
-                              ? "Compromisso de Oração"
-                              : "Oferta Voluntária Livre"}
-                          </span>
-                        </div>
-                        
-                        {purchaseMode === "gift" && giftName && (
-                          <div className="flex justify-between border-t border-stone-850/60 pt-1.5 mt-1.5">
-                            <span className="text-stone-500 font-bold">🎁 Amigo Presenteado:</span>
-                            <span className="text-stone-300 font-sans">{giftName}</span>
-                          </div>
-                        )}
-
-                        <div className="flex justify-between border-t border-stone-850/60 pt-1.5 mt-1.5">
-                          <span className="text-stone-500 font-bold">
-                            Créditos Unlocked:
-                          </span>{" "}
-                          <span className="text-emerald-400 font-bold font-sans">
-                            +
-                            {selectedBookTier === "book_despertar"
-                              ? 12
-                              : selectedBookTier === "book_devocionais"
-                              ? 10
-                              : selectedBookTier === "physical"
-                              ? 30
-                              : selectedBookTier === "kit"
-                              ? 60
-                              : selectedBookTier === "prayer"
-                              ? 5
-                              : Math.floor((parseFloat(customBookValue) || 10) * 0.45)}{" "}
-                            de Mordomia!
-                          </span>
-                        </div>
-                      </div>
-
-                      <p className="text-stone-400 text-[10.5px]">
-                        {selectedBookTier === "prayer"
-                          ? "Seus 5 créditos de Mordomia foram adicionados ao seu saldo institucional."
-                          : "Enviaremos os informativos de download do seu e-book de presente ou acesso pessoal direto no e-mail cadastrado em total conformidade com a LGPD."}
-                      </p>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setAbacatStep("select");
-                          setPurchaseMode("self");
-                          setGiftName("");
-                          setGiftEmail("");
-                          setPrayerIntention("");
-                        }}
-                        className="px-6 py-2.5 bg-stone-900 border border-stone-850 hover:bg-[#181716] rounded-xl text-xs font-semibold text-stone-200 cursor-pointer"
-                      >
-                        Retornar ao Painel / Apoiar Novamente
-                      </button>
-                    </motion.div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <hr className="border-stone-150" />
-
-            {/* HIGH FIDELITY TRANSPARENCY, SECURITY & LGPD COMPLIANCE NOTICE BLOCK */}
-            <div className="bg-[#FAF8F5]/90 border border-stone-200/80 p-6 md:p-8 rounded-3xl space-y-6">
-              <div className="flex items-center space-x-3.5 border-b border-stone-200/80 pb-4">
-                <div className="w-11 h-11 rounded-full bg-stone-100 flex items-center justify-center border border-stone-200 shadow-sm">
-                  <ShieldCheck size={20} className="text-[#C08261]" />
-                </div>
-                <div className="text-left">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-bold block">
-                    Pacto de Confiança no Reino
-                  </span>
-                  <h4 className="font-serif text-lg md:text-xl font-bold text-stone-850">
-                    Segurança, Transparência & Conformidade LGPD
-                  </h4>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left text-xs md:text-sm">
-                <div className="space-y-2">
-                  <span className="flex items-center gap-1.5 text-stone-850 font-bold font-serif text-xs md:text-sm">
-                    <CheckCircle size={15} className="text-[#C08261]" /> 1.
-                    Arquitetura 100% Sólida e Limpa
-                  </span>
-                  <p className="text-stone-500 text-xs leading-relaxed font-sans">
-                    Nesta fase do Despertar, todas as ações de oração,
-                    agendamento de Cadeira Vazia e de mútua assistência são
-                    salvas{" "}
-                    <strong className="text-stone-800 font-semibold font-bold">
-                      exclusivamente no seu próprio navegador
-                    </strong>{" "}
-                    (via LocalStorage seguro). Nenhum dado pessoal é exposto sem
-                    sua livre e manifesta autorização.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <span className="flex items-center gap-1.5 text-stone-850 font-bold font-serif text-xs md:text-sm">
-                    <FileText size={15} className="text-[#C08261]" /> 2.
-                    Propósito do Patrocínio
-                  </span>
-                  <p className="text-stone-500 text-xs leading-relaxed font-sans">
-                    O dinheiro arrecadado com a aquisição do Livro Oficial pelo{" "}
-                    <strong className="text-stone-800 font-semibold font-bold">
-                      Kiwify
-                    </strong>{" "}
-                    é inteiramente destinado a custear a consultoria jurídica
-                    para estruturação civil do movimento, aquisição de datacenter
-                    soberano com enclaves criptográficos e registro do
-                    encarregado de dados para a plena conformidade legal.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <span className="flex items-center gap-1.5 text-stone-850 font-bold font-serif text-xs md:text-sm">
-                    <Shield size={15} className="text-[#C08261]" /> 3. Blindagem
-                    de LGPD (Lei 13.709)
-                  </span>
-                  <p className="text-stone-550 text-xs leading-relaxed font-sans">
-                    Declaramos solenemente que:{" "}
-                    <strong className="text-stone-800 font-semibold font-bold">
-                      I)
-                    </strong>{" "}
-                    Seus dados de endereço e WhatsApp nunca serão compartilhados,
-                    transferidos ou vendidos para anunciantes;{" "}
-                    <strong className="text-stone-800 font-semibold font-bold">
-                      II)
-                    </strong>{" "}
-                    Você tem direito integral à exclusão instantânea de qualquer
-                    postagem no mural;{" "}
-                    <strong className="text-stone-800 font-semibold font-bold">
-                      III)
-                    </strong>{" "}
-                    O ecossistema é livre de cookies de rastreamento de
-                    big-techs.
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-stone-50 border border-stone-200/50 p-4 rounded-2xl flex items-center gap-2.5 text-left text-[11px] text-stone-500 font-mono">
-                <span className="text-base font-bold">⚖️</span>
-                <p>
-                  <strong className="text-stone-700">
-                    Responsabilidade e Legalidade:
-                  </strong>{" "}
-                  "E tudo o que fizerem, seja em palavra ou em ação, façam-no em
-                  nome do Senhor Jesus." (Colossenses 3:17). Buscamos a
-                  transparência absoluta perante as leis de Deus e dos homens.
-                </p>
-              </div>
-            </div>
-
-            <hr className="border-stone-150" />
-
-            {/* SEJA UM FUNDADOR FORM */}
-            <div
-              id="sejaexclusivo-form"
-              className="bg-[#FAF8F5]/80 border border-stone-200/60 p-8 rounded-3xl text-center space-y-6 max-w-2xl mx-auto shadow-xs"
-            >
-              <div className="space-y-3 text-center">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#C08261] font-extrabold">
-                  Seja um Pioneiro
-                </span>
-                <h4 className="font-serif text-2xl md:text-3xl font-light text-stone-850 max-w-lg mx-auto">
-                  Você acredita que a igreja ainda pode ser tudo o que ela já
-                  foi um dia?
-                </h4>
-                <p className="text-stone-600 text-xs md:text-sm leading-relaxed max-w-md mx-auto">
-                  Abra caminho e faça parte. Garanta sua listagem honorária de
-                  co-fundador pioneiro e ganhe{" "}
-                  <strong className="text-stone-900 font-bold">
-                    12 créditos de mordor para estrear os serviços no lançamento
-                  </strong>
-                  .
-                </p>
-              </div>
-
-              {isRegistered ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="p-8 bg-[#C08261]/10 rounded-2xl border-2 border-dashed border-[#C08261] max-w-lg mx-auto space-y-3"
-                >
-                  <Award
-                    size={48}
-                    className="text-[#C08261] mx-auto animate-bounce"
-                  />
-                  <h5 className="font-serif text-lg font-bold text-stone-800">
-                    Inscrição de Co-Fundador Registrada!
-                  </h5>
-                  <p className="text-stone-650 text-xs leading-relaxed">
-                    Você já está no rol oficial dos primeiros correspondentes!
-                    Enviaremos as atualizações dos servidores e chaves de acesso
-                    diretamente no seu e-mail cadastrado.
-                  </p>
-                </motion.div>
-              ) : (
-                <form
-                  onSubmit={handleRegisterFounder}
-                  className="max-w-xl mx-auto space-y-5 text-left bg-white p-6 rounded-2xl border border-stone-200/80 shadow-md text-xs"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
-                        Como deseja ser chamado?
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Nome completo ou social"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-hidden focus:border-[#C08261]"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
-                        Seu Melhor E-mail
-                      </label>
-                      <input
-                        type="email"
-                        placeholder="exemplo@igreja.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-hidden focus:border-[#C08261]"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="md:col-span-2 space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
-                        Cidade de Atendimento
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Ex: Curitiba"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        required
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-hidden focus:border-[#C08261]"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
-                        Estado (UF)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="PR"
-                        maxLength={2}
-                        value={stateCode}
-                        onChange={(e) =>
-                          setStateCode(e.target.value.toUpperCase())
-                        }
-                        required
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-center font-mono focus:outline-hidden focus:border-[#C08261]"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 pt-1">
-                    <div className="flex items-center space-x-6 text-xs font-semibold text-stone-650">
-                      <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="founder_type"
-                          checked={interactionType === "offer"}
-                          onChange={() => setInteractionType("offer")}
-                        />
-                        <span>Quero Servir / Apoiar</span>
-                      </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="founder_type"
-                          checked={interactionType === "receive"}
-                          onChange={() => setInteractionType("receive")}
-                        />
-                        <span>Preciso de Acolhimento</span>
-                      </label>
-                    </div>
-
-                    <div className="space-y-1 text-xs">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
-                        Qual ministério/foco de atuação?
-                      </label>
-                      <select
-                        value={chosenService}
-                        onChange={(e) => setChosenService(e.target.value)}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 focus:outline-hidden focus:border-[#C08261]"
-                      >
-                        <option value="Oração">Intercessão de Oração 🙏</option>
-                        <option value="Discipulado">
-                          Discipulado do Reino 👣
-                        </option>
-                        <option value="Aconselhamento">
-                          Aconselhamento e Apoio 👩‍⚕️
-                        </option>
-                        <option value="Ensino bíblico">
-                          Exposição da Escritura 📖
-                        </option>
-                        <option value="Louvor ao vivo">
-                          Louvor e Canção em Casa 🎸
-                        </option>
-                        <option value="Mesa Aberta">
-                          Acolher na Cadeira Vazia 🍲
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-4 bg-stone-900 text-stone-100 hover:bg-black uppercase tracking-wider font-extrabold rounded-xl transition cursor-pointer"
-                  >
-                    Registrar-se como Co-Fundador Pioneiro
-                  </button>
-                </form>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* TAB 4: LIVROS — COMO APOIAR O DESPERTAR */}
-      <AnimatePresence mode="wait">
+        {/* TAB 4 — OS LIVROS */}
         {activeTab === "livros" && (
-          <motion.div
-            key="livros-despertar"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-10 pb-10"
-          >
+          <motion.div key="livros-tab" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="space-y-12 pb-10">
+
             {/* Hero */}
-            <div className="text-center pt-8 pb-6 border-b border-stone-100">
+            <div className="text-center pt-6 pb-4">
               <span className="inline-flex items-center gap-2 text-[11px] font-mono font-bold uppercase tracking-widest text-[#C08261] bg-[#C08261]/10 border border-[#C08261]/20 rounded-full px-4 py-1.5 mb-4">
                 📖 Adquirir os Livros
               </span>
-              <h2 className="font-serif text-3xl md:text-4xl font-light text-stone-900 leading-tight mt-2 mb-3">
+              <h2 className="font-serif text-3xl md:text-4xl font-light text-stone-900 leading-tight mb-3">
                 Anos de escrita.<br />
                 <span className="font-semibold text-[#C08261]">Uma jornada que você pode levar para casa.</span>
               </h2>
@@ -2852,151 +965,179 @@ export default function IgrejaPrimitiva({
               </p>
             </div>
 
-            {/* Nudge */}
-            <div className="flex items-start gap-4 bg-stone-50 border border-stone-200 rounded-2xl p-5">
-              <span className="text-2xl mt-0.5 shrink-0">🤝</span>
-              <div>
-                <p className="text-stone-800 font-semibold text-[14px] mb-1">Como você pode sustentar este movimento agora?</p>
-                <p className="text-stone-500 text-[13px] leading-relaxed">
-                  O ecossistema do Despertar é gratuito e sem patrocinadores. A forma mais concreta de nos ajudar a continuar é adquirindo um dos livros abaixo — cada compra financia servidores, manutenção e o sonho de alcançar mais lares.
-                </p>
-              </div>
-            </div>
+            {/* Cards dos livros */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            {/* Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-              {/* Card 1 — O Despertar (destaque) */}
-              <div className="flex flex-col gap-4 bg-white border-2 border-[#C08261]/40 rounded-3xl p-5 shadow-sm relative">
+              {/* Card 1 — O Despertar */}
+              <div className="flex flex-col gap-5 bg-gradient-to-br from-[#1E1C1A] to-[#0e0d0c] border-2 border-[#DCAE6C]/30 rounded-3xl p-6 shadow-xl relative">
                 <div className="absolute -top-3 left-5">
-                  <span className="text-[10px] font-mono font-black uppercase bg-[#C08261] text-white px-3 py-1 rounded-full tracking-wider shadow-sm">
-                    Mais adquirido
-                  </span>
+                  <span className="text-[10px] font-mono font-black uppercase bg-[#C08261] text-white px-3 py-1 rounded-full tracking-wider shadow-sm">Mais adquirido ✨</span>
                 </div>
-                <div className="mt-3">
-                  <p className="font-serif text-xl font-semibold text-stone-900 mb-1">O Despertar</p>
-                  <p className="text-stone-500 text-[13px] leading-relaxed">
-                    O livro oficial do movimento — histórias dos discípulos que nunca viraram celebridades, mas mudaram o mundo de pessoa em pessoa.
-                  </p>
+                <div className="flex gap-4 items-start mt-3">
+                  <img src={bookCoverImg} alt="Capa O Despertar" className="w-20 h-28 object-cover rounded-r-lg rounded-l-sm shadow-lg border-l-4 border-stone-950 shrink-0" referrerPolicy="no-referrer" />
+                  <div>
+                    <p className="font-serif text-xl font-semibold text-stone-100 mb-1">O Despertar</p>
+                    <p className="text-stone-400 text-[13px] leading-relaxed">A geração que voltou a ouvir a voz de Deus. Em uma época de distrações, este livro é um convite para ouvir o Pai, encontrar propósito e viver uma fé autêntica.</p>
+                  </div>
                 </div>
-                <ul className="space-y-2 flex-1">
-                  {["Ebook completo em PDF", "Acesso vitalício", "Entrega imediata por email", "Apoia diretamente o projeto"].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-[13px] text-stone-600">
-                      <Check size={14} className="text-[#C08261] shrink-0" />
-                      {item}
-                    </li>
+                <ul className="space-y-2">
+                  {["Ebook completo em PDF + ePub", "Acesso vitalício", "Entrega imediata por e-mail", "Apoia diretamente o projeto"].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-[13px] text-stone-300"><Check size={14} className="text-[#DCAE6C] shrink-0" />{item}</li>
                   ))}
                 </ul>
-                <div className="border-t border-stone-100 pt-4 flex items-baseline gap-2">
-                  <span className="text-2xl font-semibold text-stone-900">R$ 30,00</span>
-                  <span className="text-[12px] text-stone-400 leading-snug">pagamento único<br />via Kiwify</span>
+                <div className="flex items-baseline gap-2 pt-1">
+                  <span className="text-stone-500 text-sm line-through font-mono">R$ 34,90</span>
+                  <span className="text-2xl font-semibold text-[#DCAE6C] font-mono">R$ 24,90</span>
                 </div>
-                <a
-                  href={linkDespertar}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[13px] font-bold rounded-2xl transition flex items-center justify-center gap-2 select-none"
-                >
-                  🛒 Adquirir agora
+                <a href={linkDespertar} target="_blank" rel="noopener noreferrer" className="w-full py-3.5 bg-gradient-to-r from-[#C28463] to-[#DCAE6C] hover:from-[#b07353] text-stone-950 text-sm font-black rounded-2xl transition flex items-center justify-center gap-2">
+                  Levar O Despertar para Casa →
                 </a>
               </div>
 
               {/* Card 2 — Devocionais */}
-              <div className="flex flex-col gap-4 bg-white border border-stone-200 rounded-3xl p-5">
+              <div className="flex flex-col gap-5 bg-white border border-stone-200 rounded-3xl p-6 shadow-sm">
                 <div>
-                  <span className="text-[10px] font-mono font-bold uppercase bg-blue-50 text-blue-600 border border-blue-100 px-3 py-1 rounded-full">
-                    Devocionais
-                  </span>
+                  <span className="text-[10px] font-mono font-bold uppercase bg-blue-50 text-blue-600 border border-blue-100 px-3 py-1 rounded-full">Aliança de Manhã ⛅</span>
                 </div>
                 <div>
                   <p className="font-serif text-xl font-semibold text-stone-900 mb-1">Devocionais Diários</p>
-                  <p className="text-stone-500 text-[13px] leading-relaxed">
-                    Uma coleção de reflexões para começar cada manhã com propósito — escritas para despertar antes mesmo do café esfriar.
-                  </p>
+                  <p className="text-stone-500 text-[13px] leading-relaxed">Poucos minutos por dia mudam uma vida inteira. Reflexões, versículos, orações e desafios práticos para fortalecer sua fé e ouvir Deus com mais clareza.</p>
                 </div>
                 <ul className="space-y-2 flex-1">
-                  {["Ebook completo em PDF", "Acesso vitalício", "Entrega imediata por email", "Apoia diretamente o projeto"].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-[13px] text-stone-600">
-                      <Check size={14} className="text-[#C08261] shrink-0" />
-                      {item}
-                    </li>
+                  {["Ebook completo em PDF", "Acesso vitalício", "Entrega imediata por e-mail", "Apoia diretamente o projeto"].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-[13px] text-stone-600"><Check size={14} className="text-[#C08261] shrink-0" />{item}</li>
                   ))}
                 </ul>
-                <div className="border-t border-stone-100 pt-4 flex items-baseline gap-2">
-                  <span className="text-2xl font-semibold text-stone-900">R$ 27,00</span>
-                  <span className="text-[12px] text-stone-400 leading-snug">pagamento único<br />via Kiwify</span>
+                <div className="flex items-baseline gap-2 border-t border-stone-100 pt-4">
+                  <span className="text-stone-400 text-sm line-through font-mono">R$ 39,90</span>
+                  <span className="text-2xl font-semibold text-stone-900 font-mono">R$ 27,90</span>
                 </div>
-                <a
-                  href={linkDevocionais}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[13px] font-bold rounded-2xl transition flex items-center justify-center gap-2 select-none"
-                >
-                  🛒 Adquirir agora
+                <a href={linkDevocionais} target="_blank" rel="noopener noreferrer" className="w-full py-3.5 bg-[#C08261] hover:bg-[#A96D4D] text-white text-sm font-black rounded-2xl transition flex items-center justify-center gap-2">
+                  Começar Minha Manhã Diferente →
                 </a>
-              </div>
-
-              {/* Card 3 — Gratuito */}
-              <div className="flex flex-col gap-4 bg-stone-50 border border-stone-200 rounded-3xl p-5">
-                <div>
-                  <span className="text-[10px] font-mono font-bold uppercase bg-[#C08261]/10 text-[#C08261] border border-[#C08261]/20 px-3 py-1 rounded-full">
-                    Gratuito
-                  </span>
-                </div>
-                <div>
-                  <p className="font-serif text-xl font-semibold text-stone-900 mb-1">Capítulos de amostra</p>
-                  <p className="text-stone-500 text-[13px] leading-relaxed">
-                    Leia os primeiros capítulos gratuitamente aqui no site, antes de decidir. A história que é sua vai te chamar.
-                  </p>
-                </div>
-                <ul className="space-y-2 flex-1">
-                  {["Todos os 12 discípulos", "3 capítulos por ebook", "Leitura direta no app", "Sem cadastro obrigatório"].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-[13px] text-stone-600">
-                      <Check size={14} className="text-[#C08261] shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div className="border-t border-stone-100 pt-4">
-                  <span className="text-xl text-stone-400 font-medium">Gratuito</span>
-                </div>
-                <button
-                  className="w-full py-3 bg-white border border-stone-200 hover:bg-stone-100 text-stone-700 text-[13px] font-bold rounded-2xl transition flex items-center justify-center gap-2 select-none"
-                >
-                  📘 Ler amostras grátis ↗
-                </button>
               </div>
             </div>
 
-            {/* Por que esses livros existem */}
-            <div>
-              <p className="text-[11px] font-mono font-bold uppercase tracking-widest text-stone-400 mb-4">Por que esses livros existem</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                  { icon: "⏳", title: "Anos de escrita", desc: "Cada página foi revisitada dezenas de vezes — não para impressionar, mas para tocar." },
-                  { icon: "🙌", title: "Sem editora", desc: "São livros independentes — cada compra chega diretamente ao autor." },
-                  { icon: "🌱", title: "Sua compra semeia", desc: "Cada real financia servidores, licenças e o alcance de novos leitores." },
-                  { icon: "🔒", title: "Pagamento seguro", desc: "Via Kiwify — plataforma certificada com entrega automática após confirmação." },
-                ].map((item) => (
-                  <div key={item.title} className="bg-stone-50 border border-stone-100 rounded-2xl p-4 flex flex-col gap-2">
-                    <span className="text-xl">{item.icon}</span>
-                    <p className="font-semibold text-stone-800 text-[13px]">{item.title}</p>
-                    <p className="text-stone-500 text-[12px] leading-relaxed">{item.desc}</p>
+            {/* Divisor */}
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-stone-200" />
+              <span className="text-[11px] font-mono uppercase tracking-widest text-stone-400 font-bold">A biblioteca que forma os líderes deste movimento</span>
+              <div className="flex-1 h-px bg-stone-200" />
+            </div>
+
+            {/* Biblioteca de Leitura — Persuasão & Copywriting */}
+            <div className="space-y-3">
+              <div className="max-w-2xl mb-6">
+                <p className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#C08261] mb-2">Livros que leio e recuso</p>
+                <h3 className="font-serif text-2xl font-light text-stone-900 leading-snug mb-2">
+                  Não basta ter algo a dizer.<br />
+                  <span className="font-semibold">É preciso saber como dizer.</span>
+                </h3>
+                <p className="text-stone-500 text-sm leading-relaxed">
+                  Estes são os livros que formam a espinha dorsal de como o Despertar fala, convida e se comunica. Cada um ensina uma dimensão diferente de como as palavras certas, ditas no momento certo, mudam decisões — e vidas.
+                </p>
+              </div>
+
+              <div className="space-y-8">
+                {bibliotecaLivros.map((secao) => (
+                  <div key={secao.categoria}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${secao.badge}`}>{secao.categoria}</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {secao.livros.map((livro) => (
+                        <div key={livro.titulo} className="bg-[#FAF8F5] border border-stone-200/70 rounded-2xl p-5 flex gap-4 hover:border-[#C08261]/30 hover:shadow-sm transition">
+                          <span className="text-2xl shrink-0 mt-0.5">{livro.emoji}</span>
+                          <div className="space-y-1 min-w-0">
+                            <p className="font-serif font-semibold text-stone-900 text-[14px] leading-snug">{livro.titulo}</p>
+                            <p className="text-[11px] font-mono text-stone-400 uppercase tracking-wide">{livro.autor}</p>
+                            <p className="text-stone-600 text-[13px] leading-relaxed pt-1">{livro.insight}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Footer segurança */}
-            <div className="border-t border-stone-100 pt-6 space-y-3">
-              <p className="text-[13px] text-stone-400 flex items-center gap-2">
-                <ShieldCheck size={15} />
-                Compra segura via Kiwify · Entrega imediata por email · Sem assinaturas
-              </p>
-              <p className="text-[13px] text-stone-500 leading-relaxed">
-                <span className="font-semibold text-stone-700">Tem dúvidas antes de comprar?</span> Explore os capítulos gratuitos — estamos aqui para ajudar, sem pressão.
-              </p>
+            {/* Por que os livros existem */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { icon: "⏳", title: "Anos de escrita", desc: "Cada página foi revisitada dezenas de vezes — não para impressionar, mas para tocar." },
+                { icon: "🙌", title: "Sem editora", desc: "São livros independentes — cada compra chega diretamente ao autor." },
+                { icon: "🌱", title: "Sua compra semeia", desc: "Cada real financia servidores, licenças e o alcance de novos leitores." },
+                { icon: "🔒", title: "Pagamento seguro", desc: "Via Kiwify — entrega automática após confirmação, sem assinaturas." },
+              ].map((item) => (
+                <div key={item.title} className="bg-stone-50 border border-stone-100 rounded-2xl p-4 flex flex-col gap-2">
+                  <span className="text-xl">{item.icon}</span>
+                  <p className="font-semibold text-stone-800 text-[13px]">{item.title}</p>
+                  <p className="text-stone-500 text-[12px] leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
             </div>
+
+            {/* Presentear */}
+            <div className="bg-stone-50 border border-stone-200 rounded-2xl p-5 flex items-start gap-4">
+              <span className="text-2xl shrink-0 mt-0.5">🎁</span>
+              <div>
+                <p className="font-semibold text-stone-800 text-[14px] mb-1">Quer presentear alguém?</p>
+                <p className="text-stone-500 text-[13px] leading-relaxed">Ao finalizar a compra no Kiwify, você pode alterar o e-mail de entrega para o endereço de quem receberá o livro. É o presente que chega em segundos e fica para sempre.</p>
+              </div>
+            </div>
+
+            {/* Oração como apoio */}
+            <div className="bg-gradient-to-br from-emerald-950/30 to-stone-950 border border-emerald-800/30 rounded-2xl p-5 flex items-start gap-4">
+              <span className="text-2xl shrink-0 mt-0.5">🛡️</span>
+              <div className="flex-1">
+                <p className="font-semibold text-emerald-400 text-[13px] mb-1 font-mono uppercase tracking-wide">Não pode adquirir agora?</p>
+                <p className="text-stone-400 text-[13px] leading-relaxed">Se seu momento não permite sementes financeiras, apoie com seu tempo sagrado. Comprometa-se a interceder pelo Despertar semanalmente — isso também sustenta o movimento.</p>
+                <textarea
+                  rows={2}
+                  placeholder="Registre sua intenção de oração aqui (opcional)..."
+                  value={prayerIntention}
+                  onChange={(e) => setPrayerIntention(e.target.value)}
+                  className="w-full mt-3 bg-stone-950 border border-stone-800 rounded-xl py-2 px-3 text-xs text-stone-200 focus:outline-none focus:border-emerald-600"
+                />
+                {prayerIntention && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUserCredits(p => p + 5);
+                      showTemporaryToast("Compromisso de intercessão registrado! +5 créditos. 🙏");
+                      setPrayerIntention("");
+                    }}
+                    className="mt-2 py-2 px-5 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition cursor-pointer"
+                  >
+                    Registrar Meu Compromisso de Oração
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Rodapé segurança */}
+            <div className="border-t border-stone-100 pt-5 flex items-center gap-2 text-stone-400 text-[13px]">
+              <ShieldCheck size={15} />
+              <span>Compra segura via Kiwify · Entrega imediata por e-mail · Sem assinaturas · LGPD compliant</span>
+            </div>
+
+            {/* Link config oculto */}
+            <div className="text-center opacity-10 hover:opacity-100 transition-opacity duration-300">
+              <details className="inline-block text-left">
+                <summary className="text-[9px] text-stone-400 font-mono cursor-pointer list-none">⚙️ Configurar Links de Pagamento</summary>
+                <div className="mt-3 p-4 bg-stone-50 rounded-xl border border-stone-200 text-left space-y-3 w-72 absolute left-1/2 transform -translate-x-1/2 z-50 shadow-lg">
+                  <div className="space-y-1">
+                    <label className="text-stone-500 text-[9px] uppercase font-mono block">O Despertar (Link)</label>
+                    <input type="text" value={linkDespertar} onChange={(e) => { setLinkDespertar(e.target.value); localStorage.setItem("kiwify_link_despertar", e.target.value); }} className="w-full bg-white border border-stone-200 rounded-lg px-2 py-1 text-stone-700 font-mono text-xs focus:outline-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-stone-500 text-[9px] uppercase font-mono block">Devocionais (Link)</label>
+                    <input type="text" value={linkDevocionais} onChange={(e) => { setLinkDevocionais(e.target.value); localStorage.setItem("kiwify_link_devocionais", e.target.value); }} className="w-full bg-white border border-stone-200 rounded-lg px-2 py-1 text-stone-700 font-mono text-xs focus:outline-none" />
+                  </div>
+                </div>
+              </details>
+            </div>
+
           </motion.div>
         )}
       </AnimatePresence>
