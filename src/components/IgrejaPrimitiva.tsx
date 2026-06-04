@@ -72,7 +72,7 @@ export default function IgrejaPrimitiva({
   onSaveProgress,
 }: IgrejaPrimitivaProps) {
   // Main view navigation tab
-  const [activeTab, setActiveTab] = useState<"comunhao" | "chamado" | "cocriacao">(
+  const [activeTab, setActiveTab] = useState<"comunhao" | "chamado" | "cocriacao" | "livros">(
     "comunhao"
   );
 
@@ -833,6 +833,22 @@ export default function IgrejaPrimitiva({
           <span>💡 Centelhas Co-Criadas</span>
           <span className="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-mono font-bold uppercase tracking-wider">
             Fé Ativa
+          </span>
+        </button>
+
+        <button
+          id="tab-livros-despertar"
+          onClick={() => setActiveTab("livros")}
+          className={`pb-4 text-sm font-semibold tracking-wide transition relative flex items-center gap-2 cursor-pointer ${
+            activeTab === "livros"
+              ? "text-stone-900 border-b-2 border-[#C08261]"
+              : "text-stone-400 hover:text-stone-600"
+          }`}
+        >
+          <FileText size={15} className="text-[#C08261]" />
+          <span>📖 Os Livros</span>
+          <span className="text-[10px] bg-[#C08261] text-white px-2 py-0.5 rounded-full font-mono font-bold uppercase tracking-wider animate-pulse">
+            Apoiar
           </span>
         </button>
       </div>
@@ -2806,6 +2822,180 @@ export default function IgrejaPrimitiva({
                   </button>
                 </form>
               )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* TAB 4: LIVROS — COMO APOIAR O DESPERTAR */}
+      <AnimatePresence mode="wait">
+        {activeTab === "livros" && (
+          <motion.div
+            key="livros-despertar"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-10 pb-10"
+          >
+            {/* Hero */}
+            <div className="text-center pt-8 pb-6 border-b border-stone-100">
+              <span className="inline-flex items-center gap-2 text-[11px] font-mono font-bold uppercase tracking-widest text-[#C08261] bg-[#C08261]/10 border border-[#C08261]/20 rounded-full px-4 py-1.5 mb-4">
+                📖 Adquirir os Livros
+              </span>
+              <h2 className="font-serif text-3xl md:text-4xl font-light text-stone-900 leading-tight mt-2 mb-3">
+                Anos de escrita.<br />
+                <span className="font-semibold text-[#C08261]">Uma jornada que você pode levar para casa.</span>
+              </h2>
+              <p className="text-stone-500 text-[15px] max-w-lg mx-auto leading-relaxed">
+                Cada ebook é uma lamparina — escrita com tempo, oração e alma — para acender algo que talvez esteja adormecido em você.
+              </p>
+            </div>
+
+            {/* Nudge */}
+            <div className="flex items-start gap-4 bg-stone-50 border border-stone-200 rounded-2xl p-5">
+              <span className="text-2xl mt-0.5 shrink-0">🤝</span>
+              <div>
+                <p className="text-stone-800 font-semibold text-[14px] mb-1">Como você pode sustentar este movimento agora?</p>
+                <p className="text-stone-500 text-[13px] leading-relaxed">
+                  O ecossistema do Despertar é gratuito e sem patrocinadores. A forma mais concreta de nos ajudar a continuar é adquirindo um dos livros abaixo — cada compra financia servidores, manutenção e o sonho de alcançar mais lares.
+                </p>
+              </div>
+            </div>
+
+            {/* Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+              {/* Card 1 — O Despertar (destaque) */}
+              <div className="flex flex-col gap-4 bg-white border-2 border-[#C08261]/40 rounded-3xl p-5 shadow-sm relative">
+                <div className="absolute -top-3 left-5">
+                  <span className="text-[10px] font-mono font-black uppercase bg-[#C08261] text-white px-3 py-1 rounded-full tracking-wider shadow-sm">
+                    Mais adquirido
+                  </span>
+                </div>
+                <div className="mt-3">
+                  <p className="font-serif text-xl font-semibold text-stone-900 mb-1">O Despertar</p>
+                  <p className="text-stone-500 text-[13px] leading-relaxed">
+                    O livro oficial do movimento — histórias dos discípulos que nunca viraram celebridades, mas mudaram o mundo de pessoa em pessoa.
+                  </p>
+                </div>
+                <ul className="space-y-2 flex-1">
+                  {["Ebook completo em PDF", "Acesso vitalício", "Entrega imediata por email", "Apoia diretamente o projeto"].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-[13px] text-stone-600">
+                      <Check size={14} className="text-[#C08261] shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="border-t border-stone-100 pt-4 flex items-baseline gap-2">
+                  <span className="text-2xl font-semibold text-stone-900">R$ 30,00</span>
+                  <span className="text-[12px] text-stone-400 leading-snug">pagamento único<br />via Kiwify</span>
+                </div>
+                <a
+                  href={linkDespertar}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[13px] font-bold rounded-2xl transition flex items-center justify-center gap-2 select-none"
+                >
+                  🛒 Adquirir agora
+                </a>
+              </div>
+
+              {/* Card 2 — Devocionais */}
+              <div className="flex flex-col gap-4 bg-white border border-stone-200 rounded-3xl p-5">
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase bg-blue-50 text-blue-600 border border-blue-100 px-3 py-1 rounded-full">
+                    Devocionais
+                  </span>
+                </div>
+                <div>
+                  <p className="font-serif text-xl font-semibold text-stone-900 mb-1">Devocionais Diários</p>
+                  <p className="text-stone-500 text-[13px] leading-relaxed">
+                    Uma coleção de reflexões para começar cada manhã com propósito — escritas para despertar antes mesmo do café esfriar.
+                  </p>
+                </div>
+                <ul className="space-y-2 flex-1">
+                  {["Ebook completo em PDF", "Acesso vitalício", "Entrega imediata por email", "Apoia diretamente o projeto"].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-[13px] text-stone-600">
+                      <Check size={14} className="text-[#C08261] shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="border-t border-stone-100 pt-4 flex items-baseline gap-2">
+                  <span className="text-2xl font-semibold text-stone-900">R$ 27,00</span>
+                  <span className="text-[12px] text-stone-400 leading-snug">pagamento único<br />via Kiwify</span>
+                </div>
+                <a
+                  href={linkDevocionais}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[13px] font-bold rounded-2xl transition flex items-center justify-center gap-2 select-none"
+                >
+                  🛒 Adquirir agora
+                </a>
+              </div>
+
+              {/* Card 3 — Gratuito */}
+              <div className="flex flex-col gap-4 bg-stone-50 border border-stone-200 rounded-3xl p-5">
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase bg-[#C08261]/10 text-[#C08261] border border-[#C08261]/20 px-3 py-1 rounded-full">
+                    Gratuito
+                  </span>
+                </div>
+                <div>
+                  <p className="font-serif text-xl font-semibold text-stone-900 mb-1">Capítulos de amostra</p>
+                  <p className="text-stone-500 text-[13px] leading-relaxed">
+                    Leia os primeiros capítulos gratuitamente aqui no site, antes de decidir. A história que é sua vai te chamar.
+                  </p>
+                </div>
+                <ul className="space-y-2 flex-1">
+                  {["Todos os 12 discípulos", "3 capítulos por ebook", "Leitura direta no app", "Sem cadastro obrigatório"].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-[13px] text-stone-600">
+                      <Check size={14} className="text-[#C08261] shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="border-t border-stone-100 pt-4">
+                  <span className="text-xl text-stone-400 font-medium">Gratuito</span>
+                </div>
+                <button
+                  className="w-full py-3 bg-white border border-stone-200 hover:bg-stone-100 text-stone-700 text-[13px] font-bold rounded-2xl transition flex items-center justify-center gap-2 select-none"
+                >
+                  📘 Ler amostras grátis ↗
+                </button>
+              </div>
+            </div>
+
+            {/* Por que esses livros existem */}
+            <div>
+              <p className="text-[11px] font-mono font-bold uppercase tracking-widest text-stone-400 mb-4">Por que esses livros existem</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  { icon: "⏳", title: "Anos de escrita", desc: "Cada página foi revisitada dezenas de vezes — não para impressionar, mas para tocar." },
+                  { icon: "🙌", title: "Sem editora", desc: "São livros independentes — cada compra chega diretamente ao autor." },
+                  { icon: "🌱", title: "Sua compra semeia", desc: "Cada real financia servidores, licenças e o alcance de novos leitores." },
+                  { icon: "🔒", title: "Pagamento seguro", desc: "Via Kiwify — plataforma certificada com entrega automática após confirmação." },
+                ].map((item) => (
+                  <div key={item.title} className="bg-stone-50 border border-stone-100 rounded-2xl p-4 flex flex-col gap-2">
+                    <span className="text-xl">{item.icon}</span>
+                    <p className="font-semibold text-stone-800 text-[13px]">{item.title}</p>
+                    <p className="text-stone-500 text-[12px] leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer segurança */}
+            <div className="border-t border-stone-100 pt-6 space-y-3">
+              <p className="text-[13px] text-stone-400 flex items-center gap-2">
+                <ShieldCheck size={15} />
+                Compra segura via Kiwify · Entrega imediata por email · Sem assinaturas
+              </p>
+              <p className="text-[13px] text-stone-500 leading-relaxed">
+                <span className="font-semibold text-stone-700">Tem dúvidas antes de comprar?</span> Explore os capítulos gratuitos — estamos aqui para ajudar, sem pressão.
+              </p>
             </div>
           </motion.div>
         )}
