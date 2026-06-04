@@ -30,8 +30,9 @@ import { MULTIPLICACAO } from './data/multiplication';
 import { DESPERTAR_PROFILES } from './data/profiles';
 import { UserProgress, Devotional, SpiritualIdentity } from './types';
 import { auth, db } from './lib/firebase';
+import { buscarMovimentos } from './lib/sementes';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas' | 'primitiva' | 'apps'>('home');
@@ -51,6 +52,11 @@ export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [chatContact, setChatContact] = useState<{ uid: string; name: string; emoji?: string } | null>(null);
+  
+  // Real-time Sementes do Reino balance (Mateus 6)
+  const [sementesSaldo, setSementesSaldo] = useState<number>(0);
+  const [floatingSementes, setFloatingSementes] = useState<{ id: string; tipo: string; descricao: string }[]>([]);
+  const [sementesMovimentos, setSementesMovimentos] = useState<any[]>([]);
 
   // Growth loop & Norman Feedback states
   const [committedToastMsg, setCommittedToastMsg] = useState<string | null>(null);
@@ -197,6 +203,72 @@ export default function App() {
       localStorage.setItem('despertar_progress_v2', JSON.stringify(progress));
     }
   }, [progress, currentUser]);
+
+  // Listen to Sementes do Reino in real-time or via local storage
+  useEffect(() => {
+    const updateLocalSeeds = () => {
+      const localSeeds = localStorage.getItem('despertar_sementes_saldo');
+      setSementesSaldo(localSeeds ? parseInt(localSeeds) : 0);
+    };
+
+    const handleSementePlantada = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail) {
+        const { tipo, descricao } = customEvent.detail;
+        const newId = Math.random().toString();
+        
+        // Add to floating pool
+        setFloatingSementes(prev => [...prev, { id: newId, tipo, descricao }]);
+        
+        // Clean up after 3 seconds
+        setTimeout(() => {
+          setFloatingSementes(prev => prev.filter(item => item.id !== newId));
+        }, 3000);
+      }
+    };
+
+    window.addEventListener('storage-sementes-updated', updateLocalSeeds);
+    window.addEventListener('semente-plantada', handleSementePlantada);
+    updateLocalSeeds();
+
+    let unsubscribeSnapshot: (() => void) | null = null;
+    if (currentUser) {
+      const sementeDocRef = doc(db, 'sementes', currentUser.uid);
+      unsubscribeSnapshot = onSnapshot(sementeDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const dbSaldo = docSnap.data().saldo ?? 0;
+          setSementesSaldo(dbSaldo);
+          localStorage.setItem('despertar_sementes_saldo', dbSaldo.toString());
+        }
+      }, (error) => {
+        console.warn("Real-time listener to Sementes do Reino status skipped/authorized/failed:", error);
+      });
+    }
+
+    return () => {
+      window.removeEventListener('storage-sementes-updated', updateLocalSeeds);
+      window.removeEventListener('semente-plantada', handleSementePlantada);
+      if (unsubscribeSnapshot) {
+        unsubscribeSnapshot();
+      }
+    };
+  }, [currentUser]);
+
+  // Load sementes movements history
+  useEffect(() => {
+    const carregarMovimentos = async () => {
+      const uid = currentUser?.uid || '';
+      const movs = await buscarMovimentos(uid);
+      setSementesMovimentos(movs);
+    };
+
+    carregarMovimentos();
+
+    window.addEventListener('storage-sementes-updated', carregarMovimentos);
+    return () => {
+      window.removeEventListener('storage-sementes-updated', carregarMovimentos);
+    };
+  }, [currentUser]);
 
 
   // Determine emotional greeting based on local time
@@ -447,7 +519,7 @@ export default function App() {
     <div className="min-h-screen bg-stone-50 text-stone-900 flex flex-col md:flex-row antialiased selection:bg-[#C08261]/20">
       
       {/* MOBILE STICKY HEADER */}
-      <header className="md:hidden w-full bg-white border-b border-stone-200/55 flex items-center justify-between p-4 sticky top-0 z-30 shrink-0">
+      <header className="md:hidden w-full bg-white border-b border-stone-200/55 flex items-center justify-between p-4 sticky top-0 z-30 shrink-0 select-none">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-stone-900 rounded-xl flex items-center justify-center text-white font-serif font-semibold shadow-inner">
             D
@@ -458,6 +530,12 @@ export default function App() {
           </div>
         </div>
         
+        {/* Sementes do Reino indicator pill */}
+        <div className="flex items-center space-x-1.5 bg-[#f1f8f3] border border-emerald-100/75 px-3 py-1.5 rounded-full text-emerald-800 text-xs font-semibold font-mono shadow-xs">
+          <span className="text-sm">🌱</span>
+          <span>{sementesSaldo}</span>
+        </div>
+
         <button 
           id="mobile-menu-toggle" 
           onClick={() => setIsMobileMenuOpen(true)}
@@ -540,6 +618,22 @@ export default function App() {
                   </button>
                 </div>
               )}
+
+              {/* Sementes do Reino Mobile Quick Balance */}
+              <div className="mx-4 mt-4 px-4 py-3 bg-[#f1f8f3] border border-emerald-100/50 rounded-xl flex items-center justify-between text-left">
+                <div className="flex items-center space-x-2.5 truncate">
+                  <span className="text-base select-none animate-bounce">🌱</span>
+                  <div className="truncate">
+                    <span className="text-[9px] font-mono uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold tracking-wider leading-none">Sementes do Reino</span>
+                    <p className="text-[11px] text-emerald-950 font-sans mt-0.5 truncate font-medium">Tesouros no Secreto (Mateus 6)</p>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-sm font-bold font-mono text-emerald-800 bg-white border border-emerald-100/80 px-2.5 py-1 rounded-lg block">
+                    {sementesSaldo}
+                  </span>
+                </div>
+              </div>
 
               {/* Drawer Navigation items list */}
               <nav className="flex-1 p-4 space-y-1 overflow-y-auto w-full">
@@ -762,13 +856,29 @@ export default function App() {
               Progresso seguro de forma <strong>100% vitalícia e off-line</strong> neste navegador! 🏛️ Crie sua credencial se desejar partilhar testemunhos e meditar em outros aparelhos.
             </p>
             <button
-              onClick={() => setShowAuthModal(true)}
-              className="w-full text-center py-2.5 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-black transition cursor-pointer"
+               onClick={() => setShowAuthModal(true)}
+               className="w-full text-center py-2.5 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-black transition cursor-pointer"
             >
               Entrar / Criar Conta
             </button>
           </div>
         )}
+
+        {/* Sementes do Reino Quick Balance */}
+        <div className="mx-4 mt-4 px-4 py-3 bg-[#f1f8f3] border border-emerald-100/50 rounded-xl flex items-center justify-between text-left">
+          <div className="flex items-center space-x-2.5 truncate">
+            <span className="text-base select-none animate-bounce">🌱</span>
+            <div className="truncate">
+              <span className="text-[9px] font-mono uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold tracking-wider leading-none">Sementes do Reino</span>
+              <p className="text-[11px] text-emerald-950 font-sans mt-0.5 truncate font-medium">Tesouros no Secreto (Mateus 6)</p>
+            </div>
+          </div>
+          <div className="text-right shrink-0">
+            <span className="text-sm font-bold font-mono text-emerald-800 bg-white border border-emerald-100/80 px-2.5 py-1 rounded-lg shadow-2xs block">
+              {sementesSaldo}
+            </span>
+          </div>
+        </div>
 
         {/* Navigation lists */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -2163,40 +2273,50 @@ export default function App() {
                 <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-2xl mt-2">Acompanhe seus tempos de quietude, notas e versículos favoritos.</p>
               </div>
 
-              {/* Stat rows */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-white border border-stone-200/50 p-5 rounded-2xl flex flex-col align-left justify-center">
-                  <span className="text-[9px] uppercase font-mono text-stone-400">Constância Diária</span>
-                  <div className="flex items-baseline space-x-1 mt-1.5 text-stone-800">
-                    <span className="text-2xl font-bold font-mono">{progress.streak}</span>
-                    <span className="text-xs text-stone-400">dias</span>
-                  </div>
-                </div>
+               {/* Stat rows */}
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                 <div className="bg-white border border-stone-200/50 p-5 rounded-2xl flex flex-col align-left justify-center">
+                   <span className="text-[9px] uppercase font-mono text-stone-400">Constância Diária</span>
+                   <div className="flex items-baseline space-x-1 mt-1.5 text-stone-800">
+                     <span className="text-2xl font-bold font-mono">{progress.streak}</span>
+                     <span className="text-xs text-stone-400">dias</span>
+                   </div>
+                 </div>
 
-                <div className="bg-white border border-stone-200/50 p-5 rounded-2xl flex flex-col align-left justify-center">
-                  <span className="text-[9px] uppercase font-mono text-stone-400">Anotações Escritas</span>
-                  <div className="flex items-baseline space-x-1 mt-1.5 text-stone-850">
-                    <span className="text-2xl font-bold font-mono">{progress.savedReflections.length}</span>
-                    <span className="text-xs text-stone-400">reflexões</span>
-                  </div>
-                </div>
+                 <div className="bg-white border border-stone-200/50 p-5 rounded-2xl flex flex-col align-left justify-center">
+                   <span className="text-[9px] uppercase font-mono text-stone-400">Anotações Escritas</span>
+                   <div className="flex items-baseline space-x-1 mt-1.5 text-stone-850">
+                     <span className="text-2xl font-bold font-mono">{progress.savedReflections.length}</span>
+                     <span className="text-xs text-stone-400">reflexões</span>
+                   </div>
+                 </div>
 
-                <div className="bg-white border border-stone-200/50 p-5 rounded-2xl flex flex-col align-left justify-center">
-                  <span className="text-[9px] uppercase font-mono text-stone-400">Versos Salvos</span>
-                  <div className="flex items-baseline space-x-1 mt-1.5 text-stone-800">
-                    <span className="text-2xl font-bold font-mono">{progress.favoriteVerses.length}</span>
-                    <span className="text-xs text-stone-400">passagens</span>
-                  </div>
-                </div>
+                 <div className="bg-white border border-stone-200/50 p-5 rounded-2xl flex flex-col align-left justify-center">
+                   <span className="text-[9px] uppercase font-mono text-stone-400">Versos Salvos</span>
+                   <div className="flex items-baseline space-x-1 mt-1.5 text-stone-800">
+                     <span className="text-2xl font-bold font-mono">{progress.favoriteVerses.length}</span>
+                     <span className="text-xs text-stone-400">passagens</span>
+                   </div>
+                 </div>
 
-                <div className="bg-white border border-stone-200/50 p-5 rounded-2xl flex flex-col align-left justify-center">
-                  <span className="text-[9px] uppercase font-mono text-stone-400">Capítulos de Ebooks</span>
-                  <div className="flex items-baseline space-x-1 mt-1.5 text-stone-850">
-                    <span className="text-2xl font-bold font-mono">{progress.completedChapters.length}</span>
-                    <span className="text-xs text-stone-400">lidos</span>
-                  </div>
-                </div>
-              </div>
+                 <div className="bg-white border border-stone-200/50 p-5 rounded-2xl flex flex-col align-left justify-center">
+                   <span className="text-[9px] uppercase font-mono text-stone-400">Capítulos de Ebooks</span>
+                   <div className="flex items-baseline space-x-1 mt-1.5 text-stone-850">
+                     <span className="text-2xl font-bold font-mono">{progress.completedChapters.length}</span>
+                     <span className="text-xs text-stone-400">lidos</span>
+                   </div>
+                 </div>
+
+                 <div className="bg-[#f3faf5] border border-emerald-100/75 p-5 rounded-2xl flex flex-col align-left justify-center shadow-xs">
+                   <span className="text-[9px] uppercase font-mono text-emerald-700 font-extrabold flex items-center space-x-1">
+                     <span>🌱 Sementes do Reino</span>
+                   </span>
+                   <div className="flex items-baseline space-x-1 mt-1.5 text-emerald-800 font-bold">
+                     <span className="text-2xl font-bold font-mono">{sementesSaldo}</span>
+                     <span className="text-xs text-emerald-600 font-normal">plantadas</span>
+                   </div>
+                 </div>
+               </div>
 
               {/* HISTORIC MARCOS ESPIRITUAIS BADGES (Bento / Core features) */}
               <div id="marcos-espirituais-section" className="space-y-4 pt-4">
@@ -2336,10 +2456,10 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Saved Verses & Reflections list */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
+              {/* Saved Verses, Reflections & Sementes list */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-2">
                 {/* Notes list */}
-                <div className="space-y-4">
+                <div className="space-y-4 animate-fade-in">
                   <div className="flex items-center space-x-1.5 text-stone-800 border-b border-stone-100 pb-2">
                     <FileText size={16} className="text-[#C08261]" />
                     <h4 className="font-serif text-lg font-medium">Meus Diários e Reflexões</h4>
@@ -2367,7 +2487,7 @@ export default function App() {
                 </div>
 
                 {/* Favorite verses */}
-                <div className="space-y-4">
+                <div className="space-y-4 animate-fade-in">
                   <div className="flex items-center space-x-1.5 text-stone-850 border-b border-stone-100 pb-2">
                     <Bookmark size={15} className="text-[#C08261]" />
                     <h4 className="font-serif text-lg font-medium">Versículos Faróis Guardados</h4>
@@ -2392,6 +2512,45 @@ export default function App() {
                           <p className="text-sm md:text-base leading-relaxed font-serif italic text-stone-800">
                             "{fav.text}"
                           </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Sementes do Reino Timeline */}
+                <div className="space-y-4 animate-fade-in">
+                  <div className="flex items-center space-x-1.5 text-stone-850 border-b border-stone-100 pb-2">
+                    <span className="text-sm">🌱</span>
+                    <h4 className="font-serif text-lg font-medium">Sementes no Secreto</h4>
+                  </div>
+
+                  {sementesMovimentos.length === 0 ? (
+                    <div className="text-stone-450 text-xs py-8 px-5 text-center italic border border-dashed border-emerald-100 bg-[#fbfdfb] rounded-2xl space-y-3">
+                      <p>Nenhuma semente registrada no histórico ainda.</p>
+                      <p className="text-[11px] text-stone-400 font-sans not-italic leading-relaxed">
+                        <strong>Como pontuar:</strong> Diga "vou orar" ou "estou orando" nas conversas das <strong>Mesas de Comunhão</strong>, ou salve uma reflexão na <strong>Nuvem de Testemunhas</strong>! 🌱✨
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
+                      {sementesMovimentos.map((mov, idx) => (
+                        <div key={mov.id || idx} className="bg-white border border-stone-200/60 p-4 rounded-2xl text-left space-y-1.5 shadow-xs hover:border-emerald-250 transition-all duration-300">
+                          <div className="flex justify-between items-center text-[10px] text-stone-405 font-mono">
+                            <span className="font-extrabold uppercase text-emerald-700 tracking-wider flex items-center space-x-1">
+                              <span>🌱</span>
+                              <span>{mov.tipo === 'oracao' ? 'Oração' : 'Reflexão'}</span>
+                            </span>
+                            <span>{new Date(mov.criadoEm).toLocaleDateString()}</span>
+                          </div>
+                          <p className="text-xs text-stone-700 font-sans font-medium line-clamp-3">
+                            {mov.descricao}
+                          </p>
+                          <div className="text-right">
+                            <span className="text-[9.5px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
+                              +1 semente
+                            </span>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -2519,6 +2678,39 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Floating Sementes Particle/Popup System */}
+      <div className="fixed bottom-10 right-6 z-50 pointer-events-none flex flex-col items-end space-y-2">
+        <AnimatePresence>
+          {floatingSementes.map((item) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 50, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -80, scale: 0.9, filter: 'blur(4px)' }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-emerald-950/95 text-stone-100 border border-emerald-500/35 px-4 py-3 rounded-2xl shadow-xl flex items-center space-x-3 pointer-events-auto backdrop-blur-md max-w-sm"
+            >
+              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-lg animate-bounce shrink-0">
+                🌱
+              </div>
+              <div className="text-left">
+                <div className="flex items-center space-x-1.5">
+                  <span className="text-[10px] font-mono text-emerald-300 font-extrabold uppercase tracking-wide">
+                    +1 Semente do Reino!
+                  </span>
+                  <span className="text-[9px] bg-emerald-500/30 text-emerald-400 px-1 py-0.5 rounded font-extrabold font-mono uppercase tracking-widest leading-none">
+                    {item.tipo === 'oracao' ? '🙏 Oração' : '📖 Testemunho'}
+                  </span>
+                </div>
+                <p className="text-xs text-stone-200 mt-0.5 leading-snug font-sans truncate pr-1">
+                  {item.descricao}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

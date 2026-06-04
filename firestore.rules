@@ -68,5 +68,15 @@ service cloud.firestore {
       allow update: if isSignedIn();
       allow delete: if isSignedIn() && resource.data.creatorUid == request.auth.uid;
     }
+
+    // Sementes do Reino — visível só para o próprio usuário (Mateus 6)
+    match /sementes/{uid} {
+      allow read, write: if isOwner(uid);
+
+      match /movimentos/{movId} {
+        allow read: if isOwner(uid);
+        allow create: if isSignedIn();
+      }
+    }
   }
 }

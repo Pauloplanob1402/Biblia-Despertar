@@ -7,6 +7,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, Flame, Sparkles, BookOpen, Clock, Heart, Plus, Check, Compass, Award } from 'lucide-react';
 import { WITNESSES, Witness, WITNESS_CATEGORIES } from '../data/witnesses';
+import { plantarSemente } from '../lib/sementes';
+import { auth } from '../lib/firebase';
 
 interface WitnessesSectionProps {
   onAddReflection: (verseRef: string, text: string) => void;
@@ -29,19 +31,30 @@ export default function WitnessesSection({ onAddReflection, onShowSuccessToast }
     return matchesCategory && matchesSearch;
   });
 
-  const handleSaveReflection = (witness: Witness) => {
+  const handleSaveReflection = async (witness: Witness) => {
     const text = reflectionTexts[witness.id]?.trim();
     if (!text) return;
 
+    const uid = auth.currentUser?.uid;
+
     // Save reflection to the user's main diary
     onAddReflection(`Testemunho: ${witness.name}`, text);
-    onShowSuccessToast(`Reflexão sobre ${witness.name} guardada no seu Diário! 🕊️`);
+    onShowSuccessToast(`Reflexão sobre ${witness.name} guardada no seu Diário! 🌱 +1 Semente do Reino`);
 
     // Reset local state for this input
     setReflectionTexts((prev) => ({
       ...prev,
       [witness.id]: ''
     }));
+
+    // Gatilho: compartilhou reflexão sobre um testemunho
+    if (uid) {
+      await plantarSemente({
+        uid,
+        tipo: 'testemunho',
+        descricao: `Reflexão sobre ${witness.name}`
+      }).catch(console.error);
+    }
   };
 
   return (

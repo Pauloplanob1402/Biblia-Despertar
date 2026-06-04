@@ -13,6 +13,7 @@ import {
   arrayUnion
 } from 'firebase/firestore';
 import { db, auth, OperationType, handleFirestoreError } from '../lib/firebase';
+import { plantarSemente } from '../lib/sementes';
 import { ArrowLeft, Send, Check, CheckCheck, Smile } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -140,9 +141,7 @@ export default function ChatDM({
     const textToSend = customText !== undefined ? customText : text;
     if (!textToSend.trim() || !myUid) return;
 
-    if (customText === undefined) {
-      setText('');
-    }
+    if (customText === undefined) setText('');
 
     try {
       const messagesColRef = collection(db, 'conversations', convoId, 'messages');
@@ -154,11 +153,27 @@ export default function ChatDM({
         reactions: {}
       });
 
-      // Update parent message meta
       await updateDoc(doc(db, 'conversations', convoId), {
         lastMessage: textToSend.trim(),
         lastAt: serverTimestamp()
       });
+
+      // Gatilho: detecta intenção de oração
+      const textoNormalizado = textToSend.toLowerCase().trim();
+      const ehOracao =
+        textoNormalizado.includes('vou orar') ||
+        textoNormalizado.includes('estou orando') ||
+        textoNormalizado.includes('orando por você') ||
+        textoNormalizado.includes('orando por voce') ||
+        textoNormalizado === '🙏';
+
+      if (ehOracao) {
+        await plantarSemente({
+          uid: myUid,
+          tipo: 'oracao',
+          descricao: `Orou por ${contactName}`
+        });
+      }
     } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, `conversations/${convoId}/messages`);
     }
