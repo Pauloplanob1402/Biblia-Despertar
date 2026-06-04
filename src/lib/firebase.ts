@@ -5,8 +5,10 @@ import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-// CRITICAL: Pointing to the custom named database instance
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+// CRITICAL: Pointing to the custom named database instance if specified, otherwise default
+export const db = firebaseConfig.firestoreDatabaseId && firebaseConfig.firestoreDatabaseId !== "(default)"
+  ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
+  : getFirestore(app);
 
 export enum OperationType {
   CREATE = 'create',
