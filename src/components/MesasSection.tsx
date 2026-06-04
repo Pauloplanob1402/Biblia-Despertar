@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Mesa } from '../types';
 import { Users, Pin, Plus, Coffee, Search, Check, AlertCircle, X, MessageSquare, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { collection, onSnapshot, query } from 'firebase/firestore';
+import { collection, onSnapshot, query, addDoc, updateDoc, doc, arrayUnion, serverTimestamp, orderBy } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 
 const INITIAL_MESAS: Mesa[] = [
@@ -92,7 +92,8 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
   useEffect(() => {
     setActiveSubTab(initialTab);
   }, [initialTab]);
-  const [mesas, setMesas] = useState<Mesa[]>(INITIAL_MESAS);
+  const [mesas, setMesas] = useState<Mesa[]>([]);
+  const [mesasLoading, setMesasLoading] = useState(true);
   const [searchCity, setSearchCity] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'In-person' | 'Online'>('all');
   
@@ -134,6 +135,38 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
     return () => window.removeEventListener('open-create-mesa', handleOpenCreateMesa);
   }, []);
 
+  // Real-time listener for mesas from Firestore
+  useEffect(() => {
+    const mesasQuery = query(collection(db, 'mesas'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(mesasQuery, (snapshot) => {
+      const firestoreMesas: Mesa[] = [];
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        firestoreMesas.push({
+          id: docSnap.id,
+          title: data.title || '',
+          hostName: data.hostName || '',
+          hostBio: data.hostBio || '',
+          city: data.city || '',
+          state: data.state || '',
+          type: data.type || 'In-person',
+          address: data.address || '',
+          frequency: data.frequency || '',
+          description: data.description || '',
+          slotsTotal: data.slotsTotal || 8,
+          slotsTaken: (data.members || []).length,
+          members: data.members || [],
+        });
+      });
+      setMesas(firestoreMesas);
+      setMesasLoading(false);
+    }, (error) => {
+      console.error('Erro ao carregar mesas do Firestore:', error);
+      setMesasLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
   useEffect(() => {
     if (!currentUserId) return;
 
@@ -160,24 +193,33 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
     return () => unsubscribe();
   }, [currentUserId]);
 
-  const handleJoinMesa = (mesaId: string) => {
+  const handleJoinMesa = async (mesaId: string) => {
     if (joinedMesaIds.includes(mesaId)) return;
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      setNotification('Crie uma conta gratuita para participar de uma Mesa de Comunhão!');
+      setTimeout(() => setNotification(null), 4000);
+      return;
+    }
 
-    setMesas((prev) => 
-      prev.map((m) => {
-        if (m.id === mesaId && m.slotsTaken < m.slotsTotal) {
-          return {
-            ...m,
-            slotsTaken: m.slotsTaken + 1,
-            members: [...m.members, 'Você']
-          };
-        }
-        return m;
-      })
-    );
-    setJoinedMesaIds((prev) => [...prev, mesaId]);
-    setNotification('Inscrição efetuada com sucesso! Você pertence a esta Mesa agora.');
-    setTimeout(() => setNotification(null), 4000);
+    const mesa = mesas.find(m => m.id === mesaId);
+    if (!mesa) return;
+    if (mesa.slotsTaken >= mesa.slotsTotal) return;
+
+    try {
+      const mesaRef = doc(db, 'mesas', mesaId);
+      const memberName = currentUser.displayName || currentUser.email || currentUser.uid;
+      await updateDoc(mesaRef, {
+        members: arrayUnion(memberName),
+      });
+      setJoinedMesaIds((prev) => [...prev, mesaId]);
+      setNotification('Inscrição efetuada com sucesso! Você pertence a esta Mesa agora.');
+      setTimeout(() => setNotification(null), 4000);
+    } catch (err) {
+      console.error('Erro ao participar da mesa:', err);
+      setNotification('Erro ao participar. Tente novamente.');
+      setTimeout(() => setNotification(null), 3000);
+    }
   };
 
   const handleCreateMesaSubmit = async (e: React.FormEvent) => {
@@ -190,57 +232,61 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
     setIsSubmitting(true);
 
     try {
+      const currentUser = auth.currentUser;
+      const memberName = currentUser?.displayName || currentUser?.email || newHostName;
+
+      // Salvar no Firestore
+      await addDoc(collection(db, 'mesas'), {
+        title: newTitle,
+        hostName: newHostName,
+        hostBio: newHostBio || 'Anfitrião apaixonado pela mesa posta e graça acolhedora.',
+        city: newCity,
+        state: newState.toUpperCase() || 'SP',
+        type: newType,
+        address: newType === 'In-person' ? newAddress : 'Link Google Meet',
+        frequency: newFrequency,
+        description: newDescription,
+        contact: newContact,
+        slotsTotal: newSlots,
+        members: [memberName],
+        createdBy: currentUser?.uid || null,
+        createdAt: serverTimestamp(),
+      });
+
+      // Também notificar via Formspree se configurado
       if (formspreeId && formspreeId.trim() !== '') {
-        const payload = {
-          nome_da_mesa: newTitle,
-          tipo: newType === 'In-person' ? `Presencial (${newAddress || 'Endereço não informado'})` : 'Online / Digital',
-          frequencia: newFrequency,
-          cidade: `${newCity} - ${newState.toUpperCase() || 'SP'}`,
-          contato: newContact,
-          descricao: newDescription,
-          anfitriao: newHostName,
-          biografia_anfitriao: newHostBio || 'Anfitrião apaixonado pela mesa posta e graça acolhedora.',
-          vagas_totais: newSlots
-        };
-
-        const response = await fetch(`https://formspree.io/f/${formspreeId.trim()}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-          console.warn('Submission to Formspree returned non-ok status. Saving locally as fallback.');
+        try {
+          const payload = {
+            nome_da_mesa: newTitle,
+            tipo: newType === 'In-person' ? `Presencial (${newAddress || 'Endereço não informado'})` : 'Online / Digital',
+            frequencia: newFrequency,
+            cidade: `${newCity} - ${newState.toUpperCase() || 'SP'}`,
+            contato: newContact,
+            descricao: newDescription,
+            anfitriao: newHostName,
+            biografia_anfitriao: newHostBio || 'Anfitrião apaixonado pela mesa posta e graça acolhedora.',
+            vagas_totais: newSlots
+          };
+          await fetch(`https://formspree.io/f/${formspreeId.trim()}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } catch (fErr) {
+          console.warn('Formspree opcional falhou, mas mesa foi salva no Firestore.', fErr);
         }
       }
     } catch (err) {
-      console.error('Error submitting form to Formspree:', err);
+      console.error('Erro ao criar mesa no Firestore:', err);
+      alert('Erro ao criar a mesa. Verifique sua conexão e tente novamente.');
+      setIsSubmitting(false);
+      return;
     }
 
-    const created: Mesa = {
-      id: `mesa_${Date.now()}`,
-      title: newTitle,
-      hostName: newHostName,
-      hostBio: newHostBio || 'Anfitrião apaixonado pela mesa posta e graça acolhedora.',
-      city: newCity,
-      state: newState.toUpperCase() || 'SP',
-      type: newType,
-      address: newType === 'In-person' ? newAddress : 'Link Google Meet',
-      frequency: newFrequency,
-      description: newDescription,
-      slotsTotal: newSlots,
-      slotsTaken: 1,
-      members: [newHostName]
-    };
-
-    setMesas(prev => [created, ...prev]);
     setShowCreateModal(false);
     setIsSubmitting(false);
     
-    // Clean inputs
+    // Limpar inputs
     setNewTitle('');
     setNewHostName('');
     setNewHostBio('');
@@ -252,8 +298,8 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
     setNewContact('');
     setNewSlots(8);
 
-    setNotification('A sua nova Mesa foi inaugurada com sucesso e enviada ao painel do Formspree!');
-    setTimeout(() => setNotification(null), 4000);
+    setNotification('A sua nova Mesa foi inaugurada com sucesso e já está visível para toda a comunidade! 🎉');
+    setTimeout(() => setNotification(null), 5000);
   };
 
   const filteredMesas = mesas.filter((mesa) => {
@@ -377,7 +423,12 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
             </div>
 
             {/* Mesas list */}
-            {filteredMesas.length === 0 ? (
+            {mesasLoading ? (
+              <div className="py-16 text-center text-stone-400 text-sm">
+                <span className="w-5 h-5 border-2 border-[#C08261] border-t-transparent rounded-full animate-spin inline-block mr-2"></span>
+                Carregando as mesas da comunidade...
+              </div>
+            ) : filteredMesas.length === 0 ? (
               <div className="py-16 text-center border border-dashed border-stone-200 rounded-3xl text-stone-400 text-sm">
                 Nenhuma Mesa com estes termos de busca foi encontrada. Inaugure uma mesa e acolha seus vizinhos!
               </div>
