@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Mesa } from '../types';
 import { Users, Pin, Plus, Coffee, Search, Check, AlertCircle, X, MessageSquare, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { collection, onSnapshot, query, addDoc, updateDoc, doc, arrayUnion, serverTimestamp, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot, query, addDoc, updateDoc, doc, arrayUnion, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 
 const INITIAL_MESAS: Mesa[] = [
@@ -137,7 +137,7 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
 
   // Real-time listener for mesas from Firestore
   useEffect(() => {
-    const mesasQuery = query(collection(db, 'mesas'), orderBy('createdAt', 'desc'));
+    const mesasQuery = query(collection(db, 'mesas'));
     const unsubscribe = onSnapshot(mesasQuery, (snapshot) => {
       const firestoreMesas: Mesa[] = [];
       snapshot.forEach((docSnap) => {
