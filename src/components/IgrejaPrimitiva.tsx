@@ -367,42 +367,6 @@ export default function IgrejaPrimitiva({
     } else { showTemporaryToast("Compromisso removido."); }
   };
 
-  // ─── LIVROS: dados da biblioteca de leitura ───────────────────────────────
-  const bibliotecaLivros = [
-    {
-      categoria: "Linguagem & Copywriting",
-      cor: "from-amber-950 to-stone-950",
-      badge: "bg-amber-500/15 text-amber-400 border-amber-500/25",
-      livros: [
-        { titulo: "Palavras Mágicas (Magic Words)", autor: "Jonah Berger", emoji: "✨", insight: "Como pequenas trocas de verbo mudam drasticamente a decisão do leitor. Ideal para botões de ação e mensagens de convite." },
-        { titulo: "StoryBrand", autor: "Donald Miller", emoji: "🗺️", insight: "O usuário é o herói. Você é apenas o guia. Se você se colocar como herói, ele perde o interesse — e não abre o app." },
-        { titulo: "The Adweek Copywriting Handbook", autor: "Joseph Sugarman", emoji: "🎯", insight: "A arte dos 'escorregadores mentais': uma primeira frase tão boa que obriga a leitura da segunda, até o botão de instalar." },
-        { titulo: "How to Write Copy That Sells", autor: "Ray Edwards", emoji: "📋", insight: "Estrutura prática para explicar benefícios — não funcionalidades. O que muda na vida de quem usa, não o que o produto faz." },
-      ],
-    },
-    {
-      categoria: "Persuasão & Negociação",
-      cor: "from-stone-950 to-slate-950",
-      badge: "bg-[#C08261]/15 text-[#DCAE6C] border-[#C08261]/25",
-      livros: [
-        { titulo: "As Armas da Persuasão 2.0", autor: "Robert Cialdini", emoji: "🔑", insight: "O 7º princípio inédito — Unidade — ensina a fazer o usuário sentir que o app faz parte da identidade dele, de um grupo exclusivo." },
-        { titulo: "Manual de Persuasão do FBI", autor: "Jack Schafer", emoji: "🤝", insight: "Como criar rapport instantâneo. Essencial para o onboarding: as primeiras telas precisam gerar confiança em menos de 90 segundos." },
-        { titulo: "Como Convencer Alguém em 90 Segundos", autor: "Nicholas Boothman", emoji: "⚡", insight: "Linguagem e tom moldam a primeira impressão. Como passar autoridade e simpatia no exato segundo em que o app abre." },
-        { titulo: "Never Split the Difference", autor: "Chris Voss", emoji: "🎙️", insight: "Rótulos emocionais mudam reações. Usado no app para escrever mensagens de erro que não irritam — e de renovação que não assustam." },
-      ],
-    },
-    {
-      categoria: "Indicação & Comunidade",
-      cor: "from-emerald-950 to-stone-950",
-      badge: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
-      livros: [
-        { titulo: "Influência e Persuasão (HBR)", autor: "Harvard Business Review", emoji: "🧠", insight: "Artigos científicos sobre como pedir favores e obter ajuda. Perfeito para mecânicas de 'Indique um irmão' no Despertar." },
-        { titulo: "Give and Take (Dar e Receber)", autor: "Adam Grant", emoji: "🌱", insight: "Por que as pessoas ajudam. Como criar um ecossistema onde o usuário sente prazer em convidar, comentar e participar." },
-        { titulo: "Presuasão", autor: "Robert Cialdini", emoji: "🎬", insight: "Não é o que você diz, é o que acontece antes. Como preparar o estado emocional certo para pedir uma avaliação na loja ou um convite." },
-      ],
-    },
-  ];
-
   return (
     <div
       id="igreja-primitiva-hub"
@@ -1018,54 +982,12 @@ export default function IgrejaPrimitiva({
               </div>
             </div>
 
-            {/* Divisor */}
-            <div className="flex items-center gap-4">
-              <div className="flex-1 h-px bg-stone-200" />
-              <span className="text-[11px] font-mono uppercase tracking-widest text-stone-400 font-bold">A biblioteca que forma os líderes deste movimento</span>
-              <div className="flex-1 h-px bg-stone-200" />
-            </div>
 
-            {/* Biblioteca de Leitura — Persuasão & Copywriting */}
-            <div className="space-y-3">
-              <div className="max-w-2xl mb-6">
-                <p className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#C08261] mb-2">Livros que leio e recuso</p>
-                <h3 className="font-serif text-2xl font-light text-stone-900 leading-snug mb-2">
-                  Não basta ter algo a dizer.<br />
-                  <span className="font-semibold">É preciso saber como dizer.</span>
-                </h3>
-                <p className="text-stone-500 text-sm leading-relaxed">
-                  Estes são os livros que formam a espinha dorsal de como o Despertar fala, convida e se comunica. Cada um ensina uma dimensão diferente de como as palavras certas, ditas no momento certo, mudam decisões — e vidas.
-                </p>
-              </div>
-
-              <div className="space-y-8">
-                {bibliotecaLivros.map((secao) => (
-                  <div key={secao.categoria}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${secao.badge}`}>{secao.categoria}</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {secao.livros.map((livro) => (
-                        <div key={livro.titulo} className="bg-[#FAF8F5] border border-stone-200/70 rounded-2xl p-5 flex gap-4 hover:border-[#C08261]/30 hover:shadow-sm transition">
-                          <span className="text-2xl shrink-0 mt-0.5">{livro.emoji}</span>
-                          <div className="space-y-1 min-w-0">
-                            <p className="font-serif font-semibold text-stone-900 text-[14px] leading-snug">{livro.titulo}</p>
-                            <p className="text-[11px] font-mono text-stone-400 uppercase tracking-wide">{livro.autor}</p>
-                            <p className="text-stone-600 text-[13px] leading-relaxed pt-1">{livro.insight}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {/* Por que os livros existem */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
                 { icon: "⏳", title: "Anos de escrita", desc: "Cada página foi revisitada dezenas de vezes — não para impressionar, mas para tocar." },
-                { icon: "🙌", title: "Sem editora", desc: "São livros independentes — cada compra chega diretamente ao autor." },
                 { icon: "🌱", title: "Sua compra semeia", desc: "Cada real financia servidores, licenças e o alcance de novos leitores." },
                 { icon: "🔒", title: "Pagamento seguro", desc: "Via Kiwify — entrega automática após confirmação, sem assinaturas." },
               ].map((item) => (
@@ -1083,6 +1005,24 @@ export default function IgrejaPrimitiva({
               <div>
                 <p className="font-semibold text-stone-800 text-[14px] mb-1">Quer presentear alguém?</p>
                 <p className="text-stone-500 text-[13px] leading-relaxed">Ao finalizar a compra no Kiwify, você pode alterar o e-mail de entrega para o endereço de quem receberá o livro. É o presente que chega em segundos e fica para sempre.</p>
+              </div>
+            </div>
+
+            {/* Contato */}
+            <div className="bg-[#FAF8F5] border border-stone-200 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center gap-5">
+              <div className="w-11 h-11 rounded-full bg-[#C08261]/10 flex items-center justify-center text-xl shrink-0">✉️</div>
+              <div className="flex-1">
+                <p className="font-serif font-semibold text-stone-900 text-[15px] mb-1">Dúvidas, sugestões ou uma proposta diferente?</p>
+                <p className="text-stone-500 text-[13px] leading-relaxed mb-3">
+                  Se você tem uma ideia, quer propor uma parceria, tem uma dúvida antes de adquirir, ou simplesmente quer falar — a nossa mesa está aberta. Respondemos cada mensagem com atenção.
+                </p>
+                <a
+                  href="mailto:somosodespertar@gmail.com?subject=Contato — Livros do Despertar"
+                  className="inline-flex items-center gap-2 py-2.5 px-5 bg-stone-900 hover:bg-black text-white text-xs font-bold rounded-xl transition"
+                >
+                  <Mail size={13} />
+                  somosodespertar@gmail.com
+                </a>
               </div>
             </div>
 
