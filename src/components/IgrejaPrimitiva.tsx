@@ -34,6 +34,18 @@ import {
   BookOpen,
   Star,
 } from "lucide-react";
+import { db, handleFirestoreError, OperationType } from "../lib/firebase";
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  doc,
+  updateDoc,
+  increment,
+  serverTimestamp,
+} from "firebase/firestore";
 
 interface IgrejaPrimitivaProps {
   currentUser: any;
@@ -238,23 +250,43 @@ export default function IgrejaPrimitiva({
     const savedMural = localStorage.getItem("despertar_mural_v1");
     if (savedMural) { try { setMuralItems(JSON.parse(savedMural)); } catch (e) {} }
 
-    const savedCentelhas = localStorage.getItem("despertar_cocreated_centelhas");
-    if (savedCentelhas) {
-      try { setCentelhas(JSON.parse(savedCentelhas)); } catch (e) {}
-    } else {
-      const initialCentelhas = [
-        { id: "c1", author: "Priscila Alencar", location: "Fortaleza, CE", prompt: "Qual foi a batalha que ninguém viu você vencer?", content: "Silenciar o choro na cozinha para que meus filhos não se assustassem, e dobrar os joelhos no azulejo gelado. Senti uma mão quente no meu ombro dizendo: 'Eu estou cuidando de tudo'. E desde então, sei que não estou sozinha.", votes: 78, voted: false },
-        { id: "c2", author: "Thiago Mendes", location: "Niterói, RJ", prompt: "Ninguém deveria enfrentar seus dias sozinho. O que você diria para alguém hoje?", content: "Você não está atrasado. Você está sendo preparado. O deserto não é o fim da sua história; é onde o poço de água viva é cavado no seu interior.", votes: 54, voted: false },
-        { id: "c3", author: "Débora Santos", location: "Goiânia, GO", prompt: "Em qual momento desta semana você sentiu o sopro da graça?", content: "Quando eu ia apagar o aplicativo e desistir da minha constância de oração. Uma notificação me lembrou de respirar fundo por 4 segundos. Aquele respiro mudou meu dia.", votes: 91, voted: false }
-      ];
-      setCentelhas(initialCentelhas);
-      localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(initialCentelhas));
-    }
-
-    const interval = setInterval(() => {
-      setVagasRestantes((prev) => prev > 12 ? prev - (Math.random() > 0.85 ? 1 : 0) : prev);
-    }, 15000);
-    return () => clearInterval(interval);
+    // Centelhas: listener Firestore em tempo real (todos os usuários veem as mesmas)
+    const centelhasQuery = query(
+      collection(db, "centelhas"),
+      orderBy("createdAt", "desc")
+    );
+    const unsubCentelhas = onSnapshot(
+      centelhasQuery,
+      (snap) => {
+        const items = snap.docs.map((d) => ({
+          id: d.id,
+          author: d.data().author || "Peregrino Sincero",
+          location: d.data().location || "Brasil",
+          prompt: d.data().prompt || "",
+          content: d.data().content || "",
+          votes: d.data().votes || 0,
+          voted: false,
+        }));
+        // Se ainda não há nenhuma centelha no Firestore, semente com os exemplos iniciais
+        if (items.length === 0) {
+          const initialCentelhas = [
+            { id: "c1", author: "Priscila Alencar", location: "Fortaleza, CE", prompt: "Qual foi a batalha que ninguém viu você vencer?", content: "Silenciar o choro na cozinha para que meus filhos não se assustassem, e dobrar os joelhos no azulejo gelado. Senti uma mão quente no meu ombro dizendo: 'Eu estou cuidando de tudo'. E desde então, sei que não estou sozinha.", votes: 78, voted: false },
+            { id: "c2", author: "Thiago Mendes", location: "Niterói, RJ", prompt: "Ninguém deveria enfrentar seus dias sozinho. O que você diria para alguém hoje?", content: "Você não está atrasado. Você está sendo preparado. O deserto não é o fim da sua história; é onde o poço de água viva é cavado no seu interior.", votes: 54, voted: false },
+            { id: "c3", author: "Débora Santos", location: "Goiânia, GO", prompt: "Em qual momento desta semana você sentiu o sopro da graça?", content: "Quando eu ia apagar o aplicativo e desistir da minha constância de oração. Uma notificação me lembrou de respirar fundo por 4 segundos. Aquele respiro mudou meu dia.", votes: 91, voted: false },
+          ];
+          setCentelhas(initialCentelhas);
+        } else {
+          setCentelhas(items);
+        }
+      },
+      (error) => {
+        console.warn("Centelhas listener error:", error);
+        // Fallback localStorage
+        const saved = localStorage.getItem("despertar_cocreated_centelhas");
+        if (saved) { try { setCentelhas(JSON.parse(saved)); } catch (e) {} }
+      }
+    );
+    return () => unsubCentelhas();
   }, []);
 
   const saveMuralToStorage = (updatedMural: MuralItem[]) => {
