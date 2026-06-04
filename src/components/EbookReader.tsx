@@ -86,6 +86,7 @@ export default function EbookReader({
       {/* Catalog Home View */}
       {!isReadingMode ? (
         <div className="space-y-6 animate-fadeIn">
+          {/* Header — StoryBrand: usuário é o herói, o livro é o guia */}
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#C08261] font-bold block mb-1.5">12 Inspiradores do Despertar</span>
             <h3 className="font-serif text-3xl md:text-5xl font-light text-stone-850 tracking-tight leading-tight">Cultura de Graça</h3>
@@ -94,21 +95,40 @@ export default function EbookReader({
             </p>
           </div>
 
-          <div id="ebooks-catalog-list" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+          {/* Nudge bar — Cialdini Unidade + Berger "Palavras Mágicas": posse antecipada */}
+          <div className="max-w-3xl mx-auto bg-[#FAF6F0] border border-[#DCAE6C]/30 rounded-2xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-start space-x-3">
+              <span className="text-lg mt-0.5 select-none">📖</span>
+              <div>
+                <p className="text-xs font-mono font-black uppercase tracking-wider text-stone-700">
+                  Leitura gratuita — sem cartão, sem cadastro
+                </p>
+                <p className="text-xs text-stone-500 mt-0.5 leading-relaxed">
+                  Os três primeiros capítulos de cada livro são seus, agora. As edições completas chegam em breve — e quem já começou a ler, vai querer ser o primeiro a saber.
+                </p>
+              </div>
+            </div>
+            <span className="shrink-0 text-[10px] font-mono font-black uppercase tracking-widest bg-emerald-100 text-emerald-800 border border-emerald-200/60 px-3 py-1.5 rounded-full whitespace-nowrap">
+              ✓ 100% grátis agora
+            </span>
+          </div>
+
+          <div id="ebooks-catalog-list" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
             {DESPERTAR_EBOOKS.map((book) => {
               return (
                 <div
                   id={`ebook-card-${book.id}`}
                   key={book.id}
                   onClick={() => handleBookClick(book)}
-                  className="bg-white border border-stone-250/40 rounded-2xl p-6 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex flex-col justify-between h-[300px] relative group overflow-hidden"
+                  className="bg-white border border-stone-250/40 rounded-2xl p-6 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex flex-col justify-between h-[320px] relative group overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-stone-50 group-hover:bg-[#C08261]/5 transition-colors rounded-bl-full -z-10" />
 
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">
+                      {/* Sugarman "escorregador": badge cria curiosidade imediata */}
                       <span className="text-[9px] font-mono tracking-widest px-2.5 py-1 rounded-full uppercase bg-green-50 text-green-700 border border-green-200/50">
-                        LIVRE
+                        Leitura gratuita
                       </span>
                       <BookOpen size={14} className="text-stone-400 group-hover:text-[#C08261] transition-all" />
                     </div>
@@ -122,18 +142,27 @@ export default function EbookReader({
                   </div>
 
                   <div className="flex items-center justify-between pt-4 border-t border-stone-100 z-10">
-                    <span className="text-[10px] text-stone-400 font-medium">{book.chapters.length} Capítulos</span>
+                    {/* Ray Edwards: benefício, não funcionalidade */}
+                    <span className="text-[10px] text-stone-400 font-medium">{book.chapters.length} cap. disponíveis</span>
+                    {/* Berger "Magic Words": verbo de ação concreta */}
                     <button
                       id={`btn-open-ebook-${book.id}`}
                       className="text-xs font-semibold text-[#C08261] flex items-center space-x-0.5 hover:underline"
                     >
-                      <span>Acessar</span>
+                      <span>Começar a ler</span>
                       <ChevronRight size={14} />
                     </button>
                   </div>
                 </div>
               );
             })}
+          </div>
+
+          {/* Âncora de antecipação — Presuasão (Cialdini): prepara o estado antes do pedido */}
+          <div className="max-w-3xl mx-auto text-center space-y-2 pt-4 pb-2">
+            <p className="text-xs text-stone-400 font-sans leading-relaxed">
+              As edições completas — com todos os capítulos — estão a caminho. Se quiser ser avisado quando chegarem, crie sua conta gratuita. Quem já leu os primeiros capítulos recebe o aviso primeiro.
+            </p>
           </div>
         </div>
       ) : (
@@ -246,16 +275,30 @@ export default function EbookReader({
                             Continue caminhando
                           </button>
                         ) : (
-                          <button
-                            id="btn-cozy-finish"
-                            onClick={() => {
-                              onCompleteChapter(selectedBook.id, activeChapterIndex);
-                              setIsReadingMode(false);
-                            }}
-                            className="px-5 py-2.5 bg-[#C08261] hover:bg-[#b07353] text-white text-sm font-semibold rounded-xl tracking-wide transition shadow-xs"
-                          >
-                            Concluir esta leitura
-                          </button>
+                          <>
+                            <button
+                              id="btn-cozy-finish"
+                              onClick={() => {
+                                onCompleteChapter(selectedBook.id, activeChapterIndex);
+                                setIsReadingMode(false);
+                              }}
+                              className="px-5 py-2.5 bg-[#C08261] hover:bg-[#b07353] text-white text-sm font-semibold rounded-xl tracking-wide transition shadow-xs"
+                            >
+                              Concluir esta leitura
+                            </button>
+                            {/* Presuasão (Cialdini): estado emocional alto → pedido sutil */}
+                            <div className="w-full mt-4 p-5 bg-[#FAF6F0] border border-[#DCAE6C]/30 rounded-2xl text-center space-y-2">
+                              <p className="font-serif text-sm text-stone-700 italic">
+                                "Você acabou de ler o que está disponível desta jornada."
+                              </p>
+                              <p className="text-xs text-stone-500 leading-relaxed max-w-sm mx-auto">
+                                Os capítulos seguintes — onde a história vai mais fundo — estão sendo preparados. Crie sua conta gratuita e você será o primeiro a receber quando chegarem.
+                              </p>
+                              <p className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-bold pt-1">
+                                Enquanto isso, há mais 11 histórias esperando por você ↓
+                              </p>
+                            </div>
+                          </>
                         )}
 
                         <button
