@@ -244,7 +244,7 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
         criadorNome: firstName,
         criadorGenerico: dynamicGenerico,
         categorias: selectedOracaoCats,
-        descricaoCurta: pedidoDesc.trim().substring(0, 120),
+        descricaoCurta: pedidoDesc.trim().substring(0, 500),
         cidade: pedidoCidade.trim() || null,
         contadorOracoes: 0,
         respondido: false,
@@ -511,18 +511,18 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center">
                       <label className="text-[10px] font-mono uppercase font-black text-stone-500">
-                        Compartilhe em poucas palavras (Até 120 caracteres)
+                        Compartilhe em poucas palavras (Até 500 caracteres)
                       </label>
                       <span className="text-[10px] font-mono text-stone-400">
-                        {pedidoDesc.length}/120
+                        {pedidoDesc.length}/500
                       </span>
                     </div>
                     <textarea
                       placeholder="Ex: Entrego a ansiedade sobre as decisões familiares aos pés da cruz. Busco sabedoria de Deus."
                       value={pedidoDesc}
-                      onChange={(e) => setPedidoDesc(e.target.value.substring(0, 120))}
+                      onChange={(e) => setPedidoDesc(e.target.value.substring(0, 500))}
                       rows={2}
-                      maxLength={120}
+                      maxLength={500}
                       className="w-full bg-white border border-stone-200 focus:border-[#C08261]/60 p-3 rounded-2xl text-[13.5px] text-stone-800 placeholder-stone-400 focus:outline-none transition leading-relaxed resize-none"
                     />
                   </div>
