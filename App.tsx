@@ -67,6 +67,26 @@ export default function App() {
   const [homeRef, setHomeRef] = useState("");
   const [homeText, setHomeText] = useState("");
 
+  // UX: Onboarding (Comece Aqui) — mostrar apenas para novos visitantes
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
+    try { return !localStorage.getItem('bd_onboarding_done'); } catch { return true; }
+  });
+  const dismissOnboarding = () => {
+    try { localStorage.setItem('bd_onboarding_done', '1'); } catch {}
+    setShowOnboarding(false);
+  };
+
+  // UX: Streak diário — confirmação visual de "quietude de hoje concluída"
+  const [todayStreakDone, setTodayStreakDone] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('bd_streak_today') === new Date().toISOString().split('T')[0];
+    } catch { return false; }
+  });
+  const markTodayStreakDone = () => {
+    try { localStorage.setItem('bd_streak_today', new Date().toISOString().split('T')[0]); } catch {}
+    setTodayStreakDone(true);
+  };
+
   const handleCopyToClipboard = (text: string) => {
     try {
       navigator.clipboard.writeText(text);
@@ -712,120 +732,109 @@ export default function App() {
                 </div>
               )}
 
-              {/* Drawer Navigation — 5 itens principais */}
+              {/* Drawer Navigation — 5 itens principais + sub-navegação colapsável */}
               <nav className="flex-1 p-4 space-y-1 overflow-y-auto w-full">
 
-                {/* 1. INÍCIO */}
                 <button
                   id="mobile-nav-home"
                   onClick={() => { setActiveSection('home'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center px-3 py-3 rounded-xl text-left text-sm font-semibold transition ${
-                    activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
+                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
+                    activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
                   }`}
                 >
-                  <span className="flex items-center space-x-3">
+                  <span className="flex items-center space-x-2.5">
                     <Sparkles size={15} />
                     <span>Início</span>
                   </span>
                 </button>
 
-                {/* 2. PALAVRA */}
                 <button
                   id="mobile-nav-palavra"
                   onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center px-3 py-3 rounded-xl text-left text-sm font-semibold transition ${
-                    ['devotionals','bible','respiro','ebooks'].includes(activeSection) ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
+                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
+                    (activeSection === 'devotionals' || activeSection === 'bible' || activeSection === 'respiro') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
                   }`}
                 >
-                  <span className="flex items-center space-x-3">
+                  <span className="flex items-center space-x-2.5">
                     <Book size={15} />
                     <span>Palavra</span>
                   </span>
+                  <span className="text-[9px] text-stone-400 font-mono">Café · Bíblia · Respiro</span>
                 </button>
-                <div className="ml-7 space-y-0.5 pb-1">
-                  {[
-                    { id: 'devotionals', label: 'Devocional diário' },
-                    { id: 'bible', label: 'Bíblia' },
-                    { id: 'respiro', label: 'Respiração guiada' },
-                    { id: 'ebooks', label: 'Livros' },
-                  ].map(item => (
-                    <button key={item.id} onClick={() => { setActiveSection(item.id as any); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                      className={`w-full flex items-center px-3 py-1.5 rounded-lg text-left text-xs font-medium transition ${
-                        activeSection === item.id ? 'text-[#C08261] font-semibold' : 'text-stone-500 hover:text-stone-700'
-                      }`}>
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
 
-                {/* 3. COMUNIDADE */}
                 <button
                   id="mobile-nav-comunidade"
                   onClick={() => { setActiveSection('mural'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center px-3 py-3 rounded-xl text-left text-sm font-semibold transition ${
-                    ['mural','testemunhas','primitiva','profiles'].includes(activeSection) ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
+                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
+                    (activeSection === 'mural' || activeSection === 'testemunhas') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
                   }`}
                 >
-                  <span className="flex items-center space-x-3">
-                    <Compass size={15} />
+                  <span className="flex items-center space-x-2.5">
+                    <Heart size={15} />
                     <span>Comunidade</span>
                   </span>
+                  <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Novo</span>
                 </button>
-                <div className="ml-7 space-y-0.5 pb-1">
-                  {[
-                    { id: 'mural', label: 'Mural de oração' },
-                    { id: 'testemunhas', label: 'Testemunhos' },
-                    { id: 'primitiva', label: 'Igreja Primitiva' },
-                    { id: 'profiles', label: 'Jornadas' },
-                  ].map(item => (
-                    <button key={item.id} onClick={() => { setActiveSection(item.id as any); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                      className={`w-full flex items-center px-3 py-1.5 rounded-lg text-left text-xs font-medium transition ${
-                        activeSection === item.id ? 'text-[#C08261] font-semibold' : 'text-stone-500 hover:text-stone-700'
-                      }`}>
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
 
-                {/* 4. MESAS */}
                 <button
-                  id="mobile-nav-mesas"
+                  id="mobile-nav-mesas-main"
                   onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center px-3 py-3 rounded-xl text-left text-sm font-semibold transition ${
-                    activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
+                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
+                    activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
                   }`}
                 >
-                  <span className="flex items-center space-x-3">
-                    <MessageSquare size={15} />
+                  <span className="flex items-center space-x-2.5">
+                    <Coffee size={15} />
                     <span>Mesas</span>
                   </span>
+                  <span className="text-[9px] text-stone-400 font-mono">Grupos · Chat</span>
                 </button>
-                <div className="ml-7 space-y-0.5 pb-1">
-                  {[
-                    { sub: 'mesas' as const, label: 'Mesas de comunhão' },
-                    { sub: 'pilgrims' as const, label: 'Chat & conexões' },
-                  ].map(item => (
-                    <button key={item.sub} onClick={() => { setActiveSection('mesas'); setMesasSubTab(item.sub); setIsMobileMenuOpen(false); }}
-                      className={`w-full flex items-center px-3 py-1.5 rounded-lg text-left text-xs font-medium transition ${
-                        activeSection === 'mesas' && mesasSubTab === item.sub ? 'text-[#C08261] font-semibold' : 'text-stone-500 hover:text-stone-700'
-                      }`}>
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
 
-                {/* 5. PERFIL */}
                 <button
-                  id="mobile-nav-profile"
+                  id="mobile-nav-profile-main"
                   onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center px-3 py-3 rounded-xl text-left text-sm font-semibold transition ${
-                    activeSection === 'profile' ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
+                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
+                    (activeSection === 'profile' || activeSection === 'profiles') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
                   }`}
                 >
-                  <span className="flex items-center space-x-3">
+                  <span className="flex items-center space-x-2.5">
                     <User size={15} />
                     <span>Perfil</span>
                   </span>
+                </button>
+
+                {/* Sub-navegação colapsável */}
+                <div className="pt-3 mt-3 border-t border-stone-100">
+                  <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2">Explorar</span>
+                  {[
+                    { id: 'respiro', icon: <Heart size={12}/>, label: 'Respiro — guia de respiração', section: 'respiro' as const },
+                    { id: 'primitiva', icon: <Flame size={12} className="text-[#C08261]"/>, label: 'Igreja Primitiva — fundador', section: 'primitiva' as const },
+                    { id: 'bible', icon: <Book size={12}/>, label: 'Bíblia — leitura completa', section: 'bible' as const },
+                    { id: 'testemunhas', icon: <Award size={12}/>, label: 'Testemunhas — graças manifestadas', section: 'testemunhas' as const },
+                    { id: 'profiles', icon: <Compass size={12}/>, label: 'Caminhos do Coração — identidade', section: 'profiles' as const },
+                    { id: 'ebooks', icon: <FileText size={12}/>, label: 'Livros da Jornada', section: 'ebooks' as const },
+                  ].map(item => (
+                    <button key={item.id}
+                      onClick={() => { setActiveSection(item.section); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                      className={`w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-left text-xs font-medium transition ${activeSection === item.section ? 'text-[#C08261] font-semibold' : 'text-stone-500 hover:bg-stone-50'}`}
+                    >
+                      {item.icon}<span>{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  id="mobile-nav-apps"
+                  onClick={() => { setActiveSection('apps'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition mt-2 ${
+                    activeSection === 'apps' ? 'bg-[#C08261]/15 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Smartphone size={14} className="text-[#C08261]" />
+                    <span>Baixar o App 📱</span>
+                  </span>
+                  <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold animate-pulse">Instalar</span>
                 </button>
 
                 {/* Separador e Cards de Apoio (Sementes & Clamores) ao final da navegação */}
@@ -934,129 +943,75 @@ export default function App() {
           </div>
         )}
 
-        {/* Navigation lists — 5 itens principais (UX: Essencialismo + Don't Make Me Think) */}
+        {/* Navigation — 5 itens principais + sub-navegação */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
 
-          {/* 1. INÍCIO */}
-          <button
-            id="nav-home"
-            onClick={() => { setActiveSection('home'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-sm font-semibold transition ${
-              activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
-            }`}
+          {/* ── 5 PRINCIPAIS ── */}
+          <button id="nav-home" onClick={() => { setActiveSection('home'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
           >
-            <span className="flex items-center space-x-3">
-              <Sparkles size={15} />
-              <span>Início</span>
-            </span>
+            <span className="flex items-center space-x-2.5"><Sparkles size={14} /><span>Início</span></span>
           </button>
 
-          {/* 2. PALAVRA — agrupa Bíblia + Devocional + Respiro + Livros */}
-          <button
-            id="nav-palavra"
-            onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-sm font-semibold transition ${
-              ['devotionals','bible','respiro','ebooks'].includes(activeSection) ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
-            }`}
+          <button id="nav-palavra" onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${(activeSection === 'devotionals' || activeSection === 'bible' || activeSection === 'respiro') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
           >
-            <span className="flex items-center space-x-3">
-              <Book size={15} />
-              <span>Palavra</span>
-            </span>
+            <span className="flex items-center space-x-2.5"><Book size={14} /><span>Palavra</span></span>
+            <span className="text-[9px] text-stone-300 font-mono hidden xl:block">Café · Bíblia · Respiro</span>
           </button>
-          {/* Sub-nav Palavra */}
-          {['devotionals','bible','respiro','ebooks'].includes(activeSection) && (
-            <div className="ml-7 space-y-0.5 pb-1">
-              {[
-                { id: 'devotionals', label: 'Devocional diário', icon: <Coffee size={12}/> },
-                { id: 'bible', label: 'Bíblia', icon: <Book size={12}/> },
-                { id: 'respiro', label: 'Respiração guiada', icon: <Heart size={12}/> },
-                { id: 'ebooks', label: 'Livros', icon: <FileText size={12}/> },
-              ].map(item => (
-                <button key={item.id} onClick={() => { setActiveSection(item.id as any); setSelectedDevotional(null); }}
-                  className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left text-xs font-medium transition ${
-                    activeSection === item.id ? 'text-[#C08261] font-semibold' : 'text-stone-500 hover:text-stone-700'
-                  }`}>
-                  {item.icon}<span>{item.label}</span>
-                </button>
-              ))}
-            </div>
-          )}
 
-          {/* 3. COMUNIDADE — agrupa Mural + Testemunhas + Igreja Primitiva + Perfis */}
-          <button
-            id="nav-comunidade"
-            onClick={() => { setActiveSection('mural'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-sm font-semibold transition ${
-              ['mural','testemunhas','primitiva','profiles'].includes(activeSection) ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
-            }`}
+          <button id="nav-comunidade" onClick={() => { setActiveSection('mural'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${(activeSection === 'mural' || activeSection === 'testemunhas') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
           >
-            <span className="flex items-center space-x-3">
-              <Compass size={15} />
-              <span>Comunidade</span>
-            </span>
+            <span className="flex items-center space-x-2.5"><Heart size={14} /><span>Comunidade</span></span>
+            <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Novo</span>
           </button>
-          {/* Sub-nav Comunidade */}
-          {['mural','testemunhas','primitiva','profiles'].includes(activeSection) && (
-            <div className="ml-7 space-y-0.5 pb-1">
-              {[
-                { id: 'mural', label: 'Mural de oração', icon: <Compass size={12}/> },
-                { id: 'testemunhas', label: 'Testemunhos', icon: <Award size={12}/> },
-                { id: 'primitiva', label: 'Igreja Primitiva', icon: <Flame size={12}/> },
-                { id: 'profiles', label: 'Jornadas', icon: <Compass size={12}/> },
-              ].map(item => (
-                <button key={item.id} onClick={() => { setActiveSection(item.id as any); setSelectedDevotional(null); }}
-                  className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left text-xs font-medium transition ${
-                    activeSection === item.id ? 'text-[#C08261] font-semibold' : 'text-stone-500 hover:text-stone-700'
-                  }`}>
-                  {item.icon}<span>{item.label}</span>
-                </button>
-              ))}
-            </div>
-          )}
 
-          {/* 4. MESAS — agrupa Mesas + Chat */}
-          <button
-            id="nav-mesas"
-            onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-sm font-semibold transition ${
-              activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
-            }`}
+          <button id="nav-mesas" onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
           >
-            <span className="flex items-center space-x-3">
-              <MessageSquare size={15} />
-              <span>Mesas</span>
-            </span>
+            <span className="flex items-center space-x-2.5"><Coffee size={14} /><span>Mesas</span></span>
+            <span className="text-[9px] text-stone-300 font-mono hidden xl:block">Grupos · Chat</span>
           </button>
-          {/* Sub-nav Mesas */}
-          {activeSection === 'mesas' && (
-            <div className="ml-7 space-y-0.5 pb-1">
-              {[
-                { sub: 'mesas' as const, label: 'Mesas de comunhão' },
-                { sub: 'pilgrims' as const, label: 'Chat & conexões' },
-              ].map(item => (
-                <button key={item.sub} onClick={() => setMesasSubTab(item.sub)}
-                  className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left text-xs font-medium transition ${
-                    mesasSubTab === item.sub ? 'text-[#C08261] font-semibold' : 'text-stone-500 hover:text-stone-700'
-                  }`}>
-                  <span>{item.label}</span>
-                </button>
-              ))}
-            </div>
-          )}
 
-          {/* 5. PERFIL */}
+          <button id="nav-profile" onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${(activeSection === 'profile' || activeSection === 'profiles') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
+          >
+            <span className="flex items-center space-x-2.5"><User size={14} /><span>Perfil</span></span>
+          </button>
+
+          {/* ── SUB-NAVEGAÇÃO ── */}
+          <div className="pt-3 mt-3 border-t border-stone-100/70">
+            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2">Explorar</span>
+            {[
+              { id: 'respiro', icon: <Heart size={12}/>, label: 'Respiro — respiração', section: 'respiro' as const },
+              { id: 'primitiva', icon: <Flame size={12} className="text-[#C08261]"/>, label: 'Igreja Primitiva', section: 'primitiva' as const },
+              { id: 'bible', icon: <Book size={12}/>, label: 'Bíblia completa', section: 'bible' as const },
+              { id: 'testemunhas', icon: <Award size={12}/>, label: 'Nuvem de Testemunhas', section: 'testemunhas' as const },
+              { id: 'profiles', icon: <Compass size={12}/>, label: 'Caminhos do Coração', section: 'profiles' as const },
+              { id: 'ebooks', icon: <FileText size={12}/>, label: 'Livros da Jornada', section: 'ebooks' as const },
+            ].map(item => (
+              <button key={item.id}
+                onClick={() => { setActiveSection(item.section); setSelectedDevotional(null); }}
+                className={`w-full flex items-center space-x-2.5 px-3 py-1.5 rounded-lg text-left text-[11px] font-medium transition ${activeSection === item.section ? 'text-[#C08261] font-semibold' : 'text-stone-400 hover:bg-stone-50 hover:text-stone-600'}`}
+              >
+                {item.icon}<span>{item.label}</span>
+              </button>
+            ))}
+          </div>
+
           <button
-            id="nav-profile"
-            onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-sm font-semibold transition ${
-              activeSection === 'profile' ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
+            id="nav-apps"
+            onClick={() => { setActiveSection('apps'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition mt-2 ${
+              activeSection === 'apps' ? 'bg-[#C08261]/15 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
             }`}
           >
-            <span className="flex items-center space-x-3">
-              <User size={15} />
-              <span>Perfil</span>
+            <span className="flex items-center space-x-2.5">
+              <Smartphone size={14} className="text-[#C08261]" />
+              <span>Baixar o App 📱</span>
             </span>
+            <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold animate-pulse">Instalar</span>
           </button>
 
           {/* Separador e Cards de Apoio (Sementes & Clamores) ao final da navegação */}
@@ -1123,74 +1078,7 @@ export default function App() {
               exit={{ opacity: 0, y: -15 }}
               className="space-y-8 text-left"
             >
-              {/* COMECE AQUI — StoryBrand 3-passo (exibe só quando streak <= 3 e menos de 1 reflexão salva) */}
-              {progress.streak <= 3 && (progress.savedReflections || []).length === 0 && (
-                <div className="bg-gradient-to-r from-[#C08261]/10 to-[#DCAE6C]/10 border border-[#C08261]/30 rounded-3xl p-6 md:p-8 space-y-5 text-left">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs font-mono uppercase tracking-widest text-[#C08261] font-black bg-[#C08261]/10 px-3 py-1 rounded-full">✦ Comece Aqui</span>
-                  </div>
-                  <h3 className="font-serif text-xl md:text-2xl font-bold text-stone-850 leading-snug">
-                    Três passos para sua primeira quietude
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {[
-                      {
-                        num: '1',
-                        title: 'Respire',
-                        desc: 'Faça um exercício de respiração guiada — 4 segundos, sem cadastro.',
-                        action: 'Praticar agora',
-                        section: 'respiro' as const,
-                        done: (progress.completedChallenges || []).includes('breathe'),
-                      },
-                      {
-                        num: '2',
-                        title: 'Leia',
-                        desc: 'Abra o devocional de hoje e deixe uma Palavra pousar no seu coração.',
-                        action: 'Ver devocional',
-                        section: 'devotionals' as const,
-                        done: (progress.completedChallenges || []).includes('read'),
-                      },
-                      {
-                        num: '3',
-                        title: 'Escreva',
-                        desc: 'Anote uma reflexão breve no seu diário. Leva 1 minuto.',
-                        action: 'Escrever',
-                        section: 'home' as const,
-                        done: (progress.completedChallenges || []).includes('reflection'),
-                        scroll: 'altar-scripture-ref',
-                      },
-                    ].map(step => (
-                      <div key={step.num} className={`p-4 rounded-2xl border space-y-2 transition ${step.done ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-stone-200'}`}>
-                        <div className="flex items-center space-x-2">
-                          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${step.done ? 'bg-emerald-500 text-white' : 'bg-stone-900 text-white'}`}>
-                            {step.done ? '✓' : step.num}
-                          </span>
-                          <span className="font-serif font-bold text-stone-850 text-sm">{step.title}</span>
-                        </div>
-                        <p className="text-xs text-stone-500 leading-relaxed">{step.desc}</p>
-                        {!step.done && (
-                          <button
-                            onClick={() => {
-                              if (step.scroll) {
-                                const el = document.getElementById(step.scroll);
-                                if (el) el.scrollIntoView({ behavior: 'smooth' });
-                              } else {
-                                setActiveSection(step.section);
-                                setSelectedDevotional(null);
-                              }
-                            }}
-                            className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#C08261] hover:underline"
-                          >
-                            {step.action} →
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Emotional Welcome Banner */}
+              {/* Emotional Custom Welcome Header and Streak */}
               <div id="emotional-banner" className="relative group overflow-hidden bg-gradient-to-br from-[#1E1C1A] via-[#121110] to-[#0A0A09] p-8 md:p-10 rounded-3xl border border-[#DCAE6C]/25 shadow-xl space-y-6">
                 {/* Golden Sunburst background effect */}
                 <div className="absolute top-0 right-0 w-[250px] h-[250px] bg-gradient-to-b from-[#DCAE6C]/10 to-transparent pointer-events-none rounded-full blur-3xl -mr-16 -mt-16 opacity-80 animate-pulse" />
@@ -1220,21 +1108,27 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Micro-interactive Streak card */}
-                  <div className="flex items-center space-x-4 bg-[#1F1D1B] py-4 px-6 rounded-2xl shadow-lg border border-[#DCAE6C]/15 backdrop-blur-xs shrink-0 self-start md:self-auto hover:border-[#DCAE6C]/40 transition-colors duration-300">
-                    <Flame size={24} fill="#DCAE6C" className="text-[#DCAE6C] animate-pulse" />
-                    <div className="text-left font-mono">
-                      <span className="text-2xl font-black text-[#DCAE6C]">{progress.streak} dias</span>
-                      <p className="text-xs text-stone-400 uppercase tracking-widest font-bold mt-1">À Mesa do Pai</p>
-                      {/* Feedback claro da ação diária — Mudança 3 UX */}
-                      {(progress.completedChallenges || []).length === 3 ? (
-                        <span className="text-[10px] text-emerald-400 font-bold font-mono mt-1 block">✓ Quietude de hoje concluída</span>
-                      ) : (progress.completedChallenges || []).length > 0 ? (
-                        <span className="text-[10px] text-amber-400 font-bold font-mono mt-1 block">{(progress.completedChallenges || []).length}/3 passos hoje</span>
-                      ) : (
-                        <span className="text-[10px] text-stone-500 font-mono mt-1 block">Complete os 3 passos ↓</span>
-                      )}
+                  {/* Micro-interactive Streak card — com confirmação diária clara */}
+                  <div className="flex flex-col items-center bg-[#1F1D1B] py-4 px-6 rounded-2xl shadow-lg border border-[#DCAE6C]/15 backdrop-blur-xs shrink-0 self-start md:self-auto hover:border-[#DCAE6C]/40 transition-colors duration-300 space-y-2 min-w-[140px]">
+                    <div className="flex items-center space-x-3">
+                      <Flame size={22} fill="#DCAE6C" className="text-[#DCAE6C] animate-pulse" />
+                      <div className="text-left font-mono">
+                        <span className="text-2xl font-black text-[#DCAE6C]">{progress.streak} dias</span>
+                        <p className="text-[10px] text-stone-400 uppercase tracking-widest font-bold">À Mesa do Pai</p>
+                      </div>
                     </div>
+                    {todayStreakDone ? (
+                      <span className="w-full text-center text-[10px] bg-emerald-900/60 text-emerald-300 border border-emerald-700/40 rounded-lg px-2 py-1 font-mono font-bold uppercase tracking-wider">
+                        ✓ Quietude de hoje concluída
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); markTodayStreakDone(); }}
+                        className="w-full text-center text-[10px] bg-[#DCAE6C]/10 hover:bg-[#DCAE6C]/20 text-[#DCAE6C] border border-[#DCAE6C]/20 rounded-lg px-2 py-1 font-mono font-bold uppercase tracking-wider transition"
+                      >
+                        ☕ Fazer quietude de hoje
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -1259,7 +1153,41 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Zero Fricção: Palavra do Silêncio Banner (Novo Poder) */}
+              {/* ── COMECE AQUI: Onboarding StoryBrand 3 passos (apenas novos visitantes) ── */}
+              {showOnboarding && (
+                <div className="bg-gradient-to-br from-stone-900 to-stone-800 border border-[#DCAE6C]/30 rounded-3xl p-6 md:p-8 text-left relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-[#DCAE6C]/8 rounded-full blur-2xl pointer-events-none" />
+                  <div className="flex justify-between items-start mb-5 relative z-10">
+                    <div>
+                      <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] uppercase font-mono tracking-widest text-[#DCAE6C] bg-[#DCAE6C]/10 border border-[#DCAE6C]/20 font-bold">
+                        👋 Comece Aqui
+                      </span>
+                      <h3 className="font-serif text-xl md:text-2xl font-semibold text-stone-100 mt-3 leading-snug">
+                        Três passos para sua primeira quietude
+                      </h3>
+                    </div>
+                    <button onClick={dismissOnboarding} className="text-stone-400 hover:text-stone-200 text-xs font-mono shrink-0 ml-4 mt-1 transition">✕ fechar</button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
+                    {[
+                      { step: '1', title: 'Descubra sua identidade', desc: 'Qual peregrino você é? Encontre seu perfil espiritual.', action: () => { setActiveSection('profiles'); setSelectedDevotional(null); dismissOnboarding(); }, cta: 'Descobrir agora →' },
+                      { step: '2', title: 'Faça seu primeiro Respiro', desc: 'Aquiete seu coração em 4 segundos com nosso guia de respiração.', action: () => { setActiveSection('respiro'); setSelectedDevotional(null); dismissOnboarding(); }, cta: 'Respirar →' },
+                      { step: '3', title: 'Receba uma Palavra de Graça', desc: 'Sem cadastro. Uma palavra providencial para o seu momento agora.', action: () => { handlePullRandomQuote(); dismissOnboarding(); }, cta: 'Puxar Palavra →' },
+                    ].map((item) => (
+                      <button key={item.step} onClick={item.action}
+                        className="group text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#DCAE6C]/30 rounded-2xl p-4 transition duration-200"
+                      >
+                        <span className="inline-block w-6 h-6 rounded-full bg-[#DCAE6C]/20 text-[#DCAE6C] text-[11px] font-black font-mono text-center leading-6 mb-2">{item.step}</span>
+                        <p className="font-serif text-sm font-semibold text-stone-200 mb-1 leading-snug">{item.title}</p>
+                        <p className="text-[11px] text-stone-400 leading-relaxed mb-3">{item.desc}</p>
+                        <span className="text-[10px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider group-hover:underline">{item.cta}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+                            {/* Zero Fricção: Palavra do Silêncio Banner (Novo Poder) */}
               <div className="bg-[#FAF8F5] border-2 border-dashed border-[#C08261]/25 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 text-left relative overflow-hidden">
                 <div className="space-y-2 max-w-2xl">
                   <span className="text-[9px] font-mono bg-[#C08261]/15 text-[#C08261] px-2.5 py-1 rounded-full uppercase tracking-wider font-extrabold inline-block">
@@ -2090,7 +2018,7 @@ export default function App() {
                             <div
                               id={`devotional-card-${dev.id}`}
                               key={dev.id}
-                              onClick={() => setSelectedDevotional(dev)}
+                              onClick={() => { setSelectedDevotional(dev); markTodayStreakDone(); }}
                               className={`bg-white border rounded-2xl p-5 shadow-xs hover:shadow-md transition duration-200 cursor-pointer flex flex-col justify-between h-[180px] hover:scale-[1.01] transform ${
                                 isCompleted 
                                   ? 'border-[#C08261]/30 bg-[#C08261]/2 shadow-inner-sm' 
