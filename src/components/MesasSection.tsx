@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Mesa } from '../types';
 import { Users, Pin, Plus, Coffee, Search, Check, AlertCircle, X, MessageSquare, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { collection, onSnapshot, query, addDoc, updateDoc, doc, arrayUnion, serverTimestamp } from 'firebase/firestore';
+import { collection, onSnapshot, query, addDoc, updateDoc, doc, arrayUnion, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 
 const INITIAL_MESAS: Mesa[] = [
@@ -156,7 +156,8 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
           slotsTotal: data.slotsTotal || 8,
           slotsTaken: (data.members || []).length,
           members: data.members || [],
-        });
+          createdBy: data.createdBy || null,
+        } as any);
       });
       setMesas(firestoreMesas);
       setMesasLoading(false);
@@ -302,6 +303,125 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
     setTimeout(() => setNotification(null), 5000);
   };
 
+  const handleDeleteMesa = async (mesaId: string) => {
+    if (!window.confirm('Tem certeza que deseja excluir esta Mesa? Esta ação não pode ser desfeita.')) return;
+    try {
+      await deleteDoc(doc(db, 'mesas', mesaId));
+      setNotification('Mesa excluída com sucesso.');
+      setTimeout(() => setNotification(null), 3000);
+    } catch (err) {
+      console.error('Erro ao excluir mesa:', err);
+      setNotification('Erro ao excluir. Tente novamente.');
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
+
+  const handleSeedMesas = async () => {
+    const currentUser = auth.currentUser;
+    const seedMesas = [
+      {
+        title: 'Mesa do Despertar • Moema',
+        hostName: 'Carlos & Clara Mendes',
+        hostBio: 'Casados há 15 anos, caminhando sob a teologia de mesa posta e acolhimento em São Paulo.',
+        city: 'São Paulo', state: 'SP', type: 'In-person',
+        address: 'Alameda dos Anapurus, Moema',
+        frequency: 'Toda quinta-feira às 20:00',
+        description: 'Um refúgio seguro de pão caseiro, café quente, discipulado humilde e oração sincera em meio à pressa de Moema. Todos os peregrinos com dúvidas sinceras são bem-vindos na nossa sala rústica.',
+        slotsTotal: 8, members: ['Carlos', 'Clara', 'Lucas', 'Mariana', 'Beatriz', 'Felipe'],
+        contact: 'mesa.moema@despertar.com', createdBy: currentUser?.uid || 'seed',
+      },
+      {
+        title: 'Mesa Reconciliação • Savassi',
+        hostName: 'Pra. Glória Albuquerque',
+        hostBio: 'Caminhante contemplativa e conselheira focada na acolhida e cura de feridas por traumas religiosos.',
+        city: 'Belo Horizonte', state: 'MG', type: 'In-person',
+        address: 'Rua Pernambuco, Savassi',
+        frequency: 'Quinzenalmente às quartas, 19:30',
+        description: 'Nossa mesa é focada em escuta empática. Se você cansou de debates estéreis e prefere uma boa torta de maçã e oração desarmante aos pés do Mestre, junte-se ao nosso asilo.',
+        slotsTotal: 6, members: ['Glória', 'Thiago', 'Arthur'],
+        contact: 'gloria.albuquerque@despertar.com', createdBy: currentUser?.uid || 'seed',
+      },
+      {
+        title: 'Mesa do Recomeço Digital',
+        hostName: 'Mateus Silveira',
+        hostBio: 'Pastor local no interior de Santa Catarina e apaixonado pela profundidade de Isaías.',
+        city: 'Online', state: 'SC', type: 'Online',
+        address: 'Link Google Meet',
+        frequency: 'Toda terça-feira às 21:00',
+        description: 'Para todos que moram em cidades sem mesas ativas locais. Nosso tempo envolve silêncio orante de 5 minutos, leitura bíblica e desabafos de alma no link virtual seguro.',
+        slotsTotal: 15, members: ['Mateus', 'Lara', 'Daniel', 'Patrícia', 'Otávio', 'Sarah', 'Henrique', 'Jonas', 'André', 'Carla', 'Raul', 'Lúcia'],
+        contact: 'mateus.silveira@despertar.com', createdBy: currentUser?.uid || 'seed',
+      },
+      {
+        title: 'Mesa do Café & Verso • Batel',
+        hostName: 'Rodrigo & Sônia Vaz',
+        hostBio: 'Empreendedores que transformam o lar em acolhimento caloroso toda semana.',
+        city: 'Curitiba', state: 'PR', type: 'In-person',
+        address: 'Av. do Batel, Curitiba',
+        frequency: 'Quintas-feiras alternadas às 19:45',
+        description: 'Unimos boa culinária curitibana a ensinamentos práticos de carreira e família. Nossa mesa é um laboratório de vivência do amor e ajuda comunitária sincera.',
+        slotsTotal: 10, members: ['Rodrigo', 'Sônia', 'Vera', 'Juliano', 'Letícia', 'Mateus', 'Gabriel'],
+        contact: 'rodrigo.vaz@despertar.com', createdBy: currentUser?.uid || 'seed',
+      },
+      {
+        title: 'Mesa Peregrina • Lapa',
+        hostName: 'Frei Tiago Moura',
+        hostBio: 'Franciscano leigo que acredita que o pão partido é o melhor sermão.',
+        city: 'São Paulo', state: 'SP', type: 'In-person',
+        address: 'Rua Catão, Lapa',
+        frequency: 'Sábados às 09:00',
+        description: 'Começamos com café da manhã comunitário, leitura do evangelho do domingo e partilha livre. Não há hierarquia na mesa — todos somos peregrinos igualmente famintos de sentido.',
+        slotsTotal: 12, members: ['Tiago', 'Renata', 'Paulo', 'Luciana'],
+        contact: 'mesa.lapa@despertar.com', createdBy: currentUser?.uid || 'seed',
+      },
+      {
+        title: 'Mesa das Mulheres Fortes',
+        hostName: 'Débora & Rute Coletivo',
+        hostBio: 'Grupo de mulheres que se encontraram na dor e agora caminham juntas na cura.',
+        city: 'Recife', state: 'PE', type: 'In-person',
+        address: 'Boa Viagem, Recife',
+        frequency: 'Toda segunda às 19:00',
+        description: 'Espaço seguro para mulheres que passaram por relacionamentos abusivos, perdas e traumas religiosos. Aqui choramos juntas, oramos juntas e nos levantamos juntas sob a graça.',
+        slotsTotal: 10, members: ['Débora', 'Rute', 'Ester', 'Míriam'],
+        contact: 'mesa.mulheres@despertar.com', createdBy: currentUser?.uid || 'seed',
+      },
+      {
+        title: 'Mesa Jovem • Vila Madalena',
+        hostName: 'João Pedro & Ana Luz',
+        hostBio: 'Vinte e poucos anos, muitas perguntas e uma mesa sempre aberta para quem duvida mas quer crer.',
+        city: 'São Paulo', state: 'SP', type: 'In-person',
+        address: 'Rua Harmonia, Vila Madalena',
+        frequency: 'Domingos às 18:00',
+        description: 'Para os jovens que saíram da igreja tradicional mas não saíram de Jesus. Aqui a teologia é feita de hambúrguer, dúvidas honestas e muito spotify ao fundo. Todos bem-vindos.',
+        slotsTotal: 15, members: ['João Pedro', 'Ana Luz', 'Felipe', 'Camila', 'Bruno'],
+        contact: 'mesa.jovem@despertar.com', createdBy: currentUser?.uid || 'seed',
+      },
+      {
+        title: 'Mesa do Silêncio • Online',
+        hostName: 'Irmã Cecília Fontes',
+        hostBio: 'Contemplativa que guia práticas de oração silenciosa e lectio divina há mais de 20 anos.',
+        city: 'Online', state: 'MG', type: 'Online',
+        address: 'Link Zoom',
+        frequency: 'Toda quarta às 06:30',
+        description: 'Uma hora de silêncio orante, lectio divina e partilha breve antes do trabalho. Para quem sente fome de Deus mas o dia não para. Encontros de 60 minutos, câmeras opcionais.',
+        slotsTotal: 20, members: ['Cecília', 'André', 'Patrícia', 'Lucas', 'Sofia', 'Marcos', 'Helena'],
+        contact: 'mesa.silencio@despertar.com', createdBy: currentUser?.uid || 'seed',
+      },
+    ];
+
+    try {
+      for (const mesa of seedMesas) {
+        await addDoc(collection(db, 'mesas'), { ...mesa, createdAt: serverTimestamp() });
+      }
+      setNotification('8 mesas de exemplo criadas com sucesso! 🎉');
+      setTimeout(() => setNotification(null), 4000);
+    } catch (err) {
+      console.error('Erro ao criar mesas de exemplo:', err);
+      setNotification('Erro ao criar mesas de exemplo.');
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
+
   const filteredMesas = mesas.filter((mesa) => {
     const matchCity = mesa.city.toLowerCase().includes(searchCity.toLowerCase()) || 
                       mesa.title.toLowerCase().includes(searchCity.toLowerCase()) ||
@@ -373,14 +493,24 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                 <p className="text-stone-500 text-sm font-sans leading-relaxed">Partilhe o pão, ouça histórias sinceras e encontre o seu lugar seguro na caminhada de fé.</p>
               </div>
 
-              <button
-                id="btn-trigger-post-mesa"
-                onClick={() => setShowCreateModal(true)}
-                className="flex items-center space-x-1.5 px-4.5 py-2.5 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-2xl shadow-sm transition self-end"
-              >
-                <Plus size={16} />
-                <span>Inaugurar Uma Mesa</span>
-              </button>
+              <div className="flex items-center gap-2 self-end">
+                {mesas.length === 0 && !mesasLoading && (
+                  <button
+                    onClick={handleSeedMesas}
+                    className="flex items-center space-x-1.5 px-3.5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs font-semibold rounded-2xl border border-stone-200 transition"
+                  >
+                    <span>✨ Carregar exemplos</span>
+                  </button>
+                )}
+                <button
+                  id="btn-trigger-post-mesa"
+                  onClick={() => setShowCreateModal(true)}
+                  className="flex items-center space-x-1.5 px-4.5 py-2.5 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-2xl shadow-sm transition"
+                >
+                  <Plus size={16} />
+                  <span>Inaugurar Uma Mesa</span>
+                </button>
+              </div>
             </div>
 
             {notification && (
@@ -507,6 +637,18 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                           )}
                         </button>
                       </div>
+
+                      {/* Botão excluir — visível só para o criador */}
+                      {auth.currentUser && (mesa as any).createdBy === auth.currentUser.uid && (
+                        <div className="pt-1 flex justify-end">
+                          <button
+                            onClick={() => handleDeleteMesa(mesa.id)}
+                            className="text-[10px] text-red-400 hover:text-red-600 font-mono underline transition"
+                          >
+                            excluir mesa
+                          </button>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
