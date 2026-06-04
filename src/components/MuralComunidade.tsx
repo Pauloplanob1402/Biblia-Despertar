@@ -11,6 +11,7 @@ import {
   limit, 
   onSnapshot, 
   increment,
+  serverTimestamp,
   getFirestore
 } from 'firebase/firestore';
 import { db, auth, handleFirestoreError, OperationType } from '../lib/firebase';
@@ -247,7 +248,7 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
         cidade: pedidoCidade.trim() || null,
         contadorOracoes: 0,
         respondido: false,
-        criadoEm: new Date()
+        criadoEm: serverTimestamp()
       });
 
       // Clear states
@@ -299,7 +300,7 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
         titulo: testemunhoTitle.trim().substring(0, 80),
         relato: testemunhoRelato.trim().substring(0, 500),
         fortalecidos: 0,
-        criadoEm: new Date()
+        criadoEm: serverTimestamp()
       });
 
       // Clear states
