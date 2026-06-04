@@ -712,44 +712,6 @@ export default function App() {
                 </div>
               )}
 
-              {/* Sementes do Reino Mobile Quick Balance */}
-              <div className="mx-4 mt-4 px-4 py-3 bg-[#f1f8f3] border border-emerald-100/50 rounded-xl flex items-center justify-between text-left">
-                <div className="flex items-center space-x-2.5 truncate">
-                  <span className="text-base select-none animate-bounce">🌱</span>
-                  <div className="truncate">
-                    <span className="text-[9px] font-mono uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold tracking-wider leading-none">Sementes do Reino</span>
-                    <p className="text-[11px] text-emerald-950 font-sans mt-0.5 truncate font-medium">Tesouros no Secreto (Mateus 6)</p>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <span className="text-sm font-bold font-mono text-emerald-800 bg-white border border-emerald-100/80 px-2.5 py-1 rounded-lg block">
-                    {sementesSaldo}
-                  </span>
-                </div>
-              </div>
-
-              {/* Necessidade Aberta (Mobile Gatilho Zeigarnik / Clé do Loop) */}
-              <div className="mx-4 mt-3 p-4 bg-amber-50/50 border border-amber-100/70 rounded-xl text-left space-y-2.5 shadow-3xs hover:border-amber-200 transition-colors duration-300">
-                <div className="flex items-center space-x-2 text-stone-800">
-                  <span className="text-sm select-none animate-pulse">🕊️</span>
-                  <span className="text-[10px] font-mono uppercase font-black text-amber-800 tracking-wider">
-                    Hoje existem {activePrayersCount} pedidos ativos
-                  </span>
-                </div>
-                <p className="text-[11px] text-stone-600 leading-normal font-sans">
-                  Sempre há fardos para carregar em comunidade. Seja a resposta de apoio ao clamor de um irmão agora!
-                </p>
-                <button
-                  onClick={() => {
-                    setActiveSection('mural');
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full py-1.5 px-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[10px] font-mono uppercase tracking-widest font-black rounded-lg transition text-center block shadow-2xs hover:shadow-sm"
-                >
-                  Orar por alguém agora 🙏
-                </button>
-              </div>
-
               {/* Drawer Navigation items list */}
               <nav className="flex-1 p-4 space-y-1 overflow-y-auto w-full">
                 <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2 text-left">Santuário do Secreto</span>
@@ -927,6 +889,47 @@ export default function App() {
                   </span>
                   <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold animate-pulse">Instalar</span>
                 </button>
+
+                {/* Separador e Cards de Apoio (Sementes & Clamores) ao final da navegação */}
+                <div className="pt-4 mt-4 border-t border-stone-100/70 space-y-3">
+                  {/* Sementes do Reino Mobile Quick Balance */}
+                  <div className="px-4 py-3 bg-[#f1f8f3] border border-emerald-100/50 rounded-xl flex items-center justify-between text-left">
+                    <div className="flex items-center space-x-2.5 truncate">
+                      <span className="text-base select-none animate-bounce">🌱</span>
+                      <div className="truncate">
+                        <span className="text-[9px] font-mono uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold tracking-wider leading-none">Sementes do Reino</span>
+                        <p className="text-[11px] text-emerald-950 font-sans mt-0.5 truncate font-medium">Tesouros no Secreto (Mateus 6)</p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="text-sm font-bold font-mono text-emerald-800 bg-white border border-emerald-100/80 px-2.5 py-1 rounded-lg block">
+                        {sementesSaldo}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Necessidade Aberta (Mobile Gatilho Zeigarnik / Clé do Loop) */}
+                  <div className="p-4 bg-amber-50/50 border border-amber-100/70 rounded-xl text-left space-y-2.5 shadow-3xs hover:border-amber-200 transition-colors duration-300">
+                    <div className="flex items-center space-x-2 text-stone-800">
+                      <span className="text-sm select-none animate-pulse">🕊️</span>
+                      <span className="text-[10px] font-mono uppercase font-black text-amber-800 tracking-wider">
+                        Hoje existem {activePrayersCount} pedidos ativos
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-stone-600 leading-normal font-sans">
+                      Sempre há fardos para carregar em comunidade. Seja a resposta de apoio ao clamor de um irmão agora!
+                    </p>
+                    <button
+                      onClick={() => {
+                        setActiveSection('mural');
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full py-1.5 px-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[10px] font-mono uppercase tracking-widest font-black rounded-lg transition text-center block shadow-2xs hover:shadow-sm"
+                    >
+                      Orar por alguém agora 🙏
+                    </button>
+                  </div>
+                </div>
               </nav>
 
               {/* Drawer streak indicators */}
@@ -992,43 +995,6 @@ export default function App() {
             </button>
           </div>
         )}
-
-        {/* Sementes do Reino Quick Balance */}
-        <div className="mx-4 mt-4 px-4 py-3 bg-[#f1f8f3] border border-emerald-100/50 rounded-xl flex items-center justify-between text-left">
-          <div className="flex items-center space-x-2.5 truncate">
-            <span className="text-base select-none animate-bounce">🌱</span>
-            <div className="truncate">
-              <span className="text-[9px] font-mono uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold tracking-wider leading-none">Sementes do Reino</span>
-              <p className="text-[11px] text-emerald-950 font-sans mt-0.5 truncate font-medium">Tesouros no Secreto (Mateus 6)</p>
-            </div>
-          </div>
-          <div className="text-right shrink-0">
-            <span className="text-sm font-bold font-mono text-emerald-800 bg-white border border-emerald-100/80 px-2.5 py-1 rounded-lg shadow-2xs block">
-              {sementesSaldo}
-            </span>
-          </div>
-        </div>
-
-        {/* Necessidade Aberta (Gatilho Zeigarnik / Clé do Loop) */}
-        <div className="mx-4 mt-3 p-4 bg-amber-50/50 border border-amber-100/70 rounded-xl text-left space-y-2.5 shadow-3xs hover:border-amber-200 transition-colors duration-300">
-          <div className="flex items-center space-x-2 text-stone-800">
-            <span className="text-sm select-none animate-pulse">🕊️</span>
-            <span className="text-[10px] font-mono uppercase font-black text-amber-800 tracking-wider">
-              Hoje existem {activePrayersCount} pedidos ativos
-            </span>
-          </div>
-          <p className="text-[11px] text-stone-600 leading-normal font-sans">
-            Sempre há fardos para carregar em comunidade. Seja a resposta de apoio ao clamor de um irmão agora!
-          </p>
-          <button
-            onClick={() => {
-              setActiveSection('mural');
-            }}
-            className="w-full py-1.5 px-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[10px] font-mono uppercase tracking-widest font-black rounded-lg transition text-center block shadow-2xs hover:shadow-sm"
-          >
-            Orar por alguém agora 🙏
-          </button>
-        </div>
 
         {/* Navigation lists */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -1209,6 +1175,46 @@ export default function App() {
             </span>
             <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold animate-pulse">Instalar</span>
           </button>
+
+          {/* Separador e Cards de Apoio (Sementes & Clamores) ao final da navegação */}
+          <div className="pt-4 mt-4 border-t border-stone-100/70 space-y-3">
+            {/* Sementes do Reino Quick Balance */}
+            <div className="px-4 py-3 bg-[#f1f8f3] border border-emerald-100/50 rounded-xl flex items-center justify-between text-left">
+              <div className="flex items-center space-x-2.5 truncate">
+                <span className="text-base select-none animate-bounce">🌱</span>
+                <div className="truncate">
+                  <span className="text-[9px] font-mono uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold tracking-wider leading-none">Sementes do Reino</span>
+                  <p className="text-[11px] text-emerald-950 font-sans mt-0.5 truncate font-medium">Tesouros no Secreto (Mateus 6)</p>
+                </div>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-sm font-bold font-mono text-emerald-800 bg-white border border-emerald-100/80 px-2.5 py-1 rounded-lg block">
+                  {sementesSaldo}
+                </span>
+              </div>
+            </div>
+
+            {/* Necessidade Aberta (Gatilho Zeigarnik / Clé do Loop) */}
+            <div className="p-4 bg-amber-50/50 border border-amber-100/70 rounded-xl text-left space-y-2.5 shadow-3xs hover:border-amber-200 transition-colors duration-300">
+              <div className="flex items-center space-x-2 text-stone-800">
+                <span className="text-sm select-none animate-pulse">🕊️</span>
+                <span className="text-[10px] font-mono uppercase font-black text-amber-800 tracking-wider">
+                  Hoje existem {activePrayersCount} pedidos ativos
+                </span>
+              </div>
+              <p className="text-[11px] text-stone-600 leading-normal font-sans">
+                Sempre há fardos para carregar em comunidade. Seja a resposta de apoio ao clamor de um irmão agora!
+              </p>
+              <button
+                onClick={() => {
+                  setActiveSection('mural');
+                }}
+                className="w-full py-1.5 px-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-[10px] font-mono uppercase tracking-widest font-black rounded-lg transition text-center block shadow-2xs hover:shadow-sm"
+              >
+                Orar por alguém agora 🙏
+              </button>
+            </div>
+          </div>
         </nav>
 
         {/* Footer streak count */}
