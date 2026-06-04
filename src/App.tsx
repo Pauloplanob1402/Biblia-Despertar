@@ -30,7 +30,7 @@ import { DEVOCIONAIS } from './data/devotionals';
 import { MULTIPLICACAO } from './data/multiplication';
 import { DESPERTAR_PROFILES } from './data/profiles';
 import { UserProgress, Devotional, SpiritualIdentity } from './types';
-import { auth, db } from './lib/firebase';
+import { auth, db, handleFirestoreError, OperationType } from './lib/firebase';
 import { buscarMovimentos } from './lib/sementes';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc, onSnapshot, query, collection, where, orderBy, limit, updateDoc, increment } from 'firebase/firestore';
@@ -192,7 +192,7 @@ export default function App() {
     const unsubCount = onSnapshot(qCount, (snapshot) => {
       setActivePrayersCount(snapshot.size);
     }, (error) => {
-      console.error("Error listening to active prayers count:", error);
+      handleFirestoreError(error, OperationType.GET, 'pedidosOracao');
     });
 
     // 2. Spotlight Prayer of the Day (latest active or semi-stable)
@@ -214,7 +214,7 @@ export default function App() {
         setHomePrayerOfTheDay(null);
       }
     }, (err) => {
-      console.error("Error listening to spotlight prayer:", err);
+      handleFirestoreError(err, OperationType.GET, 'pedidosOracao');
     });
 
     // 3. Spotlight Testimony of the Day (latest)
@@ -234,7 +234,7 @@ export default function App() {
         setHomeTestimonyOfTheDay(null);
       }
     }, (err) => {
-      console.error("Error listening to spotlight testimony:", err);
+      handleFirestoreError(err, OperationType.GET, 'testemunhos');
     });
 
     return () => {

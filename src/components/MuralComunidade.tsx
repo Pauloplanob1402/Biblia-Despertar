@@ -13,7 +13,7 @@ import {
   increment,
   getFirestore
 } from 'firebase/firestore';
-import { db, auth } from '../lib/firebase';
+import { db, auth, handleFirestoreError, OperationType } from '../lib/firebase';
 import { plantarSemente } from '../lib/sementes';
 import { 
   Heart, 
@@ -141,8 +141,8 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
       setPedidos(docsData);
       setLoading(false);
     }, (error) => {
-      console.error("Error setting up real-time listener for prayers list:", error);
       setLoading(false);
+      handleFirestoreError(error, OperationType.GET, 'pedidosOracao');
     });
 
     return () => unsubscribe();
@@ -174,7 +174,7 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
       });
       setTestemunhos(docsData);
     }, (error) => {
-      console.error("Error setting up real-time listener for testimonies list:", error);
+      handleFirestoreError(error, OperationType.GET, 'testemunhos');
     });
 
     return () => unsubscribe();
@@ -209,7 +209,7 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
       });
       setRespostas(docsData);
     }, (error) => {
-      console.error("Error loading answered prayers:", error);
+      handleFirestoreError(error, OperationType.GET, 'pedidosOracao');
     });
 
     return () => unsubscribe();
