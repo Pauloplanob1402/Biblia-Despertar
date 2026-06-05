@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import bookCoverImg from "../assets/images/book_cover_1780394449410.png";
+import bookCoverImg from "../assets/images/book_cover_kit.png";
 import {
   Heart,
   Compass,
