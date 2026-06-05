@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom premium gold & terracotta colors */
+  --color-[#C08261]: #C08261;
+  --color-[#b07353]: #b07353;
+  --color-gold-500: #DCAE6C;
+  --color-gold-600: #C5924E;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #FAF8F5;
+  color: #1C1A18;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ─── TIPOGRAFIA MOBILE-FIRST ─────────────────────────────────────
+   Objetivo: legibilidade em 320–412px sem zoom.
+   Estratégia: eleva o piso mínimo de tamanhos arbitrários
+   (text-[Npx]) que aparecem extensivamente nos componentes,
+   sem alterar layout, cores ou espaçamentos.
+   ─────────────────────────────────────────────────────────────── */
+
+/* Tailwind v4: text-xs = 0.75rem (12px). Elevamos para 12px mínimo
+   via rem relativo ao novo font-size base do html. */
+@layer base {
+  html {
+    font-size: 16px; /* base: 1rem = 16px */
+  }
+
+  /* Parágrafo e corpo de texto geral */
+  p, li, span:not([class*="text-["]):not([class*="text-xs"]):not([class*="text-sm"]) {
+    line-height: 1.7;
+  }
+
+  /* Labels de formulário — padrão do projeto: text-[10px] font-mono uppercase */
+  label {
+    font-size: 13px !important;
+    line-height: 1.5;
+  }
+
+  /* Inputs e placeholders */
+  input, textarea, select {
+    font-size: 15px !important;
+    line-height: 1.6;
+  }
+  input::placeholder, textarea::placeholder {
+    font-size: 15px;
+  }
+
+  /* Versículos e citações em font-mono: troca para serif + melhora legibilidade */
+  .font-mono {
+    font-size: max(var(--tw-font-size, 12px), 12px);
+    line-height: 1.65;
+  }
+
+  /* Elevação mínima dos tamanhos arbitrários mais usados no projeto.
+     Tailwind v4 compila text-[Npx] como font-size: Npx inline,
+     mas podemos criar um piso via CSS clamp() para viewports estreitos. */
+  @media (max-width: 767px) {
+    /* Corpo de texto: text-sm → 15px mínimo */
+    .text-sm   { font-size: clamp(14px, 3.7vw, 14px) !important; line-height: 1.7; }
+    .text-xs   { font-size: clamp(12px, 3.2vw, 12px) !important; line-height: 1.6; }
+    .text-base { font-size: clamp(16px, 4.3vw, 16px) !important; line-height: 1.75; }
+    .text-lg   { font-size: clamp(18px, 4.8vw, 18px) !important; line-height: 1.65; }
+    .text-xl   { font-size: clamp(19px, 5.1vw, 20px) !important; line-height: 1.5; }
+    .text-2xl  { font-size: clamp(21px, 5.6vw, 24px) !important; line-height: 1.4; }
+    .text-3xl  { font-size: clamp(24px, 6.4vw, 30px) !important; line-height: 1.3; }
+
+    /* Elevação dos tamanhos arbitrários críticos (piso em mobile) */
+    [class~="text-[7px]"],
+    [class~="text-[7.5px]"],
+    [class~="text-[8px]"],
+    [class~="text-[8.5px]"]   { font-size: 11px !important; line-height: 1.5; }
+
+    [class~="text-[9px]"],
+    [class~="text-[9.5px]"]   { font-size: 12px !important; line-height: 1.55; }
+
+    [class~="text-[10px]"],
+    [class~="text-[10.5px]"]  { font-size: 13px !important; line-height: 1.6; }
+
+    [class~="text-[11px]"],
+    [class~="text-[11.5px]"]  { font-size: 13px !important; line-height: 1.6; }
+
+    [class~="text-[12px]"]    { font-size: 13px !important; line-height: 1.6; }
+    [class~="text-[13px]"]    { font-size: 14px !important; line-height: 1.65; }
+    [class~="text-[14px]"]    { font-size: 15px !important; line-height: 1.7; }
+
+    /* Versículos/citações em mono: mais legíveis com serif e line-height generoso */
+    .font-mono {
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    /* Labels de formulário */
+    label {
+      font-size: 13px !important;
+      line-height: 1.5;
+    }
+
+    /* Inputs */
+    input, textarea, select {
+      font-size: 16px !important; /* 16px evita zoom automático no iOS */
+    }
+
+    /* Título de card */
+    .font-serif.text-xs,
+    .font-serif.text-sm {
+      font-size: 15px !important;
+      line-height: 1.65;
+    }
+
+    /* Parágrafos de leitura longa (devocionais, manifesto, versículos) */
+    p.leading-relaxed,
+    p.leading-loose,
+    div.leading-relaxed {
+      line-height: 1.8;
+    }
+  }
+}
+
+/* ─── ABAS HORIZONTAIS — scroll suave sem scrollbar visível ──────
+   Aplicado via classe .tabs-scroll nos containers de abas.
+   Em mobile: overflow-x scroll oculto + fade-out na borda direita.
+   Em desktop (md:+): comportamento original mantido.
+   ─────────────────────────────────────────────────────────────── */
+.tabs-scroll {
+  position: relative;
+}
+
+@media (max-width: 767px) {
+  .tabs-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-wrap: nowrap !important;
+  }
+  .tabs-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .tabs-scroll-wrapper {
+    position: relative;
+  }
+  .tabs-scroll-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(250, 248, 245, 0.92));
+    pointer-events: none;
+    border-radius: 0 1rem 1rem 0;
+    z-index: 1;
+  }
+  .tabs-scroll > button,
+  .tabs-scroll > a {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+/* Elegant scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.4);
+}
+::-webkit-scrollbar-thumb {
+  background: #33302D;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #DCAE6C;
+}
