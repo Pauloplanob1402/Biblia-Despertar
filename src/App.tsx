@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  Compass, Book, Coffee, User, Bookmark, Feather, 
+  Compass, Book, Coffee, User, Bookmark, Feather, BookOpen,
   Flame, Sparkles, Clock, Heart, Calendar, ArrowLeft, 
   AlertCircle, ChevronRight, Terminal, FileText, Check, Code, MessageSquare, Award, Smartphone, Share2
 } from 'lucide-react';
@@ -24,6 +24,7 @@ import WitnessesSection from './components/WitnessesSection';
 import IgrejaPrimitiva from './components/IgrejaPrimitiva';
 import AppsSection from './components/AppsSection';
 import MuralComunidade from './components/MuralComunidade';
+import LivrosDespertar from './components/LivrosDespertar';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
@@ -747,7 +748,7 @@ export default function App() {
                     { id: 'devotionals', label: 'Devocional diário' },
                     { id: 'bible', label: 'Bíblia' },
                     { id: 'respiro', label: 'Respiração guiada' },
-                    { id: 'ebooks', label: 'Livros' },
+                    { id: 'ebooks', label: 'Livros do Despertar' },
                   ].map(item => (
                     <button key={item.id} onClick={() => { setActiveSection(item.id as any); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
                       className={`w-full flex items-center px-3 py-1.5 rounded-lg text-left text-xs font-medium transition ${
@@ -971,7 +972,7 @@ export default function App() {
                 { id: 'devotionals', label: 'Devocional diário', icon: <Coffee size={12}/> },
                 { id: 'bible', label: 'Bíblia', icon: <Book size={12}/> },
                 { id: 'respiro', label: 'Respiração guiada', icon: <Heart size={12}/> },
-                { id: 'ebooks', label: 'Livros', icon: <FileText size={12}/> },
+                { id: 'ebooks', label: 'Livros do Despertar', icon: <BookOpen size={12}/> },
               ].map(item => (
                 <button key={item.id} onClick={() => { setActiveSection(item.id as any); setSelectedDevotional(null); }}
                   className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left text-xs font-medium transition ${
@@ -2483,23 +2484,12 @@ export default function App() {
             </motion.div>
           )}
 
-          {/* ACTIVE PORT: EBOOK READING SHELF */}
+          {/* ACTIVE PORT: LIVROS DO DESPERTAR */}
           {activeSection === 'ebooks' && !selectedDevotional && (
-            <motion.div
-              key="ebooks"
-              initial={{ opacity: 0, x: 15 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -15 }}
-              className="space-y-2"
-            >
-              <EbookReader
-                completedChapters={progress.completedChapters}
-                onCompleteChapter={handleCompleteChapter}
-                initialBookId={progress.lastReadEbookInfo?.ebookId}
-                initialChapterIndex={progress.lastReadEbookInfo?.chapterIndex}
-                onChapterRead={handleEbookChapterRead}
-              />
-            </motion.div>
+            <LivrosDespertar
+              currentUser={currentUser}
+              userProfile={userProfile}
+            />
           )}
 
           {/* ACTIVE PORT: NUVEM DE TESTEMUNHAS HISTORICAL GALLERY */}
