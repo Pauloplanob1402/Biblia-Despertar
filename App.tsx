@@ -24,6 +24,7 @@ import WitnessesSection from './components/WitnessesSection';
 import IgrejaPrimitiva from './components/IgrejaPrimitiva';
 import AppsSection from './components/AppsSection';
 import MuralComunidade from './components/MuralComunidade';
+import ApoiarSection from './components/ApoiarSection';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
@@ -36,7 +37,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc, onSnapshot, query, collection, where, orderBy, limit, updateDoc, increment } from 'firebase/firestore';
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas' | 'primitiva' | 'apps' | 'mural'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'bible' | 'devotionals' | 'profiles' | 'mesas' | 'ebooks' | 'profile' | 'respiro' | 'testemunhas' | 'primitiva' | 'apps' | 'mural' | 'apoiar'>('home');
   const [activePrayersCount, setActivePrayersCount] = useState<number>(0);
   const [homePrayerOfTheDay, setHomePrayerOfTheDay] = useState<any>(null);
   const [homeTestimonyOfTheDay, setHomeTestimonyOfTheDay] = useState<any>(null);
@@ -66,26 +67,6 @@ export default function App() {
   const [committedToastMsg, setCommittedToastMsg] = useState<string | null>(null);
   const [homeRef, setHomeRef] = useState("");
   const [homeText, setHomeText] = useState("");
-
-  // UX: Onboarding (Comece Aqui) — mostrar apenas para novos visitantes
-  const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
-    try { return !localStorage.getItem('bd_onboarding_done'); } catch { return true; }
-  });
-  const dismissOnboarding = () => {
-    try { localStorage.setItem('bd_onboarding_done', '1'); } catch {}
-    setShowOnboarding(false);
-  };
-
-  // UX: Streak diário — confirmação visual de "quietude de hoje concluída"
-  const [todayStreakDone, setTodayStreakDone] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('bd_streak_today') === new Date().toISOString().split('T')[0];
-    } catch { return false; }
-  });
-  const markTodayStreakDone = () => {
-    try { localStorage.setItem('bd_streak_today', new Date().toISOString().split('T')[0]); } catch {}
-    setTodayStreakDone(true);
-  };
 
   const handleCopyToClipboard = (text: string) => {
     try {
@@ -732,109 +713,198 @@ export default function App() {
                 </div>
               )}
 
-              {/* Drawer Navigation — 5 itens principais + sub-navegação colapsável */}
+              {/* Drawer Navigation items list */}
               <nav className="flex-1 p-4 space-y-1 overflow-y-auto w-full">
-
+                <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2 text-left">Santuário do Secreto</span>
+                
                 <button
                   id="mobile-nav-home"
                   onClick={() => { setActiveSection('home'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
-                    activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
                   }`}
                 >
                   <span className="flex items-center space-x-2.5">
-                    <Sparkles size={15} />
-                    <span>Início</span>
+                    <Sparkles size={14} />
+                    <span>Início & Diário</span>
                   </span>
                 </button>
 
                 <button
-                  id="mobile-nav-palavra"
+                  id="mobile-nav-primitiva"
+                  onClick={() => { setActiveSection('primitiva'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold transition ${
+                    activeSection === 'primitiva' ? 'bg-[#C08261]/10 text-[#C08261] font-bold' : 'text-stone-700 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Flame size={14} className="text-[#C08261]" />
+                    <span>Igreja Primitiva ⛪</span>
+                  </span>
+                  <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Fundador</span>
+                </button>
+
+                <button
+                  id="mobile-nav-respiro"
+                  onClick={() => { setActiveSection('respiro'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'respiro' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Heart size={14} />
+                    <span>Respiro do Secreto</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-bible"
+                  onClick={() => { setActiveSection('bible'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'bible' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Book size={14} />
+                    <span>Palavra Viva</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-devotionals"
                   onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
-                    (activeSection === 'devotionals' || activeSection === 'bible' || activeSection === 'respiro') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'devotionals' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
                   }`}
                 >
                   <span className="flex items-center space-x-2.5">
-                    <Book size={15} />
-                    <span>Palavra</span>
+                    <Coffee size={14} />
+                    <span>Café e Comunhão</span>
                   </span>
-                  <span className="text-[9px] text-stone-400 font-mono">Café · Bíblia · Respiro</span>
                 </button>
 
                 <button
-                  id="mobile-nav-comunidade"
-                  onClick={() => { setActiveSection('mural'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
-                    (activeSection === 'mural' || activeSection === 'testemunhas') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
+                  id="mobile-nav-profiles"
+                  onClick={() => { setActiveSection('profiles'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'profiles' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
                   }`}
                 >
                   <span className="flex items-center space-x-2.5">
-                    <Heart size={15} />
-                    <span>Comunidade</span>
+                    <Compass size={14} />
+                    <span>Caminhos do Coração</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-mural"
+                  onClick={() => { setActiveSection('mural'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold border-[#C08261]/20 border bg-[#C08261]/5 transition ${
+                    activeSection === 'mural' ? 'bg-[#C08261]/15 text-[#C08261] font-bold' : 'text-stone-750 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Compass size={14} className="text-[#C08261]" />
+                    <span>Mural de Oração & Fé 🕊️</span>
                   </span>
                   <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Novo</span>
                 </button>
 
                 <button
-                  id="mobile-nav-mesas-main"
-                  onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
-                    activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
+                  id="mobile-nav-testemunhas"
+                  onClick={() => { setActiveSection('testemunhas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'testemunhas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
                   }`}
                 >
                   <span className="flex items-center space-x-2.5">
-                    <Coffee size={15} />
-                    <span>Mesas</span>
+                    <Award size={14} />
+                    <span>Nuvem de Testemunhas</span>
                   </span>
-                  <span className="text-[9px] text-stone-400 font-mono">Grupos · Chat</span>
+                </button>
+
+                <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 pt-5 mb-2 text-left">Mesa & Comunhão</span>
+
+                <button
+                  id="mobile-nav-mesas"
+                  onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'mesas' && mesasSubTab === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Coffee size={14} />
+                    <span>Mesas de Comunhão</span>
+                  </span>
                 </button>
 
                 <button
-                  id="mobile-nav-profile-main"
-                  onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-[13px] font-medium transition ${
-                    (activeSection === 'profile' || activeSection === 'profiles') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-700 hover:bg-stone-50'
+                  id="mobile-nav-chat"
+                  onClick={() => { setActiveSection('mesas'); setMesasSubTab('pilgrims'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'mesas' && mesasSubTab === 'pilgrims' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
                   }`}
                 >
                   <span className="flex items-center space-x-2.5">
-                    <User size={15} />
-                    <span>Perfil</span>
+                    <MessageSquare size={14} />
+                    <span>Chat & Conexões</span>
                   </span>
                 </button>
 
-                {/* Sub-navegação colapsável */}
-                <div className="pt-3 mt-3 border-t border-stone-100">
-                  <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2">Explorar</span>
-                  {[
-                    { id: 'respiro', icon: <Heart size={12}/>, label: 'Respiro — guia de respiração', section: 'respiro' as const },
-                    { id: 'primitiva', icon: <Flame size={12} className="text-[#C08261]"/>, label: 'Igreja Primitiva — fundador', section: 'primitiva' as const },
-                    { id: 'bible', icon: <Book size={12}/>, label: 'Bíblia — leitura completa', section: 'bible' as const },
-                    { id: 'testemunhas', icon: <Award size={12}/>, label: 'Testemunhas — graças manifestadas', section: 'testemunhas' as const },
-                    { id: 'profiles', icon: <Compass size={12}/>, label: 'Caminhos do Coração — identidade', section: 'profiles' as const },
-                    { id: 'ebooks', icon: <FileText size={12}/>, label: 'Livros da Jornada', section: 'ebooks' as const },
-                  ].map(item => (
-                    <button key={item.id}
-                      onClick={() => { setActiveSection(item.section); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                      className={`w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-left text-xs font-medium transition ${activeSection === item.section ? 'text-[#C08261] font-semibold' : 'text-stone-500 hover:bg-stone-50'}`}
-                    >
-                      {item.icon}<span>{item.label}</span>
-                    </button>
-                  ))}
-                </div>
+                <button
+                  id="mobile-nav-ebooks"
+                  onClick={() => { setActiveSection('ebooks'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'ebooks' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <FileText size={14} />
+                    <span>Livros da Jornada</span>
+                  </span>
+                </button>
+
+                <button
+                  id="mobile-nav-profile"
+                  onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+                    activeSection === 'profile' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <User size={14} />
+                    <span>Minha Caminhada</span>
+                  </span>
+                </button>
 
                 <button
                   id="mobile-nav-apps"
                   onClick={() => { setActiveSection('apps'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition mt-2 ${
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition ${
                     activeSection === 'apps' ? 'bg-[#C08261]/15 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
                   }`}
                 >
                   <span className="flex items-center space-x-2.5">
                     <Smartphone size={14} className="text-[#C08261]" />
-                    <span>Baixar o App 📱</span>
+                    <span>Nossos Apps 📱</span>
                   </span>
                   <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold animate-pulse">Instalar</span>
+                </button>
+
+                <button
+                  id="mobile-nav-apoiar"
+                  onClick={() => { setActiveSection('apoiar'); setSelectedDevotional(null); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold border transition ${
+                    activeSection === 'apoiar'
+                      ? 'bg-amber-50 border-amber-200 text-amber-800'
+                      : 'bg-amber-50/40 border-amber-100 text-stone-700 hover:bg-amber-50'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2.5">
+                    <Heart size={14} className="text-amber-600" />
+                    <span>Como Apoiar 📚</span>
+                  </span>
+                  <span className="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Livros</span>
                 </button>
 
                 {/* Separador e Cards de Apoio (Sementes & Clamores) ao final da navegação */}
@@ -943,67 +1013,176 @@ export default function App() {
           </div>
         )}
 
-        {/* Navigation — 5 itens principais + sub-navegação */}
+        {/* Navigation lists */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-
-          {/* ── 5 PRINCIPAIS ── */}
-          <button id="nav-home" onClick={() => { setActiveSection('home'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
+          <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2 text-left">Santuário do Secreto</span>
+          
+          <button
+            id="nav-home"
+            onClick={() => { setActiveSection('home'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'home' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
           >
-            <span className="flex items-center space-x-2.5"><Sparkles size={14} /><span>Início</span></span>
+            <span className="flex items-center space-x-2.5">
+              <Sparkles size={14} />
+              <span>Início & Diário</span>
+            </span>
+            <ChevronRight size={12} className="opacity-0 group-hover:opacity-100" />
           </button>
 
-          <button id="nav-palavra" onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${(activeSection === 'devotionals' || activeSection === 'bible' || activeSection === 'respiro') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
+          <button
+            id="nav-primitiva"
+            onClick={() => { setActiveSection('primitiva'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold transition ${
+              activeSection === 'primitiva' ? 'bg-[#C08261]/10 text-[#C08261] font-bold' : 'text-stone-700 hover:bg-stone-50'
+            }`}
           >
-            <span className="flex items-center space-x-2.5"><Book size={14} /><span>Palavra</span></span>
-            <span className="text-[9px] text-stone-300 font-mono hidden xl:block">Café · Bíblia · Respiro</span>
+            <span className="flex items-center space-x-2.5">
+              <Flame size={14} className="text-[#C08261]" />
+              <span>Igreja Primitiva ⛪</span>
+            </span>
+            <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Fundador</span>
           </button>
 
-          <button id="nav-comunidade" onClick={() => { setActiveSection('mural'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${(activeSection === 'mural' || activeSection === 'testemunhas') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
+          <button
+            id="nav-respiro"
+            onClick={() => { setActiveSection('respiro'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'respiro' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
           >
-            <span className="flex items-center space-x-2.5"><Heart size={14} /><span>Comunidade</span></span>
+            <span className="flex items-center space-x-2.5">
+              <Heart size={14} />
+              <span>Respiro do Secreto</span>
+            </span>
+            <ChevronRight size={12} className="opacity-0 group-hover:opacity-100" />
+          </button>
+
+          <button
+            id="nav-bible"
+            onClick={() => { setActiveSection('bible'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'bible' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <Book size={14} />
+              <span>Palavra Viva</span>
+            </span>
+          </button>
+
+          <button
+            id="nav-devotionals"
+            onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'devotionals' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <Coffee size={14} />
+              <span>Café e Comunhão</span>
+            </span>
+          </button>
+
+          <button
+            id="nav-profiles"
+            onClick={() => { setActiveSection('profiles'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'profiles' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <Compass size={14} />
+              <span>Caminhos do Coração</span>
+            </span>
+          </button>
+
+          <button
+            id="nav-mural"
+            onClick={() => { setActiveSection('mural'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition ${
+              activeSection === 'mural' ? 'bg-[#C08261]/15 text-[#C08261] font-bold' : 'text-stone-750 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <Compass size={14} className="text-[#C08261]" />
+              <span>Mural de Oração & Fé 🕊️</span>
+            </span>
             <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Novo</span>
           </button>
 
-          <button id="nav-mesas" onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
+          <button
+            id="nav-testemunhas"
+            onClick={() => { setActiveSection('testemunhas'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'testemunhas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
           >
-            <span className="flex items-center space-x-2.5"><Coffee size={14} /><span>Mesas</span></span>
-            <span className="text-[9px] text-stone-300 font-mono hidden xl:block">Grupos · Chat</span>
+            <span className="flex items-center space-x-2.5">
+              <Award size={14} />
+              <span>Nuvem de Testemunhas</span>
+            </span>
           </button>
 
-          <button id="nav-profile" onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${(activeSection === 'profile' || activeSection === 'profiles') ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'}`}
+          <span className="text-[11.5px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 pt-5 mb-2 text-left">Mesa & Comunhão</span>
+
+          <button
+            id="nav-mesas"
+            onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'mesas' && mesasSubTab === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
           >
-            <span className="flex items-center space-x-2.5"><User size={14} /><span>Perfil</span></span>
+            <span className="flex items-center space-x-2.5">
+              <Coffee size={14} />
+              <span>Mesas de Comunhão</span>
+            </span>
           </button>
 
-          {/* ── SUB-NAVEGAÇÃO ── */}
-          <div className="pt-3 mt-3 border-t border-stone-100/70">
-            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-stone-400 block px-3 mb-2">Explorar</span>
-            {[
-              { id: 'respiro', icon: <Heart size={12}/>, label: 'Respiro — respiração', section: 'respiro' as const },
-              { id: 'primitiva', icon: <Flame size={12} className="text-[#C08261]"/>, label: 'Igreja Primitiva', section: 'primitiva' as const },
-              { id: 'bible', icon: <Book size={12}/>, label: 'Bíblia completa', section: 'bible' as const },
-              { id: 'testemunhas', icon: <Award size={12}/>, label: 'Nuvem de Testemunhas', section: 'testemunhas' as const },
-              { id: 'profiles', icon: <Compass size={12}/>, label: 'Caminhos do Coração', section: 'profiles' as const },
-              { id: 'ebooks', icon: <FileText size={12}/>, label: 'Livros da Jornada', section: 'ebooks' as const },
-            ].map(item => (
-              <button key={item.id}
-                onClick={() => { setActiveSection(item.section); setSelectedDevotional(null); }}
-                className={`w-full flex items-center space-x-2.5 px-3 py-1.5 rounded-lg text-left text-[11px] font-medium transition ${activeSection === item.section ? 'text-[#C08261] font-semibold' : 'text-stone-400 hover:bg-stone-50 hover:text-stone-600'}`}
-              >
-                {item.icon}<span>{item.label}</span>
-              </button>
-            ))}
-          </div>
+          <button
+            id="nav-chat"
+            onClick={() => { setActiveSection('mesas'); setMesasSubTab('pilgrims'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'mesas' && mesasSubTab === 'pilgrims' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <MessageSquare size={14} />
+              <span>Chat & Conexões</span>
+            </span>
+          </button>
+
+          <button
+            id="nav-ebooks"
+            onClick={() => { setActiveSection('ebooks'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'ebooks' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <FileText size={14} />
+              <span>Livros da Jornada</span>
+            </span>
+          </button>
+
+          <button
+            id="nav-profile"
+            onClick={() => { setActiveSection('profile'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-medium transition ${
+              activeSection === 'profile' ? 'bg-[#C08261]/10 text-[#C08261] font-semibold' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <User size={14} />
+              <span>Minha Caminhada</span>
+            </span>
+          </button>
 
           <button
             id="nav-apps"
             onClick={() => { setActiveSection('apps'); setSelectedDevotional(null); }}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition mt-2 ${
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold bg-[#C08261]/5 border border-[#C08261]/10 transition ${
               activeSection === 'apps' ? 'bg-[#C08261]/15 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
             }`}
           >
@@ -1014,7 +1193,21 @@ export default function App() {
             <span className="text-[9px] bg-[#C08261] text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold animate-pulse">Instalar</span>
           </button>
 
-          {/* Separador e Cards de Apoio (Sementes & Clamores) ao final da navegação */}
+          <button
+            id="nav-apoiar"
+            onClick={() => { setActiveSection('apoiar'); setSelectedDevotional(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left tracking-wide text-xs font-semibold border transition ${
+              activeSection === 'apoiar'
+                ? 'bg-amber-50 border-amber-200 text-amber-800'
+                : 'bg-amber-50/40 border-amber-100 text-stone-700 hover:bg-amber-50'
+            }`}
+          >
+            <span className="flex items-center space-x-2.5">
+              <Heart size={14} className="text-amber-600" />
+              <span>Como Apoiar 📚</span>
+            </span>
+            <span className="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Livros</span>
+          </button>
           <div className="pt-4 mt-4 border-t border-stone-100/70 space-y-3">
             {/* Sementes do Reino Quick Balance */}
             <div className="px-4 py-3 bg-[#f1f8f3] border border-emerald-100/50 rounded-xl flex items-center justify-between text-left">
@@ -1108,27 +1301,13 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Micro-interactive Streak card — com confirmação diária clara */}
-                  <div className="flex flex-col items-center bg-[#1F1D1B] py-4 px-6 rounded-2xl shadow-lg border border-[#DCAE6C]/15 backdrop-blur-xs shrink-0 self-start md:self-auto hover:border-[#DCAE6C]/40 transition-colors duration-300 space-y-2 min-w-[140px]">
-                    <div className="flex items-center space-x-3">
-                      <Flame size={22} fill="#DCAE6C" className="text-[#DCAE6C] animate-pulse" />
-                      <div className="text-left font-mono">
-                        <span className="text-2xl font-black text-[#DCAE6C]">{progress.streak} dias</span>
-                        <p className="text-[10px] text-stone-400 uppercase tracking-widest font-bold">À Mesa do Pai</p>
-                      </div>
+                  {/* Micro-interactive Streak card */}
+                  <div className="flex items-center space-x-4 bg-[#1F1D1B] py-4 px-6 rounded-2xl shadow-lg border border-[#DCAE6C]/15 backdrop-blur-xs shrink-0 self-start md:self-auto hover:border-[#DCAE6C]/40 transition-colors duration-300">
+                    <Flame size={24} fill="#DCAE6C" className="text-[#DCAE6C] animate-pulse" />
+                    <div className="text-left font-mono">
+                      <span className="text-2xl font-black text-[#DCAE6C]">{progress.streak} dias</span>
+                      <p className="text-xs text-stone-400 uppercase tracking-widest font-bold mt-1">À Mesa do Pai</p>
                     </div>
-                    {todayStreakDone ? (
-                      <span className="w-full text-center text-[10px] bg-emerald-900/60 text-emerald-300 border border-emerald-700/40 rounded-lg px-2 py-1 font-mono font-bold uppercase tracking-wider">
-                        ✓ Quietude de hoje concluída
-                      </span>
-                    ) : (
-                      <button
-                        onClick={() => { setActiveSection('devotionals'); setSelectedDevotional(null); markTodayStreakDone(); }}
-                        className="w-full text-center text-[10px] bg-[#DCAE6C]/10 hover:bg-[#DCAE6C]/20 text-[#DCAE6C] border border-[#DCAE6C]/20 rounded-lg px-2 py-1 font-mono font-bold uppercase tracking-wider transition"
-                      >
-                        ☕ Fazer quietude de hoje
-                      </button>
-                    )}
                   </div>
                 </div>
 
@@ -1153,41 +1332,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* ── COMECE AQUI: Onboarding StoryBrand 3 passos (apenas novos visitantes) ── */}
-              {showOnboarding && (
-                <div className="bg-gradient-to-br from-stone-900 to-stone-800 border border-[#DCAE6C]/30 rounded-3xl p-6 md:p-8 text-left relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-40 h-40 bg-[#DCAE6C]/8 rounded-full blur-2xl pointer-events-none" />
-                  <div className="flex justify-between items-start mb-5 relative z-10">
-                    <div>
-                      <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] uppercase font-mono tracking-widest text-[#DCAE6C] bg-[#DCAE6C]/10 border border-[#DCAE6C]/20 font-bold">
-                        👋 Comece Aqui
-                      </span>
-                      <h3 className="font-serif text-xl md:text-2xl font-semibold text-stone-100 mt-3 leading-snug">
-                        Três passos para sua primeira quietude
-                      </h3>
-                    </div>
-                    <button onClick={dismissOnboarding} className="text-stone-400 hover:text-stone-200 text-xs font-mono shrink-0 ml-4 mt-1 transition">✕ fechar</button>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
-                    {[
-                      { step: '1', title: 'Descubra sua identidade', desc: 'Qual peregrino você é? Encontre seu perfil espiritual.', action: () => { setActiveSection('profiles'); setSelectedDevotional(null); dismissOnboarding(); }, cta: 'Descobrir agora →' },
-                      { step: '2', title: 'Faça seu primeiro Respiro', desc: 'Aquiete seu coração em 4 segundos com nosso guia de respiração.', action: () => { setActiveSection('respiro'); setSelectedDevotional(null); dismissOnboarding(); }, cta: 'Respirar →' },
-                      { step: '3', title: 'Receba uma Palavra de Graça', desc: 'Sem cadastro. Uma palavra providencial para o seu momento agora.', action: () => { handlePullRandomQuote(); dismissOnboarding(); }, cta: 'Puxar Palavra →' },
-                    ].map((item) => (
-                      <button key={item.step} onClick={item.action}
-                        className="group text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#DCAE6C]/30 rounded-2xl p-4 transition duration-200"
-                      >
-                        <span className="inline-block w-6 h-6 rounded-full bg-[#DCAE6C]/20 text-[#DCAE6C] text-[11px] font-black font-mono text-center leading-6 mb-2">{item.step}</span>
-                        <p className="font-serif text-sm font-semibold text-stone-200 mb-1 leading-snug">{item.title}</p>
-                        <p className="text-[11px] text-stone-400 leading-relaxed mb-3">{item.desc}</p>
-                        <span className="text-[10px] font-mono font-bold text-[#DCAE6C] uppercase tracking-wider group-hover:underline">{item.cta}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-                            {/* Zero Fricção: Palavra do Silêncio Banner (Novo Poder) */}
+              {/* Zero Fricção: Palavra do Silêncio Banner (Novo Poder) */}
               <div className="bg-[#FAF8F5] border-2 border-dashed border-[#C08261]/25 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 text-left relative overflow-hidden">
                 <div className="space-y-2 max-w-2xl">
                   <span className="text-[9px] font-mono bg-[#C08261]/15 text-[#C08261] px-2.5 py-1 rounded-full uppercase tracking-wider font-extrabold inline-block">
@@ -2018,7 +2163,7 @@ export default function App() {
                             <div
                               id={`devotional-card-${dev.id}`}
                               key={dev.id}
-                              onClick={() => { setSelectedDevotional(dev); markTodayStreakDone(); }}
+                              onClick={() => setSelectedDevotional(dev)}
                               className={`bg-white border rounded-2xl p-5 shadow-xs hover:shadow-md transition duration-200 cursor-pointer flex flex-col justify-between h-[180px] hover:scale-[1.01] transform ${
                                 isCompleted 
                                   ? 'border-[#C08261]/30 bg-[#C08261]/2 shadow-inner-sm' 
@@ -2869,6 +3014,18 @@ export default function App() {
               className="space-y-4"
             >
               <AppsSection />
+            </motion.div>
+          )}
+
+          {activeSection === 'apoiar' && !selectedDevotional && (
+            <motion.div
+              key="apoiar"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="space-y-4"
+            >
+              <ApoiarSection />
             </motion.div>
           )}
         </AnimatePresence>
