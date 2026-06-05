@@ -2,19 +2,6 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import bookCoverImg from "../assets/images/book_cover_1780394449410.png";
 import {
-  collection,
-  addDoc,
-  updateDoc,
-  doc,
-  query,
-  orderBy,
-  limit,
-  onSnapshot,
-  increment,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import {
   Heart,
   Compass,
   Gift,
@@ -85,7 +72,7 @@ export default function IgrejaPrimitiva({
   onSaveProgress,
 }: IgrejaPrimitivaProps) {
   // Main view navigation tab
-  const [activeTab, setActiveTab] = useState<"comunhao" | "chamado" | "cocriacao">(
+  const [activeTab, setActiveTab] = useState<"comunhao" | "chamado" | "cocriacao" | "livros">(
     "comunhao"
   );
 
@@ -127,8 +114,7 @@ export default function IgrejaPrimitiva({
   const [donatorName, setDonatorName] = useState("");
   const [confirmedDonation, setConfirmedDonation] = useState(false);
 
-
-  // User Credits State (As proposed, starts with 12 initial credits)
+  // User Credits State
   const [userCredits, setUserCredits] = useState<number>(12);
 
   // Interactive Mural Posts State (Pre-populated with rich editorial, personal stories based on proposal)
@@ -270,7 +256,7 @@ export default function IgrejaPrimitiva({
     },
   ]);
 
-  // Load founder/credits from localStorage (local only — não afeta outros usuários)
+  // Load from local storage if registered as founder or has interactive progress
   useEffect(() => {
     const savedFounder = localStorage.getItem("somosodespertar_founder_status");
     if (savedFounder) {
@@ -281,11 +267,63 @@ export default function IgrejaPrimitiva({
     if (savedCredits) {
       setUserCredits(parseInt(savedCredits));
     }
+    const savedMural = localStorage.getItem("despertar_mural_v1");
+    if (savedMural) {
+      try {
+        setMuralItems(JSON.parse(savedMural));
+      } catch (e) {
+        // use default
+      }
+    }
 
-    // Simular vagas restantes
+    // Initialize co-created centelhas
+    const savedCentelhas = localStorage.getItem("despertar_cocreated_centelhas");
+    if (savedCentelhas) {
+      try {
+        setCentelhas(JSON.parse(savedCentelhas));
+      } catch (e) {
+        // use default
+      }
+    } else {
+      const initialCentelhas = [
+        {
+          id: "c1",
+          author: "Priscila Alencar",
+          location: "Fortaleza, CE",
+          prompt: "Qual foi a batalha que ninguém viu você vencer?",
+          content: "Silenciar o choro na cozinha para que meus filhos não se assustassem, e dobrar os joelhos no azulejo gelado. Senti uma mão quente no meu ombro dizendo: 'Eu estou cuidando de tudo'. E desde então, sei que não estou sozinha.",
+          votes: 78,
+          voted: false
+        },
+        {
+          id: "c2",
+          author: "Thiago Mendes",
+          location: "Niterói, RJ",
+          prompt: "Ninguém deveria enfrentar seus dias sozinho. O que você diria para alguém hoje?",
+          content: "Você não está atrasado. Você está sendo preparado. O deserto não é o fim da sua história; é onde o poço de água viva é cavado no seu interior. A mesa da Presença do Pai está com o café quente te esperando a cada manhã.",
+          votes: 54,
+          voted: false
+        },
+        {
+          id: "c3",
+          author: "Débora Santos",
+          location: "Goiânia, GO",
+          prompt: "Em qual momento desta semana você sentiu o sopro da graça?",
+          content: "Quando eu ia apagar o aplicativo e desistir da minha constância de oração. Uma notificação me lembrou de respirar fundo no Altar de quietude por 4 segundos. Aquele respiro mudou meu dia e me trouxe de volta ao aconchego.",
+          votes: 91,
+          voted: false
+        }
+      ];
+      setCentelhas(initialCentelhas);
+      localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(initialCentelhas));
+    }
+
+    // Simulate real-time progress slightly to create high pre-suasion engagement
     const interval = setInterval(() => {
       setVagasRestantes((prev) => {
-        if (prev > 12) return prev - (Math.random() > 0.85 ? 1 : 0);
+        if (prev > 12) {
+          return prev - (Math.random() > 0.85 ? 1 : 0);
+        }
         return prev;
       });
     }, 15000);
@@ -293,151 +331,13 @@ export default function IgrejaPrimitiva({
     return () => clearInterval(interval);
   }, []);
 
-  // ── Mural Vivo: tempo real via Firestore ──────────────────────────────────
-  useEffect(() => {
-    const q = query(
-      collection(db, 'muralItems'),
-      orderBy('criadoEm', 'desc'),
-      limit(50)
-    );
-
-    const unsub = onSnapshot(q, (snapshot) => {
-      const items: MuralItem[] = snapshot.docs.map((docSnap) => {
-        const d = docSnap.data();
-        return {
-          id: docSnap.id,
-          category: d.category || 'oracao',
-          author: d.author || 'Peregrino',
-          avatarEmoji: d.avatarEmoji || '🕊️',
-          location: d.location || '',
-          title: d.title || '',
-          description: d.description || '',
-          tags: d.tags || [],
-          type: d.type || 'need',
-          contact: d.contact || '',
-          prayerCount: d.prayerCount || 0,
-          criadoEm: d.criadoEm,
-        } as MuralItem;
-      });
-      if (items.length > 0) setMuralItems(items);
-    }, (error: any) => {
-      // Fallback sem ordenação se índice não existir ainda
-      if (error?.code === 'failed-precondition' || error?.code === 'unimplemented') {
-        const qFallback = query(collection(db, 'muralItems'), limit(50));
-        onSnapshot(qFallback, (snapshot) => {
-          const items: MuralItem[] = snapshot.docs.map((docSnap) => {
-            const d = docSnap.data();
-            return {
-              id: docSnap.id,
-              category: d.category || 'oracao',
-              author: d.author || 'Peregrino',
-              avatarEmoji: d.avatarEmoji || '🕊️',
-              location: d.location || '',
-              title: d.title || '',
-              description: d.description || '',
-              tags: d.tags || [],
-              type: d.type || 'need',
-              contact: d.contact || '',
-              prayerCount: d.prayerCount || 0,
-              criadoEm: d.criadoEm,
-            } as MuralItem;
-          });
-          if (items.length > 0) setMuralItems(items);
-        });
-      }
-    });
-
-    return () => unsub();
-  }, []);
-
-  // ── Centelhas Fé Ativa: tempo real via Firestore ──────────────────────────
-  useEffect(() => {
-    const q = query(
-      collection(db, 'centelhas'),
-      orderBy('criadoEm', 'desc'),
-      limit(30)
-    );
-
-    const unsub = onSnapshot(q, (snapshot) => {
-      if (snapshot.empty) return; // Manter seeds iniciais se vazio
-      const items = snapshot.docs.map((docSnap) => {
-        const d = docSnap.data();
-        return {
-          id: docSnap.id,
-          author: d.author || 'Peregrino',
-          location: d.location || 'Brasil',
-          prompt: d.prompt || '',
-          content: d.content || '',
-          votes: d.votes || 0,
-          voted: false,
-        };
-      });
-      setCentelhas(items);
-    }, (error: any) => {
-      if (error?.code === 'failed-precondition' || error?.code === 'unimplemented') {
-        const qFallback = query(collection(db, 'centelhas'), limit(30));
-        onSnapshot(qFallback, (snapshot) => {
-          if (snapshot.empty) return;
-          const items = snapshot.docs.map((docSnap) => {
-            const d = docSnap.data();
-            return {
-              id: docSnap.id,
-              author: d.author || 'Peregrino',
-              location: d.location || 'Brasil',
-              prompt: d.prompt || '',
-              content: d.content || '',
-              votes: d.votes || 0,
-              voted: false,
-            };
-          });
-          setCentelhas(items);
-        });
-      }
-    });
-
-    return () => unsub();
-  }, []);
-
-  // Salva item novo no Firestore (Mural Vivo) — o onSnapshot atualiza o state automaticamente
-  const saveMuralToStorage = async (updatedMural: MuralItem[]) => {
-    // Atualização otimista local imediata
+  const saveMuralToStorage = (updatedMural: MuralItem[]) => {
     setMuralItems(updatedMural);
-    // Salvar apenas o item novo (primeiro da lista que não existe ainda no Firestore)
-    const newItem = updatedMural[0];
-    if (!newItem || newItem.id === muralItems[0]?.id) return; // já existe
-    try {
-      await addDoc(collection(db, 'muralItems'), {
-        category: newItem.category,
-        author: newItem.author,
-        avatarEmoji: newItem.avatarEmoji || '🕊️',
-        location: newItem.location || '',
-        title: newItem.title || '',
-        description: newItem.description || '',
-        tags: newItem.tags || [],
-        type: newItem.type || 'need',
-        contact: newItem.contact || '',
-        prayerCount: newItem.prayerCount || 0,
-        counter: newItem.counter ?? null,
-        maxCounter: newItem.maxCounter ?? null,
-        criadoEm: serverTimestamp(),
-      });
-    } catch (err) {
-      console.error('Erro ao salvar no Mural:', err);
-    }
-  };
-
-  // Incrementa contador de oração/cadeira no Firestore
-  const updateMuralCounter = async (id: string, field: string, delta: number) => {
-    try {
-      const docRef = doc(db, 'muralItems', id);
-      await updateDoc(docRef, { [field]: increment(delta) });
-    } catch (err) {
-      console.error('Erro ao atualizar contador no Mural:', err);
-    }
+    localStorage.setItem("despertar_mural_v1", JSON.stringify(updatedMural));
   };
 
   // Co-creation actions (New Power)
-  const handlePublishCentelha = async (e: React.FormEvent) => {
+  const handlePublishCentelha = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCentelhaContent.trim()) {
       showTemporaryToast("Por favor, derrame a sua palavra ou resposta antes de enviar.");
@@ -447,20 +347,29 @@ export default function IgrejaPrimitiva({
     const authorToUse = newCentelhaAuthor.trim() || userProfile?.name || "Um Peregrino Sincero";
     const locationToUse = newCentelhaLocation.trim() || userProfile?.city || "Brasil";
 
-    try {
-      await addDoc(collection(db, 'centelhas'), {
-        author: authorToUse,
-        location: locationToUse,
-        prompt: selectedPrompt,
-        content: newCentelhaContent.trim(),
-        votes: 1,
-        criadoEm: serverTimestamp(),
-      });
-    } catch (err) {
-      console.error('Erro ao publicar centelha:', err);
-    }
+    const newCent: {
+      id: string;
+      author: string;
+      location: string;
+      prompt: string;
+      content: string;
+      votes: number;
+      voted?: boolean;
+    } = {
+      id: "cent_" + Date.now().toString(),
+      author: authorToUse,
+      location: locationToUse,
+      prompt: selectedPrompt,
+      content: newCentelhaContent.trim(),
+      votes: 1, // Start with their own vote
+      voted: true
+    };
 
-    // Créditos locais
+    const updated = [newCent, ...centelhas];
+    setCentelhas(updated);
+    localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(updated));
+
+    // Reward active participation (New Power mechanism: circulation of credits)
     const nextCredits = userCredits + 5;
     setUserCredits(nextCredits);
     localStorage.setItem("despertar_user_credits", nextCredits.toString());
@@ -471,22 +380,24 @@ export default function IgrejaPrimitiva({
     showTemporaryToast("Chama acesa! Sua resposta brilha na mesa de Co-Criação e você ganhou +5 créditos! 🕯️🔥");
   };
 
-  const handleVoteCentelha = async (id: string) => {
+  const handleVoteCentelha = (id: string) => {
     if (hasVotedPost[id]) {
       showTemporaryToast("Você já somou sua fé a esta resposta.");
       return;
     }
 
+    const updated = centelhas.map(c => {
+      if (c.id === id) {
+        return { ...c, votes: c.votes + 1, voted: true };
+      }
+      return c;
+    });
+
+    setCentelhas(updated);
+    localStorage.setItem("despertar_cocreated_centelhas", JSON.stringify(updated));
     setHasVotedPost(prev => ({ ...prev, [id]: true }));
 
-    try {
-      const docRef = doc(db, 'centelhas', id);
-      await updateDoc(docRef, { votes: increment(1) });
-    } catch (err) {
-      console.error('Erro ao votar na centelha:', err);
-    }
-
-    // Créditos locais
+    // Circulate power: reward voter
     const nextCredits = userCredits + 1;
     setUserCredits(nextCredits);
     localStorage.setItem("despertar_user_credits", nextCredits.toString());
@@ -751,14 +662,7 @@ export default function IgrejaPrimitiva({
       return m;
     });
 
-    // Atualização otimista local
-    setMuralItems(updated);
-
-    // Persiste contador no Firestore se for interação de oração/cadeira
-    if (item.category === 'oracao' || item.category === 'cadeira_vazia') {
-      const delta = item.userInteracted ? -1 : 1;
-      updateMuralCounter(item.id, 'counter', delta);
-    }
+    saveMuralToStorage(updated);
 
     if (item.userInteracted) {
       showTemporaryToast(`Você removeu seu compromisso.`);
@@ -883,10 +787,10 @@ export default function IgrejaPrimitiva({
               : "text-stone-400 hover:text-stone-600"
           }`}
         >
-          <Flame size={15} />
-          <span>Nossa Visão Primitiva & Apoio</span>
-          <span className="text-[10px] bg-[#C08261] text-stone-100 px-1.5 py-0.5 rounded-full font-mono font-bold">
-            Pioneiro
+          <FileText size={15} className="text-[#C08261]" />
+          <span>📖 Livros & Apoio</span>
+          <span className="text-[10px] bg-[#C08261] text-stone-100 px-1.5 py-0.5 rounded-full font-mono font-bold animate-pulse">
+            Apoiar
           </span>
         </button>
 
@@ -1824,11 +1728,10 @@ export default function IgrejaPrimitiva({
               </div>
             </div>
 
-            <hr className="border-stone-150" />
 
             <hr className="border-stone-150" />
 
-           {/* APOIO AO MOVIMENTO — Kit dos livros com capas reais */}
+            {/* APOIO AO MOVIMENTO — Kit dos livros com capas reais */}
             <div className="bg-gradient-to-br from-[#1E1C1A] via-[#121110] to-[#080807] text-white rounded-3xl p-8 md:p-10 border border-[#DCAE6C]/25 shadow-xl overflow-hidden relative">
               {/* Glow */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#DCAE6C]/8 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16" />
@@ -1921,11 +1824,16 @@ export default function IgrejaPrimitiva({
                   Seja um Pioneiro
                 </span>
                 <h4 className="font-serif text-2xl md:text-3xl font-light text-stone-850 max-w-lg mx-auto">
-                  Você acredita que a igreja ainda pode ser tudo o que ela já foi um dia?
+                  Você acredita que a igreja ainda pode ser tudo o que ela já
+                  foi um dia?
                 </h4>
                 <p className="text-stone-600 text-xs md:text-sm leading-relaxed max-w-md mx-auto">
-                  Abra caminho e faça parte. Garanta sua listagem honorária de co-fundador pioneiro e ganhe{" "}
-                  <strong className="text-stone-900 font-bold">12 créditos de mordomia para estrear os serviços no lançamento</strong>.
+                  Abra caminho e faça parte. Garanta sua listagem honorária de
+                  co-fundador pioneiro e ganhe{" "}
+                  <strong className="text-stone-900 font-bold">
+                    12 créditos de mordor para estrear os serviços no lançamento
+                  </strong>
+                  .
                 </p>
               </div>
 
@@ -1935,10 +1843,17 @@ export default function IgrejaPrimitiva({
                   animate={{ opacity: 1, scale: 1 }}
                   className="p-8 bg-[#C08261]/10 rounded-2xl border-2 border-dashed border-[#C08261] max-w-lg mx-auto space-y-3"
                 >
-                  <Award size={48} className="text-[#C08261] mx-auto animate-bounce" />
-                  <h5 className="font-serif text-lg font-bold text-stone-800">Inscrição de Co-Fundador Registrada!</h5>
+                  <Award
+                    size={48}
+                    className="text-[#C08261] mx-auto animate-bounce"
+                  />
+                  <h5 className="font-serif text-lg font-bold text-stone-800">
+                    Inscrição de Co-Fundador Registrada!
+                  </h5>
                   <p className="text-stone-650 text-xs leading-relaxed">
-                    Você já está no rol oficial dos primeiros correspondentes! Enviaremos as atualizações diretamente no seu e-mail.
+                    Você já está no rol oficial dos primeiros correspondentes!
+                    Enviaremos as atualizações dos servidores e chaves de acesso
+                    diretamente no seu e-mail cadastrado.
                   </p>
                 </motion.div>
               ) : (
@@ -1948,48 +1863,120 @@ export default function IgrejaPrimitiva({
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Como deseja ser chamado?</label>
-                      <input type="text" placeholder="Nome completo ou social" value={name} onChange={(e) => setName(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-hidden focus:border-[#C08261]" />
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
+                        Como deseja ser chamado?
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Nome completo ou social"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-hidden focus:border-[#C08261]"
+                      />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Seu Melhor E-mail</label>
-                      <input type="email" placeholder="exemplo@igreja.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-hidden focus:border-[#C08261]" />
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
+                        Seu Melhor E-mail
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="exemplo@igreja.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-hidden focus:border-[#C08261]"
+                      />
                     </div>
                   </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="md:col-span-2 space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Cidade de Atendimento</label>
-                      <input type="text" placeholder="Ex: Curitiba" value={city} onChange={(e) => setCity(e.target.value)} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-hidden focus:border-[#C08261]" />
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
+                        Cidade de Atendimento
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ex: Curitiba"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        required
+                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-hidden focus:border-[#C08261]"
+                      />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Estado (UF)</label>
-                      <input type="text" placeholder="PR" maxLength={2} value={stateCode} onChange={(e) => setStateCode(e.target.value.toUpperCase())} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-center font-mono focus:outline-hidden focus:border-[#C08261]" />
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
+                        Estado (UF)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="PR"
+                        maxLength={2}
+                        value={stateCode}
+                        onChange={(e) =>
+                          setStateCode(e.target.value.toUpperCase())
+                        }
+                        required
+                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-center font-mono focus:outline-hidden focus:border-[#C08261]"
+                      />
                     </div>
                   </div>
+
                   <div className="space-y-3 pt-1">
                     <div className="flex items-center space-x-6 text-xs font-semibold text-stone-650">
                       <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="founder_type" checked={interactionType === "offer"} onChange={() => setInteractionType("offer")} />
+                        <input
+                          type="radio"
+                          name="founder_type"
+                          checked={interactionType === "offer"}
+                          onChange={() => setInteractionType("offer")}
+                        />
                         <span>Quero Servir / Apoiar</span>
                       </label>
                       <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="founder_type" checked={interactionType === "receive"} onChange={() => setInteractionType("receive")} />
+                        <input
+                          type="radio"
+                          name="founder_type"
+                          checked={interactionType === "receive"}
+                          onChange={() => setInteractionType("receive")}
+                        />
                         <span>Preciso de Acolhimento</span>
                       </label>
                     </div>
+
                     <div className="space-y-1 text-xs">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">Qual ministério/foco de atuação?</label>
-                      <select value={chosenService} onChange={(e) => setChosenService(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 focus:outline-hidden focus:border-[#C08261]">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-extrabold block">
+                        Qual ministério/foco de atuação?
+                      </label>
+                      <select
+                        value={chosenService}
+                        onChange={(e) => setChosenService(e.target.value)}
+                        className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 focus:outline-hidden focus:border-[#C08261]"
+                      >
                         <option value="Oração">Intercessão de Oração 🙏</option>
-                        <option value="Discipulado">Discipulado do Reino 👣</option>
-                        <option value="Aconselhamento">Aconselhamento e Apoio 👩‍⚕️</option>
-                        <option value="Ensino bíblico">Exposição da Escritura 📖</option>
-                        <option value="Louvor ao vivo">Louvor e Canção em Casa 🎸</option>
-                        <option value="Mesa Aberta">Acolher na Cadeira Vazia 🍲</option>
+                        <option value="Discipulado">
+                          Discipulado do Reino 👣
+                        </option>
+                        <option value="Aconselhamento">
+                          Aconselhamento e Apoio 👩‍⚕️
+                        </option>
+                        <option value="Ensino bíblico">
+                          Exposição da Escritura 📖
+                        </option>
+                        <option value="Louvor ao vivo">
+                          Louvor e Canção em Casa 🎸
+                        </option>
+                        <option value="Mesa Aberta">
+                          Acolher na Cadeira Vazia 🍲
+                        </option>
                       </select>
                     </div>
                   </div>
-                  <button type="submit" className="w-full py-4 bg-stone-900 text-stone-100 hover:bg-black uppercase tracking-wider font-extrabold rounded-xl transition cursor-pointer">
+
+                  <button
+                    type="submit"
+                    className="w-full py-4 bg-stone-900 text-stone-100 hover:bg-black uppercase tracking-wider font-extrabold rounded-xl transition cursor-pointer"
+                  >
                     Registrar-se como Co-Fundador Pioneiro
                   </button>
                 </form>
