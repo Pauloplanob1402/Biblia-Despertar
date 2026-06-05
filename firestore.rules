@@ -69,7 +69,7 @@ service cloud.firestore {
       allow delete: if isSignedIn() && resource.data.creatorUid == request.auth.uid;
     }
 
-    // Sementes do Reino — visível só para o próprio usuário (Mateus 6)
+    // Sementes do Reino
     match /sementes/{uid} {
       allow read, write: if isOwner(uid);
 
@@ -79,7 +79,7 @@ service cloud.firestore {
       }
     }
 
-    // Pedidos de Oração (Área 1 e Área 3)
+    // Pedidos de Oração
     match /pedidosOracao/{pedidoId} {
       allow read: if true;
       allow create: if isSignedIn()
@@ -90,21 +90,29 @@ service cloud.firestore {
         || (isSignedIn() && resource.data.criadoPor == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['respondido']));
     }
 
-    // Mesas de Comunhão
-    match /mesas/{mesaId} {
-      allow read: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn();
-      allow delete: if isSignedIn() && resource.data.createdBy == request.auth.uid;
-    }
-
-    // Testemunhos (Área 2)
+    // Testemunhos
     match /testemunhos/{testemunhoId} {
       allow read: if true;
       allow create: if isSignedIn()
         && request.resource.data.criadoPor == request.auth.uid
         && request.resource.data.fortalecidos == 0;
       allow update: if isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fortalecidos']);
+    }
+
+    // Mural Vivo (IgrejaPrimitiva)
+    match /muralItems/{itemId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['counter', 'prayerCount']);
+      allow delete: if false;
+    }
+
+    // Centelhas Fé Ativa (IgrejaPrimitiva)
+    match /centelhas/{centelhaId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes']);
+      allow delete: if false;
     }
   }
 }
