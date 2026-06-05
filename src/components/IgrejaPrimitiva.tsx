@@ -1828,50 +1828,85 @@ export default function IgrejaPrimitiva({
 
             <hr className="border-stone-150" />
 
-            {/* APOIO AO MOVIMENTO — Link para Livros */}
-            <div className="bg-gradient-to-br from-[#1E1C1A] via-[#121110] to-[#080807] text-white rounded-3xl p-8 md:p-10 border border-[#DCAE6C]/25 shadow-xl space-y-6 text-center">
-              <div className="space-y-3 max-w-2xl mx-auto">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#DCAE6C]/10 border border-[#DCAE6C]/20 rounded-full text-[10px] font-mono text-[#DCAE6C] font-bold uppercase tracking-wider">
-                  <Gift size={11} className="text-amber-300 animate-pulse" />
-                  <span>Livros Oficiais do Despertar</span>
-                </span>
-                <h3 className="font-serif text-2xl md:text-3xl font-light text-stone-100 leading-tight">
-                  Leve o Despertar para <span className="text-[#DCAE6C] font-semibold">sua mesa</span>
-                </h3>
-                <p className="text-stone-300 text-xs md:text-sm leading-relaxed max-w-xl mx-auto">
-                  Adquira os dois livros oficiais do movimento — e-books escritos para equipar sua família, aprofundar sua fé e transformar a forma como você começa cada dia.
-                </p>
-              </div>
+           {/* APOIO AO MOVIMENTO — Kit dos livros com capas reais */}
+            <div className="bg-gradient-to-br from-[#1E1C1A] via-[#121110] to-[#080807] text-white rounded-3xl p-8 md:p-10 border border-[#DCAE6C]/25 shadow-xl overflow-hidden relative">
+              {/* Glow */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#DCAE6C]/8 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16" />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg mx-auto">
-                <div className="bg-stone-900/60 border border-stone-800 rounded-2xl p-5 text-left space-y-2">
-                  <span className="text-2xl">📔</span>
-                  <p className="font-serif font-bold text-[#DCAE6C] text-sm">O Despertar</p>
-                  <p className="text-[11px] text-stone-400 leading-relaxed">A geração que voltou a ouvir a voz de Deus.</p>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-xs text-stone-500 line-through">R$ 34,90</span>
-                    <span className="font-mono font-black text-[#DCAE6C] text-sm">R$ 24,90</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center relative z-10">
+
+                {/* Capa do Kit */}
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <img
+                      src={bookCoverImg}
+                      alt="Kit O Despertar — 2 livros"
+                      className="w-56 md:w-64 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] hover:scale-[1.02] transition duration-300 border border-[#DCAE6C]/10"
+                    />
+                    <span className="absolute -top-3 -right-3 bg-[#C08261] text-white text-[10px] font-mono font-black uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg border border-[#DCAE6C]/20">
+                      2 livros · 1 propósito
+                    </span>
                   </div>
                 </div>
-                <div className="bg-stone-900/60 border border-stone-800 rounded-2xl p-5 text-left space-y-2">
-                  <span className="text-2xl">🙏</span>
-                  <p className="font-serif font-bold text-[#DCAE6C] text-sm">Devocionais Diários</p>
-                  <p className="text-[11px] text-stone-400 leading-relaxed">40 reflexões para despertar sua manhã.</p>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-xs text-stone-500 line-through">R$ 29,90</span>
-                    <span className="font-mono font-black text-[#DCAE6C] text-sm">R$ 19,90</span>
+
+                {/* Texto + CTA */}
+                <div className="space-y-5 text-left">
+                  <div className="space-y-3">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#DCAE6C]/10 border border-[#DCAE6C]/20 rounded-full text-[10px] font-mono text-[#DCAE6C] font-bold uppercase tracking-wider">
+                      <Gift size={11} className="text-amber-300 animate-pulse" />
+                      <span>Kit Oficial do Despertar</span>
+                    </span>
+                    <h3 className="font-serif text-2xl md:text-3xl font-light text-stone-100 leading-tight">
+                      Leve o Despertar para <span className="text-[#DCAE6C] font-semibold">sua mesa</span>
+                    </h3>
+                    <p className="text-stone-300 text-xs md:text-sm leading-relaxed">
+                      Os dois livros oficiais juntos — para transformar sua visão de fé e viver isso todo dia de manhã.
+                    </p>
+                  </div>
+
+                  {/* Mini cards dos livros */}
+                  <div className="space-y-2">
+                    {[
+                      { emoji: '📔', title: 'O Despertar', sub: 'A geração que voltou a ouvir a voz de Deus', orig: 'R$ 34,90', price: 'R$ 24,90' },
+                      { emoji: '🙏', title: 'O Despertar Devocional', sub: 'Devocionais diários para fé, transformação e propósito', orig: 'R$ 29,90', price: 'R$ 19,90' },
+                    ].map((livro) => (
+                      <div key={livro.title} className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5">
+                        <span className="text-lg shrink-0">{livro.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-serif font-semibold text-[#DCAE6C] text-xs truncate">{livro.title}</p>
+                          <p className="text-[10px] text-stone-400 truncate">{livro.sub}</p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <span className="text-[10px] text-stone-500 line-through block">{livro.orig}</span>
+                          <span className="font-mono font-black text-[#DCAE6C] text-xs">{livro.price}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Preço do Kit */}
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-stone-500 text-sm line-through">R$ 64,80</span>
+                    <span className="font-mono font-black text-[#DCAE6C] text-2xl">R$ 34,80</span>
+                    <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full font-mono font-bold">Economize R$ 30</span>
+                  </div>
+
+                  {/* CTA — link direto do kit */}
+                  <button
+                    type="button"
+                    onClick={() => window.open('https://pay.kiwify.com.br/Fbksh0o', '_blank')}
+                    className="w-full py-4 bg-[#C08261] hover:bg-[#b07353] text-white font-bold text-sm rounded-2xl shadow-lg transition flex items-center justify-center gap-2 group"
+                  >
+                    <span>Adquirir o Kit — R$ 34,80</span>
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition" />
+                  </button>
+
+                  <div className="flex items-center justify-center gap-3 text-[10px] text-stone-500 flex-wrap">
+                    <span>🔒 Compra segura via Kiwify</span>
+                    <span>📧 Entrega imediata no e-mail</span>
                   </div>
                 </div>
               </div>
-
-              <button
-                type="button"
-                onClick={() => window.dispatchEvent(new CustomEvent('change-section', { detail: 'ebooks' }))}
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#C08261] hover:bg-[#b07353] text-white font-bold text-sm rounded-2xl shadow-lg transition"
-              >
-                <span>Ver os Livros e Adquirir</span>
-                <ArrowRight size={14} />
-              </button>
             </div>
 
             <hr className="border-stone-150" />
