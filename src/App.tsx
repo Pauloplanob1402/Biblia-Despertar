@@ -25,6 +25,7 @@ import IgrejaPrimitiva from './components/IgrejaPrimitiva';
 import AppsSection from './components/AppsSection';
 import MuralComunidade from './components/MuralComunidade';
 import ApoiarSection from './components/ApoiarSection';
+import AvatarUpload from './components/AvatarUpload';
 
 // Core static databases
 import { DEVOCIONAIS } from './data/devotionals';
