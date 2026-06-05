@@ -11,7 +11,6 @@ import {
   limit, 
   onSnapshot, 
   increment,
-  serverTimestamp,
   getFirestore
 } from 'firebase/firestore';
 import { db, auth, handleFirestoreError, OperationType } from '../lib/firebase';
@@ -115,6 +114,24 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
   // Listen to active prayer requests
   useEffect(() => {
     setLoading(true);
+
+    const parsePedido = (docSnap: any): PedidoOracao => {
+      const d = docSnap.data();
+      return {
+        id: docSnap.id,
+        criadoPor: d.criadoPor || '',
+        criadorNome: d.criadorNome || 'Servo/a',
+        criadorGenerico: d.criadorGenerico || 'Irmão',
+        categorias: d.categorias || [],
+        descricaoCurta: d.descricaoCurta || '',
+        cidade: d.cidade || '',
+        contadorOracoes: d.contadorOracoes || 0,
+        respondido: !!d.respondido,
+        criadoEm: d.criadoEm
+      };
+    };
+
+    // Query composta (requer índice no Firestore)
     const q = query(
       collection(db, 'pedidosOracao'),
       where('respondido', '==', false),
@@ -123,25 +140,29 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const docsData: PedidoOracao[] = [];
-      snapshot.forEach((docSnap) => {
-        const d = docSnap.data();
-        docsData.push({
-          id: docSnap.id,
-          criadoPor: d.criadoPor || '',
-          criadorNome: d.criadorNome || 'Servo/a',
-          criadorGenerico: d.criadorGenerico || 'Irmão',
-          categorias: d.categorias || [],
-          descricaoCurta: d.descricaoCurta || '',
-          cidade: d.cidade || '',
-          contadorOracoes: d.contadorOracoes || 0,
-          respondido: !!d.respondido,
-          criadoEm: d.criadoEm
-        });
-      });
-      setPedidos(docsData);
+      setPedidos(snapshot.docs.map(parsePedido));
       setLoading(false);
-    }, (error) => {
+    }, (error: any) => {
+      // Índice composto ainda não criado no Firebase Console → fallback sem orderBy
+      if (error?.code === 'failed-precondition' || error?.code === 'unimplemented') {
+        const qFallback = query(
+          collection(db, 'pedidosOracao'),
+          where('respondido', '==', false),
+          limit(40)
+        );
+        const unsubFallback = onSnapshot(qFallback, (snapshot) => {
+          const docs = snapshot.docs.map(parsePedido);
+          // Ordenar no cliente enquanto índice não existe
+          docs.sort((a, b) => {
+            const ta = a.criadoEm?.toDate ? a.criadoEm.toDate().getTime() : 0;
+            const tb = b.criadoEm?.toDate ? b.criadoEm.toDate().getTime() : 0;
+            return tb - ta;
+          });
+          setPedidos(docs);
+          setLoading(false);
+        }, () => setLoading(false));
+        return () => unsubFallback();
+      }
       setLoading(false);
       handleFirestoreError(error, OperationType.GET, 'pedidosOracao');
     });
@@ -151,6 +172,21 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
 
   // Listen to testimonies
   useEffect(() => {
+    const parseTestemunho = (docSnap: any): Testemunho => {
+      const d = docSnap.data();
+      return {
+        id: docSnap.id,
+        criadoPor: d.criadoPor || '',
+        criadorNome: d.criadorNome || 'Servo/a',
+        criadorGenerico: d.criadorGenerico || 'Irmão',
+        categoria: d.categoria || 'Fé',
+        titulo: d.titulo || '',
+        relato: d.relato || '',
+        fortalecidos: d.fortalecidos || 0,
+        criadoEm: d.criadoEm
+      };
+    };
+
     const q = query(
       collection(db, 'testemunhos'),
       orderBy('criadoEm', 'desc'),
@@ -158,23 +194,21 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const docsData: Testemunho[] = [];
-      snapshot.forEach((docSnap) => {
-        const d = docSnap.data();
-        docsData.push({
-          id: docSnap.id,
-          criadoPor: d.criadoPor || '',
-          criadorNome: d.criadorNome || 'Servo/a',
-          criadorGenerico: d.criadorGenerico || 'Irmão',
-          categoria: d.categoria || 'Fé',
-          titulo: d.titulo || '',
-          relato: d.relato || '',
-          fortalecidos: d.fortalecidos || 0,
-          criadoEm: d.criadoEm
+      setTestemunhos(snapshot.docs.map(parseTestemunho));
+    }, (error: any) => {
+      if (error?.code === 'failed-precondition' || error?.code === 'unimplemented') {
+        const qFallback = query(collection(db, 'testemunhos'), limit(40));
+        const unsubFallback = onSnapshot(qFallback, (snapshot) => {
+          const docs = snapshot.docs.map(parseTestemunho);
+          docs.sort((a, b) => {
+            const ta = a.criadoEm?.toDate ? a.criadoEm.toDate().getTime() : 0;
+            const tb = b.criadoEm?.toDate ? b.criadoEm.toDate().getTime() : 0;
+            return tb - ta;
+          });
+          setTestemunhos(docs);
         });
-      });
-      setTestemunhos(docsData);
-    }, (error) => {
+        return () => unsubFallback();
+      }
       handleFirestoreError(error, OperationType.GET, 'testemunhos');
     });
 
@@ -184,6 +218,22 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
   // Filter answered prayers
   const [respostas, setRespostas] = useState<PedidoOracao[]>([]);
   useEffect(() => {
+    const parseRespondido = (docSnap: any): PedidoOracao => {
+      const d = docSnap.data();
+      return {
+        id: docSnap.id,
+        criadoPor: d.criadoPor || '',
+        criadorNome: d.criadorNome || 'Servo/a',
+        criadorGenerico: d.criadorGenerico || 'Irmão',
+        categorias: d.categorias || [],
+        descricaoCurta: d.descricaoCurta || '',
+        cidade: d.cidade || '',
+        contadorOracoes: d.contadorOracoes || 0,
+        respondido: !!d.respondido,
+        criadoEm: d.criadoEm
+      };
+    };
+
     const q = query(
       collection(db, 'pedidosOracao'),
       where('respondido', '==', true),
@@ -192,24 +242,25 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const docsData: PedidoOracao[] = [];
-      snapshot.forEach((docSnap) => {
-        const d = docSnap.data();
-        docsData.push({
-          id: docSnap.id,
-          criadoPor: d.criadoPor || '',
-          criadorNome: d.criadorNome || 'Servo/a',
-          criadorGenerico: d.criadorGenerico || 'Irmão',
-          categorias: d.categorias || [],
-          descricaoCurta: d.descricaoCurta || '',
-          cidade: d.cidade || '',
-          contadorOracoes: d.contadorOracoes || 0,
-          respondido: !!d.respondido,
-          criadoEm: d.criadoEm
+      setRespostas(snapshot.docs.map(parseRespondido));
+    }, (error: any) => {
+      if (error?.code === 'failed-precondition' || error?.code === 'unimplemented') {
+        const qFallback = query(
+          collection(db, 'pedidosOracao'),
+          where('respondido', '==', true),
+          limit(40)
+        );
+        const unsubFallback = onSnapshot(qFallback, (snapshot) => {
+          const docs = snapshot.docs.map(parseRespondido);
+          docs.sort((a, b) => {
+            const ta = a.criadoEm?.toDate ? a.criadoEm.toDate().getTime() : 0;
+            const tb = b.criadoEm?.toDate ? b.criadoEm.toDate().getTime() : 0;
+            return tb - ta;
+          });
+          setRespostas(docs);
         });
-      });
-      setRespostas(docsData);
-    }, (error) => {
+        return () => unsubFallback();
+      }
       handleFirestoreError(error, OperationType.GET, 'pedidosOracao');
     });
 
@@ -244,11 +295,11 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
         criadorNome: firstName,
         criadorGenerico: dynamicGenerico,
         categorias: selectedOracaoCats,
-        descricaoCurta: pedidoDesc.trim().substring(0, 500),
+        descricaoCurta: pedidoDesc.trim().substring(0, 120),
         cidade: pedidoCidade.trim() || null,
         contadorOracoes: 0,
         respondido: false,
-        criadoEm: serverTimestamp()
+        criadoEm: new Date()
       });
 
       // Clear states
@@ -300,7 +351,7 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
         titulo: testemunhoTitle.trim().substring(0, 80),
         relato: testemunhoRelato.trim().substring(0, 500),
         fortalecidos: 0,
-        criadoEm: serverTimestamp()
+        criadoEm: new Date()
       });
 
       // Clear states
@@ -511,18 +562,18 @@ export default function MuralComunidade({ currentUser, userProfile, onShowAuthMo
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center">
                       <label className="text-[10px] font-mono uppercase font-black text-stone-500">
-                        Compartilhe em poucas palavras (Até 500 caracteres)
+                        Compartilhe em poucas palavras (Até 120 caracteres)
                       </label>
                       <span className="text-[10px] font-mono text-stone-400">
-                        {pedidoDesc.length}/500
+                        {pedidoDesc.length}/120
                       </span>
                     </div>
                     <textarea
                       placeholder="Ex: Entrego a ansiedade sobre as decisões familiares aos pés da cruz. Busco sabedoria de Deus."
                       value={pedidoDesc}
-                      onChange={(e) => setPedidoDesc(e.target.value.substring(0, 500))}
+                      onChange={(e) => setPedidoDesc(e.target.value.substring(0, 120))}
                       rows={2}
-                      maxLength={500}
+                      maxLength={120}
                       className="w-full bg-white border border-stone-200 focus:border-[#C08261]/60 p-3 rounded-2xl text-[13.5px] text-stone-800 placeholder-stone-400 focus:outline-none transition leading-relaxed resize-none"
                     />
                   </div>
