@@ -154,8 +154,8 @@ export default function ApoiarSection() {
                           </div>
                         )}
 
-                        {/* CTA */}
-                        
+                        {/* CTA — tag <a> estava faltando antes do href */}
+                        <a
                           href={EBOOK_SITE}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -192,7 +192,8 @@ export default function ApoiarSection() {
             Se um único capítulo mudar a forma como você vê a si mesmo, o investimento 
             já valeu. E o movimento continua vivo por mais um dia.
           </p>
-          
+          {/* CTA Final — tag <a> estava faltando antes do href */}
+          <a
             href={EBOOK_SITE}
             target="_blank"
             rel="noopener noreferrer"
