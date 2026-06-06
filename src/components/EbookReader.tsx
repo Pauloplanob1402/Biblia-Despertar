@@ -164,6 +164,176 @@ export default function EbookReader({
               As edições completas — com todos os capítulos — estão a caminho. Se quiser ser avisado quando chegarem, crie sua conta gratuita. Quem já leu os primeiros capítulos recebe o aviso primeiro.
             </p>
           </div>
+
+          {/* ── SEÇÃO LIVROS KIWIFY ────────────────────────────────────────────
+              Os três títulos físicos/digitais do Despertar disponíveis para compra
+          ───────────────────────────────────────────────────────────────────── */}
+          <div className="pt-8 border-t border-stone-200/60 space-y-8">
+            {/* Header da seção */}
+            <div className="text-center max-w-2xl mx-auto space-y-2">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#C08261] font-bold block">📚 Obras Completas do Despertar</span>
+              <h3 className="font-serif text-2xl md:text-3xl font-light text-stone-850 tracking-tight leading-tight">
+                Leve o Despertar para <span className="text-[#C08261] font-semibold">dentro de casa</span>
+              </h3>
+              <p className="text-stone-500 text-sm leading-relaxed font-sans">
+                Além das leituras gratuitas, estas obras completas aprofundam sua jornada espiritual com conteúdo exclusivo, devocional diário estruturado e o kit completo para transformação real.
+              </p>
+            </div>
+
+            {/* Grid dos 3 produtos */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* 1. O Despertar */}
+              <div className="group relative bg-white border border-stone-200/60 rounded-3xl overflow-hidden flex flex-col hover:shadow-xl hover:border-[#C08261]/40 transition-all duration-300">
+                {/* Badge destaque */}
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="text-[9px] font-mono font-black uppercase tracking-wider bg-emerald-500 text-white px-2.5 py-1 rounded-full">Mais lido</span>
+                </div>
+                {/* Capa */}
+                <div className="relative bg-gradient-to-br from-stone-900 via-stone-800 to-[#1a0f0a] h-52 flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  <img
+                    src="/src/assets/images/book_cover_1780394449410.png"
+                    alt="Capa O Despertar"
+                    className="h-40 object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500 relative z-10"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <div className="text-center opacity-0 group-hover:opacity-0">
+                      <span className="text-5xl">📖</span>
+                    </div>
+                  </div>
+                  {/* Fallback visual quando sem imagem */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-7xl opacity-20">📖</span>
+                  </div>
+                </div>
+                {/* Conteúdo */}
+                <div className="p-6 flex flex-col flex-1 space-y-4">
+                  <div className="space-y-1">
+                    <h4 className="font-serif text-xl font-semibold text-stone-850">O Despertar</h4>
+                    <p className="text-xs text-[#C08261] font-mono font-semibold">A geração que voltou a ouvir a voz de Deus</p>
+                  </div>
+                  <p className="text-xs text-stone-500 leading-relaxed flex-1">
+                    Em uma época de distrações e vazio espiritual, este livro é um convite para ouvir o Pai, encontrar propósito e viver uma fé autêntica. Mais do que páginas — é o início de um movimento.
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-stone-400 font-mono border-t border-stone-100 pt-3">
+                    <span>142 páginas · PDF + EPUB</span>
+                    <span className="line-through text-stone-300">R$ 34,90</span>
+                  </div>
+                  <a
+                    href="https://pay.kiwify.com.br/JRqrznH"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 bg-stone-900 hover:bg-black text-white text-xs font-bold font-mono uppercase tracking-wider rounded-2xl transition flex items-center justify-center space-x-2 shadow-sm group-hover:shadow-md"
+                  >
+                    <span>Adquirir por R$ 24,90</span>
+                    <span>→</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* 2. O Despertar Devocional */}
+              <div className="group relative bg-white border border-stone-200/60 rounded-3xl overflow-hidden flex flex-col hover:shadow-xl hover:border-[#C08261]/40 transition-all duration-300">
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="text-[9px] font-mono font-black uppercase tracking-wider bg-[#C08261] text-white px-2.5 py-1 rounded-full">Devocional</span>
+                </div>
+                {/* Capa */}
+                <div className="relative bg-gradient-to-br from-[#2d1a0a] via-[#3d2410] to-[#1a0d05] h-52 flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  <img
+                    src="/src/assets/images/book_cover_devocional.png"
+                    alt="Capa O Despertar Devocional"
+                    className="h-40 object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500 relative z-10"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-7xl opacity-20">🕯️</span>
+                  </div>
+                </div>
+                {/* Conteúdo */}
+                <div className="p-6 flex flex-col flex-1 space-y-4">
+                  <div className="space-y-1">
+                    <h4 className="font-serif text-xl font-semibold text-stone-850">O Despertar Devocional</h4>
+                    <p className="text-xs text-[#C08261] font-mono font-semibold">365 dias de quietude com o Pai</p>
+                  </div>
+                  <p className="text-xs text-stone-500 leading-relaxed flex-1">
+                    Um ano inteiro de encontros diários com Deus. Reflexões curtas, versículos âncora e espaço para escrever — projetado para quem quer consistência na fé, não apenas inspiração passageira.
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-stone-400 font-mono border-t border-stone-100 pt-3">
+                    <span>365 reflexões · PDF</span>
+                    <span className="line-through text-stone-300">R$ 29,90</span>
+                  </div>
+                  <a
+                    href="https://pay.kiwify.com.br/X23KvCQ"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-xs font-bold font-mono uppercase tracking-wider rounded-2xl transition flex items-center justify-center space-x-2 shadow-sm group-hover:shadow-md"
+                  >
+                    <span>Adquirir por R$ 19,90</span>
+                    <span>→</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* 3. Kit Completo */}
+              <div className="group relative bg-gradient-to-b from-[#1C1A18] to-[#0F0E0D] border border-[#DCAE6C]/30 rounded-3xl overflow-hidden flex flex-col hover:shadow-2xl hover:border-[#DCAE6C]/60 transition-all duration-300">
+                {/* Badge destaque — ouro */}
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="text-[9px] font-mono font-black uppercase tracking-wider bg-[#DCAE6C] text-stone-900 px-2.5 py-1 rounded-full animate-pulse">⭐ Melhor valor</span>
+                </div>
+                {/* Capa */}
+                <div className="relative bg-gradient-to-br from-[#1C1A18] to-[#2a2218] h-52 flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-[#DCAE6C]/5" />
+                  <img
+                    src="/src/assets/images/book_cover_kit.png"
+                    alt="Capa Kit Completo"
+                    className="h-44 object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500 relative z-10"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-7xl opacity-10">👑</span>
+                  </div>
+                </div>
+                {/* Conteúdo */}
+                <div className="p-6 flex flex-col flex-1 space-y-4">
+                  <div className="space-y-1">
+                    <h4 className="font-serif text-xl font-semibold text-stone-100">Kit Completo do Despertar</h4>
+                    <p className="text-xs text-[#DCAE6C] font-mono font-semibold">Os dois livros + bônus exclusivos</p>
+                  </div>
+                  <p className="text-xs text-stone-400 leading-relaxed flex-1">
+                    O kit reúne O Despertar + O Devocional com desconto especial, além de materiais bônus exclusivos para quem quer ir mais fundo na jornada. A escolha de quem leva a fé a sério.
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-stone-500 font-mono border-t border-[#DCAE6C]/20 pt-3">
+                    <span>2 ebooks + bônus</span>
+                    <span className="line-through text-stone-600">R$ 64,80</span>
+                  </div>
+                  <a
+                    href="https://pay.kiwify.com.br/Fbksh0o"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 bg-[#DCAE6C] hover:bg-[#C9A055] text-stone-900 text-xs font-black font-mono uppercase tracking-wider rounded-2xl transition flex items-center justify-center space-x-2 shadow-lg group-hover:shadow-xl"
+                  >
+                    <span>Adquirir Kit por R$ 39,90</span>
+                    <span>→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Garantia e segurança */}
+            <div className="max-w-2xl mx-auto text-center">
+              <p className="text-[10px] text-stone-400 font-sans leading-relaxed">
+                🔒 Pagamento 100% seguro via Kiwify · Entrega imediata por e-mail · Suporte em até 24h
+              </p>
+            </div>
+          </div>
+          {/* ── FIM SEÇÃO LIVROS KIWIFY ──────────────────────────────────────── */}
         </div>
       ) : (
         /* Immersive Reading Mode Panel */
