@@ -15,8 +15,7 @@ import {
   Users, MessageSquare, Search, Flame, Heart, Lock,
   ArrowRight, ChevronRight, X, Sparkles, Shield,
   Coffee, Globe, MapPin, Star
-} from 'lucide-react';
-import {
+} from 'lucide-react';import {
   collection, onSnapshot, query, addDoc,
   updateDoc, doc, arrayUnion, serverTimestamp
 } from 'firebase/firestore';
@@ -49,7 +48,7 @@ interface Pilgrim {
 interface MesasSectionProps {
   onStartChat: (uid: string, name: string, emoji: string) => void;
   onOpenAuth: () => void;
-  initialTab?: 'mesas' | 'pilgrims';
+  initialTab?: 'tribos' | 'pilgrims' | 'mesas-online' | 'mesas-presenciais';
 }
 
 // ── 10 Tribos semente ─────────────────────────────────────────────────────────
@@ -187,7 +186,7 @@ const MESAS_FUTURAS = [
 // ── Componente ────────────────────────────────────────────────────────────────
 
 export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'mesas' }: MesasSectionProps) {
-  const [activeTab, setActiveTab] = useState<'tribos' | 'mesas' | 'pilgrims'>('tribos');
+  const [activeTab, setActiveTab] = useState<'tribos' | 'pilgrims' | 'mesas-online' | 'mesas-presenciais'>(initialTab || 'tribos');
   const [tribos, setTribos] = useState<Tribo[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -205,6 +204,11 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
 
   const currentUser = auth.currentUser;
   const currentUserId = currentUser?.uid;
+
+  // Sincroniza com a navegação externa (sidebar/bottom nav)
+  useEffect(() => {
+    if (initialTab) setActiveTab(initialTab);
+  }, [initialTab]);
 
   // ── Firestore: tribos ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -419,9 +423,10 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
       {/* ── Tabs ── */}
       <div className="flex gap-2 border-b border-stone-100 pb-1 overflow-x-auto scrollbar-hide">
         {[
-          { id: 'tribos'   as const, label: '🔥 Tribos',    sub: 'por temporada de vida'   },
-          { id: 'mesas'    as const, label: '☕ Mesas',     sub: mesasDesbloqueadas ? 'online' : `🔒 ${tribosAtivas}/${tribosMeta}` },
-          { id: 'pilgrims' as const, label: '🧭 Peregrinos', sub: 'conectar diretamente'    },
+          { id: 'tribos'            as const, label: '🔥 Tribos',             sub: 'por temporada de vida'          },
+          { id: 'pilgrims'          as const, label: '🧭 Peregrinos',          sub: 'conectar diretamente'           },
+          { id: 'mesas-online'      as const, label: '☕ Mesas online',        sub: mesasDesbloqueadas ? 'abertas' : `🔒 ${tribosAtivas}/${tribosMeta}` },
+          { id: 'mesas-presenciais' as const, label: '📍 Mesas presenciais',   sub: 'futuro'                         },
         ].map(tab => (
           <button
             key={tab.id}
@@ -537,9 +542,9 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
       )}
 
       {/* ══════════════════════════════════════════════════════════════════════
-          ABA MESAS
+          ABA MESAS ONLINE
       ══════════════════════════════════════════════════════════════════════ */}
-      {activeTab === 'mesas' && (
+      {activeTab === 'mesas-online' && (
         <div className="space-y-5">
           {/* Banner de progresso */}
           {!mesasDesbloqueadas && (
@@ -660,7 +665,6 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
             </div>
           </div>
 
-          {/* CTA para ir às tribos */}
           {!mesasDesbloqueadas && (
             <div className="text-center py-2">
               <button
@@ -673,6 +677,110 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
               </button>
             </div>
           )}
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          ABA MESAS PRESENCIAIS
+      ══════════════════════════════════════════════════════════════════════ */}
+      {activeTab === 'mesas-presenciais' && (
+        <div className="space-y-5">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-stone-900 text-white rounded-3xl p-6 md:p-8 space-y-4 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-[#C08261]/10 pointer-events-none" />
+            <div className="relative z-10 space-y-3">
+              <div className="flex items-center gap-2">
+                <MapPin size={18} className="text-[#DCAE6C]" />
+                <span className="text-xs font-mono uppercase tracking-widest text-[#DCAE6C] font-bold">
+                  Próximo horizonte
+                </span>
+              </div>
+              <h3 className="font-serif text-2xl md:text-3xl font-light leading-tight">
+                As Mesas presenciais nascerão<br />
+                <span className="text-[#C08261]">de dentro das tribos.</span>
+              </h3>
+              <p className="text-stone-400 text-base leading-relaxed max-w-lg">
+                Quando uma tribo online estiver madura — com peregrinos reais,
+                conversas honestas e laços formados — ela própria decidirá
+                se encontrar. Não será organizado pela plataforma.
+                Será o movimento acontecendo naturalmente.
+              </p>
+              <div className="flex items-start gap-3 bg-white/5 rounded-2xl px-4 py-3 mt-2">
+                <span className="text-[#C08261] shrink-0">✦</span>
+                <p className="text-sm text-stone-300 italic font-serif leading-relaxed">
+                  "Porque onde estiverem dois ou três reunidos em meu nome,
+                  aí estou no meio deles."
+                </p>
+              </div>
+              <p className="text-[10px] font-mono text-stone-500 mt-1">Mateus 18:20</p>
+            </div>
+          </motion.div>
+
+          {/* Timeline do caminho */}
+          <div className="space-y-3">
+            <h3 className="font-serif text-xl text-stone-800">O caminho até aqui</h3>
+            <div className="space-y-2">
+              {[
+                {
+                  etapa: '1',
+                  titulo: 'Tribos online',
+                  desc: 'Pessoas ao redor do mesmo vale se encontram aqui, em texto assíncrono.',
+                  status: 'ativo',
+                },
+                {
+                  etapa: '2',
+                  titulo: 'Mesas online',
+                  desc: `Grupos menores e temáticos, com encontros regulares. Desbloqueiam com ${tribosMeta} tribos ativas.`,
+                  status: tribosAtivas >= tribosMeta ? 'ativo' : 'bloqueado',
+                },
+                {
+                  etapa: '3',
+                  titulo: 'Mesas presenciais',
+                  desc: 'Tribos maduras que decidem — por vontade própria — se encontrar no mundo real.',
+                  status: 'futuro',
+                },
+              ].map((item) => (
+                <div
+                  key={item.etapa}
+                  className={`flex items-start gap-4 p-4 rounded-2xl border transition ${
+                    item.status === 'ativo'
+                      ? 'bg-emerald-50 border-emerald-200'
+                      : item.status === 'bloqueado'
+                      ? 'bg-stone-50 border-stone-200 opacity-70'
+                      : 'bg-[#fdfaf7] border-[#C08261]/20'
+                  }`}
+                >
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 ${
+                    item.status === 'ativo'
+                      ? 'bg-emerald-500 text-white'
+                      : item.status === 'bloqueado'
+                      ? 'bg-stone-300 text-white'
+                      : 'bg-[#C08261] text-white'
+                  }`}>
+                    {item.status === 'ativo' ? '✓' : item.etapa}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-stone-800">{item.titulo}</p>
+                    <p className="text-sm text-stone-500 mt-0.5 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center py-2">
+            <button
+              onClick={() => setActiveTab('tribos')}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#C08261] hover:bg-[#A96D4D] text-white text-sm font-semibold rounded-2xl transition min-h-[48px]"
+            >
+              <Sparkles size={15} />
+              Começar pela minha tribo
+              <ArrowRight size={15} />
+            </button>
+          </div>
         </div>
       )}
 
