@@ -246,27 +246,38 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
   // ── Entrar numa tribo ─────────────────────────────────────────────────────
   const handleEntrarTribo = async (tribo: Tribo) => {
     if (!currentUser) { onOpenAuth(); return; }
-    if (joinedIds.includes(tribo.id)) return;
+    if (joinedIds.includes(tribo.id) || tribo.membros.includes(currentUserId || '')) return;
 
     try {
-      // Tentar atualizar no Firestore; se não existe, criar
       const triboRef = doc(db, 'tribos', tribo.id);
-      await updateDoc(triboRef, {
-        membros: arrayUnion(currentUserId),
-        updatedAt: serverTimestamp(),
-      }).catch(async () => {
-        // Documento não existe ainda — criar
-        await addDoc(collection(db, 'tribos'), {
-          ...tribo,
+      // Tenta atualizar — se o doc não existe (tribo semente), cria com o id correto
+      try {
+        await updateDoc(triboRef, {
+          membros: arrayUnion(currentUserId),
+          updatedAt: serverTimestamp(),
+        });
+      } catch {
+        // Doc não existe ainda: usar setDoc com o id da semente
+        const { setDoc } = await import('firebase/firestore');
+        await setDoc(triboRef, {
+          emoji: tribo.emoji,
+          nome: tribo.nome,
+          tagline: tribo.tagline,
+          descricao: tribo.descricao,
+          cor: tribo.cor,
+          corTexto: tribo.corTexto,
+          corBorda: tribo.corBorda,
           membros: [currentUserId],
           createdAt: serverTimestamp(),
         });
-      });
+      }
 
       setJoinedIds(prev => [...prev, tribo.id]);
-      showNotification(`Você entrou na tribo "${tribo.nome}" 🕊️`);
+      setTriboSelecionada(null); // fecha o modal
+      showNotification(`Bem-vindo à tribo "${tribo.nome}" 🕊️`);
     } catch (e) {
       console.error(e);
+      showNotification('Algo deu errado. Tente novamente.');
     }
   };
 
@@ -393,18 +404,6 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
       {/* ── ABA TRIBOS ── */}
       {activeSubTab === 'mesas' && (
         <div className="space-y-5">
-
-          {/* Aviso de segurança — transparente e acolhedor */}
-          <div className="flex items-start gap-3 bg-stone-50 border border-stone-200/60 rounded-2xl px-4 py-3">
-            <Shield size={15} className="text-[#C08261] shrink-0 mt-0.5" />
-            <p className="text-xs text-stone-500 leading-relaxed">
-              <span className="font-semibold text-stone-700">Tribos 100% online — por enquanto.</span>{' '}
-              Estas comunidades existem aqui dentro, em conversa assíncrona.
-              Nenhum dado de localização é coletado. Nenhum encontro presencial é organizado
-              por esta plataforma. Quem sabe um dia, quando a tribo estiver forte,
-              ela própria decida se encontrar — isso será entre vocês.
-            </p>
-          </div>
 
           {/* Barra de busca + botão criar */}
           <div className="flex gap-2">
@@ -650,15 +649,6 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                   </ul>
                 </div>
 
-                <div className="flex items-start gap-2 text-[11px] text-stone-400 leading-relaxed">
-                  <Shield size={12} className="shrink-0 mt-0.5" />
-                  <span>
-                    Esta tribo existe aqui dentro, online.
-                    Se um dia quiserem se encontrar presencialmente, isso ficará entre os membros —
-                    a plataforma não organiza nem intermedia encontros físicos.
-                  </span>
-                </div>
-
                 {joinedIds.includes(triboSelecionada.id) || triboSelecionada.membros.includes(currentUserId || '') ? (
                   <div className="flex items-center justify-center gap-2 py-3 bg-emerald-50 border border-emerald-100 rounded-2xl text-emerald-700 text-sm font-semibold">
                     <span>✓</span>
@@ -784,15 +774,6 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                   <span className="text-[10px] text-stone-400 font-mono">{novaTriboDescricao.length}/300</span>
                 </div>
 
-                {/* Aviso */}
-                <div className="flex items-start gap-2 text-[11px] text-stone-400 leading-relaxed bg-stone-50 rounded-xl px-3 py-2.5">
-                  <Shield size={12} className="shrink-0 mt-0.5" />
-                  <span>
-                    Ao criar esta tribo você se compromete a manter um ambiente de respeito e cuidado.
-                    Tribos com conteúdo impróprio serão removidas.
-                  </span>
-                </div>
-
                 {/* CTA */}
                 <button
                   onClick={handleCriarTribo}
@@ -876,16 +857,6 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
         <div className="space-y-5">
 
           {/* Aviso de segurança — transparência total */}
-          <div className="flex items-start gap-3 bg-stone-50 border border-stone-200/60 rounded-2xl px-4 py-3">
-            <Shield size={15} className="text-[#C08261] shrink-0 mt-0.5" />
-            <p className="text-xs text-stone-500 leading-relaxed">
-              <span className="font-semibold text-stone-700">Tribos 100% online.</span>{' '}
-              Estas comunidades existem aqui dentro, em texto assíncrono —
-              como um grupo de WhatsApp, mas dentro do Despertar.
-              Nenhum dado de localização é coletado. Nenhum encontro presencial é organizado por esta plataforma.
-            </p>
-          </div>
-
           {/* Busca */}
           <div className="relative">
             <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
@@ -1133,16 +1104,6 @@ export default function MesasSection({ onStartChat, onOpenAuth, initialTab = 'me
                       </li>
                     ))}
                   </ul>
-                </div>
-
-                {/* Aviso de segurança no modal */}
-                <div className="flex items-start gap-2 text-[11px] text-stone-400 leading-relaxed">
-                  <Shield size={12} className="shrink-0 mt-0.5 text-stone-400" />
-                  <span>
-                    Esta tribo existe dentro do Despertar, online.
-                    Nenhum dado de localização é coletado e nenhum encontro
-                    presencial é organizado por esta plataforma.
-                  </span>
                 </div>
 
                 {/* CTA */}
