@@ -21,7 +21,6 @@ import MesasSection from './components/MesasSection';
 import AuthModal from './components/AuthModal';
 import ChatDM from './components/ChatDM';
 import ManifestoSection from './components/ManifestoSection';
-import ManifestoDespertar from './components/ManifestoDespertar';
 import WitnessesSection from './components/WitnessesSection';
 import MuralVivo from './components/MuralVivo';
 import FaiscasEterno from './components/FaiscasEterno';
@@ -46,7 +45,7 @@ export default function App() {
   const [activePrayersCount, setActivePrayersCount] = useState<number>(0);
   const [homePrayerOfTheDay, setHomePrayerOfTheDay] = useState<any>(null);
   const [homeTestimonyOfTheDay, setHomeTestimonyOfTheDay] = useState<any>(null);
-  const [mesasSubTab, setMesasSubTab] = useState<'mesas' | 'pilgrims'>('mesas');
+  const [mesasSubTab, setMesasSubTab] = useState<'tribos' | 'mesas-online' | 'mesas-presenciais' | 'pilgrims'>('tribos');
   const [activeDevotionalTab, setActiveDevotionalTab] = useState<'comunhao' | 'multiplicacao'>('comunhao');
   const [selectedDevotional, setSelectedDevotional] = useState<Devotional | null>(null);
   
@@ -698,8 +697,10 @@ export default function App() {
         {(activeSection === 'mesas') && (
           <div className="flex gap-2 px-4 pb-2.5 overflow-x-auto scrollbar-hide">
             {[
-              { sub: 'mesas' as const,    label: '🍞 Comunhão' },
-              { sub: 'pilgrims' as const, label: '💬 Chat' },
+              { sub: 'tribos'            as const, label: '🔥 Tribos'            },
+              { sub: 'pilgrims'          as const, label: '🧭 Peregrinos'        },
+              { sub: 'mesas-online'      as const, label: '☕ Mesas online'      },
+              { sub: 'mesas-presenciais' as const, label: '📍 Mesas presenciais' },
             ].map(item => (
               <button
                 key={item.sub}
@@ -860,10 +861,10 @@ export default function App() {
             </div>
           )}
 
-          {/* 4. MESAS — agrupa Mesas + Chat */}
+          {/* 4. MESAS */}
           <button
             id="nav-mesas"
-            onClick={() => { setActiveSection('mesas'); setMesasSubTab('mesas'); setSelectedDevotional(null); }}
+            onClick={() => { setActiveSection('mesas'); setMesasSubTab('tribos'); setSelectedDevotional(null); }}
             className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-left tracking-wide text-sm font-semibold transition ${
               activeSection === 'mesas' ? 'bg-[#C08261]/10 text-[#C08261]' : 'text-stone-700 hover:bg-stone-50'
             }`}
@@ -873,12 +874,13 @@ export default function App() {
               <span>Mesas</span>
             </span>
           </button>
-          {/* Sub-nav Mesas */}
           {activeSection === 'mesas' && (
             <div className="ml-7 space-y-0.5 pb-1">
               {[
-                { sub: 'mesas' as const, label: 'Mesas de comunhão' },
-                { sub: 'pilgrims' as const, label: 'Chat & conexões' },
+                { sub: 'tribos'            as const, label: 'Tribos'            },
+                { sub: 'pilgrims'          as const, label: 'Peregrinos'        },
+                { sub: 'mesas-online'      as const, label: 'Mesas online'      },
+                { sub: 'mesas-presenciais' as const, label: 'Mesas presenciais' },
               ].map(item => (
                 <button key={item.sub} onClick={() => setMesasSubTab(item.sub)}
                   className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left text-xs font-medium transition ${
@@ -1706,10 +1708,13 @@ export default function App() {
                 </div>
               </div>
 
-              {/* MANIFESTO DESPERTAR — substitui ManifestoSection */}
-              <ManifestoDespertar
-                onGoToApoiar={() => setActiveSection('apoiar')}
-                sementesSaldo={sementesSaldo}
+              {/* NOTA DO DESPERTAR — MANIFESTO SECTION */}
+              <ManifestoSection
+                onExploreMesas={() => setActiveSection('mesas')}
+                onOpenCreateMesa={() => setActiveSection('mesas')}
+                currentUserName={userProfile?.name || currentUser?.displayName || undefined}
+                onAuthenticate={() => setShowAuthModal(true)}
+                isAuthenticated={!!currentUser}
               />
             </motion.div>
           )}
@@ -3008,6 +3013,9 @@ export default function App() {
                   setActiveSection('devotionals');
                 } else if (id === 'mural' && !['mural','mural-vivo','faisca','testemunhas','profiles'].includes(activeSection)) {
                   setActiveSection('mural');
+                } else if (id === 'mesas' && activeSection !== 'mesas') {
+                  setActiveSection('mesas');
+                  setMesasSubTab('tribos');
                 } else {
                   setActiveSection(id);
                 }
